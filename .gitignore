@@ -1,0 +1,10 @@
+*.pyc
+__pycache__/
+lib/
+var/
+build/
+include/
+.DS_Store
+.idea
+bin/
+node_modules/
