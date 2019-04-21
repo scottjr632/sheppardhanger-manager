@@ -7,16 +7,12 @@ import { Router } from 'react-router-dom';
 import createHistory from 'history/createHashHistory';
 import { Provider } from 'mobx-react'
 
-// import { stores } from './stores'
+import { stores } from './stores'
 
-import userStore from './stores/userStore'
-import './index.css';
+import './index.scss';
 
 require('dotenv').config()
 
-const stores = {
-  userStore,
-}
 
 ReactDOM.render(
     <Provider {...stores} >
@@ -33,11 +29,3 @@ document.getElementById('root')
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.register();
-
-
-// ReactDOM.render(
-//   <div>
-//     TEST
-//   </div>,
-//   document.getElementById('root')
-// )

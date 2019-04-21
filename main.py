@@ -44,7 +44,8 @@ if not os.path.exists(os.path.dirname(PID_FILE_PATH)):
 with open(PID_FILE_PATH, 'w+') as file:
     file.write(str(os.getpgrp()) + '\n')
 
-#------------------------ ACTIONS --------------------------------------------
+# ------------------------ ACTIONS --------------------------------------------
+
 
 def start_dev_flask():
     from dotenv import load_dotenv
@@ -113,7 +114,7 @@ ACTIONS = {
     "celery" : start_celery,
 }
 
-#------------------------ COMMAND LINE ARGS ----------------------------------
+# ------------------------ COMMAND LINE ARGS ----------------------------------
 
 parser.add_argument('action',
                     help='start the Flask app',

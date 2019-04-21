@@ -2,10 +2,6 @@ import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import Nav from 'react-bootstrap/lib/Nav';
-import NavItem from 'react-bootstrap/lib/NavItem';
-import Navbar from 'react-bootstrap/lib/Navbar';
-
 
 class Navi extends React.Component {
 
@@ -39,9 +35,6 @@ class Navi extends React.Component {
          }
     }
 
-    toUserPrefs = () => {
-        this.props.history.push('/user/preferences')
-    }
 
     handleSelect = (selectedKey) => {
         this.setState({
@@ -52,59 +45,13 @@ class Navi extends React.Component {
     render() {
         return (
             <header>
-                <Navbar collapseOnSelect inverse>
-                <Navbar.Header>
-                    <Navbar.Brand >
-                        <Link to='/'>Budget</Link>                    
-                    </Navbar.Brand>
-                    <Navbar.Toggle />
-                </Navbar.Header>
-                {this.props.loggedIn && 
-                <Navbar.Collapse>
-                    <Nav  activeKey={this.state.currentKey}>
-                        <NavItem 
-                            componentClass={Link} 
-                            href='/dashboard' 
-                            to='/dashboard' 
-                            onClick={this.handleSelect} 
-                            onSelect={this.handleSelect}
-                            eventKey={1}
-                        > 
-                            Dashboard 
-                        </NavItem>
-                        <NavItem 
-                            componentClass={Link} 
-                            href='/user/alerts' 
-                            to='/user/alerts' 
-                            onClick={this.handleSelect} 
-                            onSelect={this.handleSelect}
-                            eventKey={2}
-                        > 
-                            Alerts 
-                        </NavItem>
-                        <NavItem 
-                            componentClass={Link} 
-                            href='/stocks' 
-                            to='/stocks' 
-                            onClick={this.handleSelect} 
-                            onSelect={this.handleSelect}
-                            eventKey={3}
-                        > 
-                            Stocks 
-                        </NavItem>
-                    </Nav>
-                    <Nav pullRight>
-                            <NavItem eventKey={1} onSelect={this.toUserPrefs}>
-                                <i class="fas fa-user" style={{padding:5}}></i>
-                                {this.props.userName}
-                            </NavItem>
-                            <NavItem eventKey={1} onSelect={this.props.onLogout}>
-                            <i class="fas fa-sign-out-alt" style={{padding:5}}></i>
-                            Logout
-                            </NavItem>
-                    </Nav>
-                </Navbar.Collapse>}
-                </Navbar>
+                <div className={'pull-left header-title'}>
+                    Sheppard Hanger Manager
+                </div>
+                <div className={'pull-right nav__link'}>
+                    <a className={this.state.currentKey === 1 ? 'active' : ''}>Home</a>
+                    <a className={this.state.currentKey === 2 ? 'active' : ''}>Admin</a>
+                </div>
             </header>
         )
     }

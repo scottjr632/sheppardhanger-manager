@@ -1,7 +1,10 @@
 import React from "react";
 import PropTypes from 'prop-types'
+import { inject, observer } from 'mobx-react'
+import { NotificationManager } from 'react-notifications'
 
-
+@inject('userStore')
+@observer
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -9,18 +12,22 @@ class Login extends React.Component {
       email: "",
       password: "",
       loginPending: false,
+      loginError: this.props.userStore.loginError,
+      passwordLengthReq: this.props.passwordLengthReq || 6,
+      emailLengthReq: this.props.emailLengthReq || 5
     };
   }
 
 
   validateForm() {
-    return this.state.email.length > 0 && this.state.password.length > 0;
+    return this.state.email.length > this.state.emailLengthReq &&
+      this.state.password.length > this.state.passwordLengthReq;
   }
 
   validatePassword() {
     const length = this.state.password.length;
-    if (length > 10) return "success";
-    else if (length > 5) return "warning";
+    if (length > this.state.passwordLengthReq) return "success";
+    else if (length > (this.state.passwordLengthReq / 2)) return "warning";
     else if (length > 0) return "error";
     return null;
   }
@@ -33,7 +40,17 @@ class Login extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    this.props.handleSubmit(1, 'no')
+    console.log(this.props)
+    let { email, password } = this.state
+    if (this.validateForm()) {
+      this.props.userStore.loginUser({ email, password }, () => {
+        this.props.onLoginSuccess()
+      })
+    }
+    else {
+      NotificationManager.warning('Password length needs to be more than 6 characters')
+      return
+    }
     this.setState({
       email: "",
       password: "",
@@ -45,7 +62,7 @@ class Login extends React.Component {
     return (
       <div className="container">
         <div className="grid login-container">
-          {this.state.loginPending && "Logging you in..."}
+          {this.state.loginPending && !this.props.userStore.loginError && "Signing you in..."}
           <form method="POST" className="form login" onSubmit={this.onSubmit}>
             <div className="form__field">
               <label htmlFor="login__username">
@@ -75,7 +92,7 @@ class Login extends React.Component {
                 onChange={this.handleChange}
                 type="password"
                 name="password"
-                className="form__input"
+                className={"form__input validate " + this.validatePassword() }
                 placeholder="Password"
                 required
               />
@@ -113,8 +130,10 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
-  showNotAMember: PropTypes.bool
+  showNotAMember: PropTypes.bool,
+  passwordLengthReq: PropTypes.number,
+  emailLengthReq: PropTypes.number,
+  onLoginSuccess: PropTypes.func
 }
 
 export default Login;
