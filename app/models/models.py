@@ -55,6 +55,21 @@ class Lessee(db.Model):
     zipcode = db.Column(db.String)
     notes = db.Column(db.String)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'fname': self.fname,
+            'lname': self.lname,
+            'rank': self.rank,
+            'email': self.email,
+            'phone': self.phone,
+            'address': self.address,
+            'city': self.city,
+            'state': self.state,
+            'zipcode': self.zipcode,
+            'notes': self.notes
+        }
+
 
 class Reservation(db.Model):
     __tablename__ = 'reservations'
@@ -115,6 +130,15 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.email
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'fname': self.fname,
+            'lname': self.lname,
+            'role': self.role.name
+        }
 
 
 class UserPreferences(db.Model):

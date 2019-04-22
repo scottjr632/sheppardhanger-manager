@@ -8,6 +8,7 @@ from .config import configure_app
 from app.bookshelf.sql_configuration import metadata
 
 db = SQLAlchemy(metadata=metadata)
+APIV = '/api/v1'
 
 
 def _serve_client(app):
@@ -30,12 +31,13 @@ def _add_blueprints(app):
     from app.routes import authroutes
     from app.routes import houseroutes
     from app.routes import reservationroutes
+    from app.routes import lesseeroutes
 
     # Blueprints
-    app.register_blueprint(authroutes.mod, url_prefix='/auth')
-    app.register_blueprint(houseroutes.mod, url_prefix='/houses')
-    app.register_blueprint(reservationroutes.mod, url_prefix='/reservations')
-
+    app.register_blueprint(authroutes.mod, url_prefix=APIV + '/auth')
+    app.register_blueprint(houseroutes.mod, url_prefix=APIV + '/houses')
+    app.register_blueprint(reservationroutes.mod, url_prefix=APIV + '/reservations')
+    app.register_blueprint(lesseeroutes.mod, url_prefix=APIV + '/lessee')
 
 
 def create_app(config_name="default", serve_client=True):
@@ -51,6 +53,5 @@ def create_app(config_name="default", serve_client=True):
     _add_blueprints(app)
 
     db.init_app(app)
-
 
     return app

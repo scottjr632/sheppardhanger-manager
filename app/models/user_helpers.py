@@ -46,6 +46,10 @@ def find_user_by_email(email) -> User:
     return User.query.filter_by(email=email).first()
 
 
+def find_user_by_id(userid) -> User:
+    return User.query.get(userid)
+
+
 def get_user_roles(userid: User.id) -> str:
     """ returns the role of the user in a string """
     user = User.query.get(userid)

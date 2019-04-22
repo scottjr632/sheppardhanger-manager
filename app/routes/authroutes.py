@@ -46,6 +46,13 @@ def logout(*args):
     return resp
 
 
+@mod.route('/user', methods=['GET'])
+@utils.login_required
+def get_user_info(userid):
+    user = usermodel.find_user_by_id(userid)
+    return jsonify(user.serialize())
+
+
 @mod.route('/user', methods=['POST'])
 def new_user():
     try:

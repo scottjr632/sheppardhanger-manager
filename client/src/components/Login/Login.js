@@ -14,7 +14,8 @@ class Login extends React.Component {
       loginPending: false,
       loginError: this.props.userStore.loginError,
       passwordLengthReq: this.props.passwordLengthReq || 6,
-      emailLengthReq: this.props.emailLengthReq || 5
+      emailLengthReq: this.props.emailLengthReq || 5,
+      showResetPassword: this.props.showResetPassword || true
     };
   }
 
@@ -43,12 +44,17 @@ class Login extends React.Component {
     console.log(this.props)
     let { email, password } = this.state
     if (this.validateForm()) {
-      this.props.userStore.loginUser({ email, password }, () => {
-        this.props.onLoginSuccess()
+      this.props.userStore.loginUser({ email, password }, (auth) => {
+        if (auth) this.props.onLoginSuccess()
       })
     }
     else {
-      NotificationManager.warning('Password length needs to be more than 6 characters')
+      if (this.state.email.length < this.state.emailLengthReq) NotificationManager.warning(
+        `Email length needs to be more than ${this.state.emailLengthReq} characters`)
+      if (this.state.password.length < this.state.passwordLengthReq) NotificationManager.warning(
+        `Password length needs to be more than ${this.state.passwordLengthReq}`
+      )
+
       return
     }
     this.setState({
@@ -99,7 +105,7 @@ class Login extends React.Component {
             </div>
 
             <div className="form__field">
-              <input type="submit" value="Sign In" />
+              <input type="submit" value="Sign In" disabled={!this.validateForm()} style={!this.validateForm() ? {backgroundColor: '#e68fb0'} : {backgroundColor: '#ea4c88'}}/>
             </div>
           </form>
           { this.props.showNotAMember &&
@@ -110,6 +116,15 @@ class Login extends React.Component {
               </a>{ " " }
               <svg className="icon"/>
             </p>
+          }
+          { this.state.showResetPassword &&
+          <p className="text--center">
+            Forgot your password?{ " " }
+            <a className="subdued-link" href="#">
+              Click to reset
+            </a>{ " " }
+            <svg className="icon"/>
+          </p>
           }
         </div>
 

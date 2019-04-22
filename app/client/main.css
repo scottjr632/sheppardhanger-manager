@@ -165,11 +165,53 @@ tr {
   color: #1c1c1c;
   text-align: center; }
 
+.login-btn.active {
+  background-color: #ea4c88; }
+
+.login-btn.disabled {
+  background-color: #e68fb0; }
+
+.dropdown__menu {
+  position: absolute;
+  right: 5%;
+  background-color: #e2e2e2;
+  padding: 10px 0 10px 5px;
+  width: 10%;
+  border-radius: 5px; }
+  .dropdown__menu a {
+    text-decoration: none; }
+  .dropdown__menu a:hover {
+    text-decoration: none; }
+
+.btn__new {
+  border: none;
+  background-color: #128de9;
+  color: white;
+  border-radius: 5px;
+  padding: 5px;
+  width: 20%;
+  max-width: 180px;
+  min-width: 130px;
+  font-size: 12pt;
+  margin: 10px; }
+  .btn__new.lessee {
+    margin-right: 10px; }
+  .btn__new.dangerous {
+    background-color: red; }
+
+.btn__new:focus {
+  outline: none; }
+
+.btn__new:hover {
+  background-color: rgba(18, 141, 233, 0.76); }
+
 header {
-  margin: 10px 15px 15px 15px;
-  padding: 0px 5px 5px 5px; }
+  margin: 10px 0px 15px 0px;
+  padding: 5px 15px 5px 15px;
+  height: 35px;
+  background-color: white; }
   header .header-title {
-    font-size: 15pt;
+    font-size: 10pt;
     color: #1c1c1c;
     letter-spacing: 2px; }
   header a {
@@ -179,11 +221,16 @@ header {
     font-size: 11pt;
     padding: 5px; }
   header a:hover {
-    text-decoration: underline #727373;
+    text-decoration: #727373;
     color: black;
     cursor: pointer; }
   header .active {
     color: #1c1c1c !important; }
+
+.username {
+  margin-left: 10px; }
+  .username i {
+    padding-right: 5px; }
 
 .validate.error {
   border: 1pt red solid !important; }
@@ -219,7 +266,7 @@ header {
 .login-container {
   position: absolute;
   margin-top: 40vh;
-  bottom: 7vh;
+  bottom: 1vh;
   right: 50%;
   transform: translateX(50%); }
 
@@ -296,6 +343,26 @@ h4 {
 .subdued-link:focus,
 .subdued-link:hover {
   text-decoration: underline; }
+
+.input-group {
+  align-items: center;
+  width: 30%;
+  padding: 5px; }
+  .input-group input {
+    border: none;
+    border-bottom: 1pt solid black;
+    width: 60%;
+    min-width: 100px;
+    margin-left: 20px;
+    margin-right: 20px;
+    float: right;
+    text-align: left;
+    font-size: 12pt;
+    color: black; }
+  .input-group button {
+    float: right; }
+  .input-group .DayPickerInput {
+    width: 100%; }
 
 /* modules/form.css */
 input {
@@ -422,6 +489,6 @@ input[type='submit'] {
     transform: rotate(360deg); } }
 
 .center {
-  position: absolute;
-  left: 50%; }
+  position: relative;
+  left: 25%; }
 

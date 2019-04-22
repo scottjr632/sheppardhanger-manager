@@ -3,6 +3,7 @@ import sys
 from flask import Blueprint
 from flask import request
 from flask import make_response
+from flask.json import jsonify
 
 from app import utils
 import app.models.lessee_helpers as helpers
@@ -20,3 +21,23 @@ def new_lessee(user):
     except Exception as e:
         print(e, sys.stderr)
         return make_response('Something went wrong', 500)
+
+
+@mod.route('/', methods=['GET'])
+@utils.login_required
+def get_all_lessees(user):
+    lessees = helpers.get_all_lessees()
+    return jsonify([lessee.serialize() for lessee in lessees])
+
+
+@mod.route('/<lid>', methods=['GET'])
+@utils.login_required
+def get_lessee_by_id(user, lid):
+    return helpers.get_lessee_info(lid)
+
+
+@mod.route('/filter', methods=['GET'])
+@utils.login_required
+def get_lessee_by_filter(user):
+    data = request.get_json(force=True)
+    return helpers.get_lessee_by_email(**data)

@@ -1,17 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types'
+
+import * as backend from '../../backend'
 
 
 export default class AccessDenied extends React.Component {
-    componentDidMount(){
-        if (!this.props.isLoginSuccess && this.props.handleLoad) {
-            this.props.handleLoad().then((res) => {
-                if (!res){
-                    this.props.history.push('/login')
-                }
-            })
-        }
+
+    componentWillMount() {
+        backend.authenticate(status => {
+            if (status !== 200) {
+                this.props.history.push('/login')
+            }
+        })
     }
-    render(){
-        return(<div></div>)
-    }
+    render(){ return(<div />) }
+}
+
+AccessDenied.propTypes = {
+    history: PropTypes.isRequired
 }

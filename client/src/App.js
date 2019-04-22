@@ -10,6 +10,8 @@ import {
 } from 'react-router-dom';
 
 import asyncComponent from './utils/AsyncComponent';
+import * as backend from './backend'
+
 
 const Login = asyncComponent(() =>
   import('./pages/login.jsx').then(module => module.default)
@@ -19,16 +21,17 @@ const Dashboard = asyncComponent(() =>
   import('./pages/dashboard.jsx').then(module => module.default)
 )
 
-
 const NotFound = asyncComponent(() =>
   import('./pages/notFound.jsx').then(module => module.default)
 )
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={(props) => (
-    localStorage.getItem('access_token') !== null
-      ? <Component {...props} />
-      : <Redirect to='/login' />
+    backend.authenticate(res => {
+      if (res !== 200) {
+          return window.location.href = '/'
+      }
+    }) ? <Component {...props} /> : <Component {...props} />
   )} />
 )
 
@@ -42,7 +45,7 @@ class App extends Component {
               <Switch>
                 <Route exact path='/login' component={ Login } />
                 <Route exact path='/' component={ Login } />
-                <Route exact path='/dashboard' component={ Dashboard } />
+                <PrivateRoute path='/dashboard' component={ Dashboard } />
                 <Route name="not-found" path='*' component={ NotFound } />
               </Switch>
             </section>
