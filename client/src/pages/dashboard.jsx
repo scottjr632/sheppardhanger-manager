@@ -4,6 +4,7 @@ import Navi from '../components/HeaderComponents/Navbar'
 import Schedule from '../components/charts/scheduler'
 import NewLesseeModal from '../components/Modals/NewLesseeModal'
 import AccessDenied from '../components/Errors/AccessDenied'
+import Table from '../components/Tables/Table'
 
 
 class Dashboard extends React.Component {
@@ -25,23 +26,20 @@ class Dashboard extends React.Component {
       <div>
         <Navi />
         <Schedule />
-        <button className={'pull-right btn__new lessee'} onClick={this.toggleModal}>Create new lessee</button>
-        <button className={'pull-right btn__new'} onClick={this.toggleModal}>Add to calendar</button>
-        <NewLesseeModal showModal={this.state.showModal} closeModal={this.toggleModal}/>
-        <div className={'container'}>
-            <div style={{fontSize: '18pt'}}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-          </div>
-            <div style={{fontSize: '18pt'}}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+        <div className={'grid-container'}>
+          <div className='table large-screen' style={{gridArea: 'tbl'}}>
+            <div>
+              <label>Locate a lessee</label>
+              <Table />
             </div>
-            <div style={{fontSize: '18pt'}}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-            </div>        <div style={{fontSize: '18pt'}}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
           </div>
         </div>
+        <div style={{gridArea: 'btns', display: 'flex', flexDirection: 'column', position: 'fixed', top: '80%'}}>
+          <button className={'btn__new minimized'} style={{overflow: 'hidden'}} onClick={this.toggleModal}>+ Create new lessee</button>
+          <button className={'btn__new minimized'} style={{overflow: 'hidden'}} onClick={this.toggleModal}>+ Add to calendar</button>
+        </div>
 
+        <NewLesseeModal showModal={this.state.showModal} closeModal={this.toggleModal}/>
         <AccessDenied history={this.props.history} />
       </div>
     )
