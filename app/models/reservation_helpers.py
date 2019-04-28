@@ -19,6 +19,10 @@ def get_res_by_lessee(lesseeid) -> list:
     return models.Reservation.query.filter_by(lesseeid=lesseeid).all()
 
 
+def get_all_res() -> list:
+    return models.Reservation.query.all()
+
+
 @utils.rollback_on_error
 def new_reservation(data):
     reservation = models.Reservation(**data)

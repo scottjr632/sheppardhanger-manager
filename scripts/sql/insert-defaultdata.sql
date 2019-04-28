@@ -35,3 +35,5 @@ values (
        ), (
            (select id from houses where name = 'Sparrow'), 'HUNTER'
        );
+
+insert into bookingtype (name) values ('TENTATIVE'), ('CONFIRMED'), ('CLEANING');

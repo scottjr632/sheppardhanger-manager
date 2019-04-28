@@ -91,16 +91,19 @@ class Reservation(db.Model):
     def serialize(self):
         return {
             'id': self.id,
+            'lesseefname': self.lessee.fname,
+            'lesseelname': self.lessee.lname,
             'lesseeemail': self.lessee.email,
             'purpose': self.purpose,
             'numberofguests': self.numberofguests,
             'pet': self.pet,
             'checkindate': self.checkindate,
             'checkoutdate': self.checkoutdate,
+            'roomid': self.roomid,
             'room': self.room.name,
             'house': self.room.house.name,
-            'notes': self.notes
-            # 'bookingtype': self.bookingtype.name
+            'notes': self.notes,
+            'bookingtype': self.bookingtype.name
         }
 
 

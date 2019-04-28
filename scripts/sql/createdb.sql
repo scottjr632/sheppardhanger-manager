@@ -131,6 +131,7 @@ CREATE TABLE public.lessee (
     fname character varying(100),
     lname character varying(100),
     email character varying(254) unique,
+    rank text,
     phone text,
     address text,
     city text,

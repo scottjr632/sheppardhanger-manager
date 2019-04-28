@@ -16,8 +16,8 @@ mod = Blueprint('lesseeroutes', __name__)
 def new_lessee(user):
     data = request.get_json(force=True)
     try:
-        helpers.add_new_lessee(data)
-        return make_response('Added new lessee {}'.format(data.email), 200)
+        lessee = helpers.add_new_lessee(data)
+        return make_response(jsonify(lessee.serialize()), 200)
     except Exception as e:
         print(e, sys.stderr)
         return make_response('Something went wrong', 500)

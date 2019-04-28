@@ -6,6 +6,11 @@ import { inject, observer } from 'mobx-react'
 
 import * as backend from '../../backend'
 
+const BOOKINGTYPECOLORS = {
+  'TENTATIVE': 'grey',
+  'CONFIRMED': '#128de9'
+}
+
 @inject ('roomStore')
 @observer
 class Schedule extends React.Component{
@@ -31,11 +36,26 @@ class Schedule extends React.Component{
         schedulerData.setResources(data)
         data.forEach(room => {
           setTimeout(() => {
-            this.props.roomStore.addRoom(room)
+            this.props.roomStore.addRoom(room) 
           },0)
         })
 
-        this.setState({ viewModel: schedulerData })
+        backend.getAllReservations(res => {
+          let { data } = res
+          if (data) {
+            data.forEach((reservation) => {
+              schedulerData.addEvent({
+                id: reservation.id,
+                resourceId: reservation.roomid,
+                title: `${reservation.lesseelname}, ${reservation.lesseefname}  -  ${reservation.house}`,
+                start: reservation.checkindate,
+                end: reservation.checkoutdate,
+                bgColor: BOOKINGTYPECOLORS[reservation.bookingtype]
+              })
+            })
+          }
+          this.setState({ viewModel: schedulerData })
+        })
       }
     })
   }

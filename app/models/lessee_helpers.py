@@ -1,12 +1,15 @@
+import sys
+
 import app.models.models as models
 from app import db, utils
 
 
 @utils.rollback_on_error
-def add_new_lessee(info):
+def add_new_lessee(info) -> models.Lessee:
     lessee = models.Lessee(**info)
     db.session.add(lessee)
     db.session.commit()
+    return lessee
 
 
 def get_all_lessees() -> list:

@@ -5,6 +5,8 @@ import Schedule from '../components/charts/scheduler'
 import NewLesseeModal from '../components/Modals/NewLesseeModal'
 import AccessDenied from '../components/Errors/AccessDenied'
 import Table from '../components/Tables/Table'
+import Question from '../components/Dashboard/Question.jsx'
+import * as backend from '../backend'
 
 
 class Dashboard extends React.Component {
@@ -12,13 +14,38 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      showModal: false
+      showModal: false,
+      lessees: []
     }
+  }
+
+  componentDidMount() {
+    this.formatLessees()
   }
 
   toggleModal = () => {
     console.log('clicked')
     this.setState({showModal: !this.state.showModal})
+  }
+
+  formatLessees = () => {
+    backend.getAllLessees(res => {
+      let { data } = res
+      if (data) {
+        let result = []
+        data.forEach(value => {
+          result.push({
+            name: `${value.lname}, ${value.fname}`,
+            email: value.email,
+            phone: value.phone || '',
+            rank: value.rank || '',
+            reservations: '',
+            exandableInfo: `Address: ${value.address} City: ${value.city} State: ${value.state}`
+          })
+        })
+        this.setState({lessees: result})
+      } 
+    })
   }
 
   render(){
@@ -29,12 +56,13 @@ class Dashboard extends React.Component {
         <div className={'grid-container'}>
           <div className='table large-screen' style={{gridArea: 'tbl'}}>
             <div>
+              <Question helpText={'Search to find a lessee. Click on their name to get more information.'} />
               <label>Locate a lessee</label>
-              <Table />
+              <Table data={this.state.lessees}/>
             </div>
           </div>
         </div>
-        <div style={{gridArea: 'btns', display: 'flex', flexDirection: 'column', position: 'fixed', top: '80%'}}>
+        <div style={{gridArea: 'btns', display: 'flex', flexDirection: 'column', position: 'fixed', top: '75%'}}>
           <button className={'btn__new minimized'} style={{overflow: 'hidden'}} onClick={this.toggleModal}>+ Create new lessee</button>
           <button className={'btn__new minimized'} style={{overflow: 'hidden'}} onClick={this.toggleModal}>+ Add to calendar</button>
         </div>

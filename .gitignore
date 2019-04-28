@@ -8,3 +8,4 @@ include/
 .idea
 bin/
 node_modules/
+.vscode/

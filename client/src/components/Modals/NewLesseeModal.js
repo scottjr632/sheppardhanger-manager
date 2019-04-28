@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { NotificationManager } from 'react-notifications'
 
+import * as backend from '../../backend'
 import 'react-day-picker/lib/style.css';
 
 
@@ -34,24 +35,43 @@ class NewLesseeModal extends React.Component {
       isCheckInEmpty: true,
       isCheckOutEmpty: true,
       firstName: '',
-      lastName: ''
+      lastName: '',
+      email: '',
+      createBooking: false,
     }
   }
 
-  createNewLessee = () => {
+  createNewLessee = async () => {
+    let { firstName, lastName, checkInDate, checkOutDate, email, createBooking } = this.state
+    let lesseeData = {
+      fname: firstName,
+      lname: lastName,
+      email: email
+    }
+    let lessee = await backend.createNewLesseeAsync(lesseeData)
+    if (createBooking) {
+      let resData = {
+        lesseeid: lessee.id,
+        checkindate: checkInDate,
+        checkoutdate: checkOutDate,
+        bookingtypeid: 1
+      }
+      backend.createNewReservation(resData, ()=>{})
+    }
     NotificationManager.info(`Create new lessee: ${this.state.lastName}, ${this.state.firstName} `)
-    this.setState({
-      firstName: '',
-      lastName: ''
-    })
     this.props.closeModal()
   }
 
   handleChange = (event) => {
     let { target } = event
+    let value = target.type === 'checkbox' ? target.checked : target.value
     this.setState({
-      [target.name]: target.value
-    })
+      [target.name]: value
+    }, () => console.log(this.state))
+  }
+
+  setDate = (name, value) => {
+    this.setState( {[name]: value} )
   }
 
   render() {
@@ -72,19 +92,23 @@ class NewLesseeModal extends React.Component {
               </div>
             </div>
             <div className={'input-group'}>
-              <label>Email</label> <input />
+              <label>Email</label> <input name={'email'} onChange={this.handleChange}/>
             </div>
             <div style={{display: 'flex'}}>
               <div className={'input-group'}>
-                <label>Check-in</label> <DayPickerInput onDayChange={day => console.log(day)} />
+                <label>Check-in</label> <DayPickerInput onDayChange={day => this.setDate('checkInDate', day)} />
               </div>
               <div className={'input-group'}>
-                <label>check-out</label> <DayPickerInput onDayChange={day => console.log(day)} />
+                <label>check-out</label> <DayPickerInput onDayChange={day => this.setDate('checkOutDate', day)} />
+              </div>
+              <div className={'input-group'}>
+                <label>Create booking </label> <br />
+                <input name={'createBooking'} type={'checkbox'} onChange={this.handleChange} />
               </div>
             </div>
-            <div className={'input-group'}>
-              <button onClick={this.props.closeModal} className={'btn__new dangerous'}>Cancel</button>
-              <button onClick={this.createNewLessee} className={'btn__new'}>Create</button>
+            <div className={'input-group'} style={{display: 'flex'}}>
+              <button onClick={this.props.closeModal} className={'pull-left btn__new dangerous'}>Cancel</button>
+              <button onClick={this.createNewLessee} className={'pull-right btn__new'}>Create</button>
             </div>
           </div>
         </Modal>

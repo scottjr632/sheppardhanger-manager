@@ -125,6 +125,19 @@ export function getReservationsByLesseeId(lesseeId, callback) {
   })
 }
 
+export function getAllReservations(callback) {
+  axios.get('/reservations/')
+    .then(res => {
+      if (res.status !== 200) {
+        return callback(new Error(ERRORMSG))
+      }
+
+      return callback(res)
+    }).catch(err => {
+      return callback(err)
+    })
+}
+
 export function logout(callback) {
   axios.post('/auth/logout')
     .then(res => {
@@ -134,8 +147,50 @@ export function logout(callback) {
   })
 }
 
+export function createNewReservation(data, callback) {
+  axios.post('/reservations/', data)
+    .then(res => {
+      if (res.status !== 200) {
+        return callback(new Error(ERRORMSG))
+      }
 
+      return callback(res)
+    }).catch(err => {
+      return callback(err)
+    })
+}
 
+export async function createNewLesseeAsync(data) {
+  console.log('stuff happening')
+  let res =  await axios.post('/lessee/', data)
+  return res.data
+}
+
+export function createNewLessee(data, callback) {
+  axios.post('/lessee/', data)
+    .then(res => {
+      if (res.status !== 200) {
+        return callback(new Error(ERRORMSG))
+      }
+
+      return callback(res)
+    }).catch(err => {
+      return callback(err)
+    })
+}
+
+export function getAllLessees(callback) {
+  axios.get('/lessee/')
+    .then(res => {
+      if (res.status !== 200) {
+        return callback(new Error(ERRORMSG))
+      }
+
+      return callback(res)
+    }).catch(err => {
+      return callback(err)
+    })
+}
 
 
 

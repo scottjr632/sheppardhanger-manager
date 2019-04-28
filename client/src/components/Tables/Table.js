@@ -1,6 +1,17 @@
 import React from 'react'
-import SubTable from './SubTable'
+import PropTypes from 'prop-types'
 
+import ExpandableRow from './ExpandableRow'
+
+
+const TESTDATA = [
+  {'a': 1, 'b': 2, 'c': 3, 'd': 4, 'f': 5, 'exandableInfo': ''},
+  {'a': 2, 'b': 2, 'c': 3, 'd': 4, 'f': 5, 'exandableInfo': 'TESTSETESTEST'},
+  {'a': 2, 'b': 2, 'c': 3, 'd': 4, 'f': 5, 'exandableInfo': 'TESTSETESTEST'},
+  {'a': 2, 'b': 2, 'c': 3, 'd': 4, 'f': 5, 'exandableInfo': 'TESTSETESTEST'},
+  {'a': 2, 'b': 2, 'c': 3, 'd': 4, 'f': 5, 'exandableInfo': 'TESTSETESTEST'},
+  {'a': 2, 'b': 2, 'c': 3, 'd': 4, 'f': 5, 'exandableInfo': 'TESTSETESTEST'},
+]
 
 class Table extends React.Component {
 
@@ -12,7 +23,6 @@ class Table extends React.Component {
     }
 
     handleClick = () => {
-        console.log('stuff')
         this.setState({expanded: !this.state.expanded})
     }
 
@@ -23,10 +33,11 @@ class Table extends React.Component {
                 <i class="fas fa-search search-icon"></i>
                 <input type="text" placeholder={'Search'}/>
                 <select>
-                    <option>TEST</option>
-                    <option>TEST</option>
-                    <option>TEST</option>
-                    <option>TEST</option>
+                    <option>Name</option>
+                    <option>Email</option>
+                    <option>Phone</option>
+                    <option>Rank</option>
+                    <option>Reservation</option>
                 </select>
             </div>
             <table class="table-responsive card-list-table">
@@ -40,104 +51,12 @@ class Table extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                <tr onClick={this.handleClick}>
-                  <td data-title="Column #1"><i className={`fas fa-plus ${this.state.expanded ? 'rotated' : ''}`}></i>Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                    <SubTable expanded={this.state.expanded} />
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                <SubTable expanded={this.state.expanded} />
-                    
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
-                <tr>
-                  <td data-title="Column #1">Value #1</td>
-                  <td data-title="Column #2">Value #2</td>
-                  <td data-title="Column #3">Value #3</td>
-                  <td data-title="Column #4">Value #4</td>
-                  <td data-title="Column #5">Value #5</td>
-                </tr>
+                {
+                  this.props.data.map(value => {
+                    return <ExpandableRow data={value} />
+                  })
+                }
+
               </tbody>
             </table>
           </div>

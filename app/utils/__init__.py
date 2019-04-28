@@ -31,7 +31,7 @@ def rollback_on_error(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         try:
-            f(*args, **kwargs)
+            return f(*args, **kwargs)
         except Exception as e:
             db.session.rollback()
             raise e

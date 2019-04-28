@@ -278,7 +278,7 @@ table {
   overflow: hidden; }
 
 .fa-plus {
-  transition: 0.3s;
+  transition: 0.2s;
   margin-right: 5px;
   color: #128de9; }
   .fa-plus.rotated {
@@ -359,6 +359,32 @@ tr {
   .btn__new.minimized:hover {
     min-width: 1px;
     width: 100% !important; }
+
+a.tip {
+  text-decoration: none;
+  color: #727373; }
+
+a.tip:hover {
+  cursor: pointer;
+  position: relative; }
+
+a.tip span {
+  display: none; }
+
+a.tip:hover span {
+  border: #727373 1px solid;
+  border-radius: 5px;
+  padding: 5px 5px 5px 5px;
+  display: block;
+  z-index: 100;
+  background: #ffffff no-repeat 100% 5%;
+  left: 0px;
+  margin: 10px;
+  width: 150px;
+  position: absolute;
+  bottom: 10px;
+  text-decoration: none;
+  color: #727373; }
 
 .btn__new:focus {
   outline: none; }
@@ -615,7 +641,7 @@ input[type='submit'] {
   /* position: relative; */
   width: 50%;
   float: right;
-  text-indent: 20px;
+  text-indent: 30px;
   border-radius: 5px 0px 0px 5px;
   background: #f8f8f8;
   border: none;
