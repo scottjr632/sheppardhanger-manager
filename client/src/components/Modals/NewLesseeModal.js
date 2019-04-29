@@ -20,10 +20,9 @@ const customStyles = {
     // transform             : 'translate(-50%, -50%)'
   },
   overlay : {
-    zIndex: 9999999
+    zIndex: 99
   }
 };
-
 
 class NewLesseeModal extends React.Component {
 
@@ -34,31 +33,70 @@ class NewLesseeModal extends React.Component {
       checkOutDate: undefined,
       isCheckInEmpty: true,
       isCheckOutEmpty: true,
-      firstName: '',
-      lastName: '',
+      fname: '',
+      lname: '',
       email: '',
+      rank: '',
+      phone: '',
+      address: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      notes: '',
+      pet: false,
+      numberofguests: 0,
+      purpose: '',
       createBooking: false,
+      rooms: [],
+      activeRoomId: undefined
     }
   }
 
+  componentDidMount() {
+    backend.getRooms(res => {
+      let { data } = res
+      if (data) {
+        this.setState({ rooms: data})
+      }
+    })
+  }
+
   createNewLessee = async () => {
-    let { firstName, lastName, checkInDate, checkOutDate, email, createBooking } = this.state
+    let { checkInDate, checkOutDate, createBooking } = this.state
+    let {
+      fname, lname, email, rank, phone, address, city, state, zipcode, notes
+    } = this.state
     let lesseeData = {
-      fname: firstName,
-      lname: lastName,
-      email: email
+      fname, lname, email, rank, phone, address, city, state, zipcode, notes
     }
-    let lessee = await backend.createNewLesseeAsync(lesseeData)
+    let lessee
+    try {
+      lessee = await backend.createNewLesseeAsync(lesseeData)
+    } catch (error) {
+      NotificationManager.error(`User already exists with email ${this.state.email}`) 
+      return   
+    }
+    console.log(lessee)
     if (createBooking) {
       let resData = {
         lesseeid: lessee.id,
         checkindate: checkInDate,
         checkoutdate: checkOutDate,
-        bookingtypeid: 1
+        bookingtypeid: 1,
+        roomid: this.state.activeRoomId,
+        pet: this.state.pet,
+        purpose: this.state.purpose,
+        numberofguests: this.state.numberofguests
       }
-      backend.createNewReservation(resData, ()=>{})
+      backend.createNewReservation(resData, (res)=>{
+        if (res.status !== 200) {
+          NotificationManager.error(`Unable to create reservation for ${this.state.lname}, ${this.state.fname}`)
+          return
+        }
+      })
+      NotificationManager.info(`Created reservation for ${this.state.lname}, ${this.state.fname}`)
     }
-    NotificationManager.info(`Create new lessee: ${this.state.lastName}, ${this.state.firstName} `)
+    NotificationManager.info(`Create new lessee: ${this.state.lname}, ${this.state.fname} `)
     this.props.closeModal()
   }
 
@@ -85,27 +123,82 @@ class NewLesseeModal extends React.Component {
           <div className={'center'}>
             <div style={{display: 'flex'}}>
               <div className={'input-group'}>
-                <label>First name</label> <input name={'firstName'} onChange={this.handleChange} autoFocus={true}/>
+                <label>First name</label> <input name={'fname'} onChange={this.handleChange} autoFocus={true}/>
               </div>
               <div className={'input-group'}>
-                <label>Last name</label> <input name={'lastName'} onChange={this.handleChange}/>
+                <label>Last name</label> <input name={'lname'} onChange={this.handleChange}/>
               </div>
-            </div>
-            <div className={'input-group'}>
-              <label>Email</label> <input name={'email'} onChange={this.handleChange}/>
             </div>
             <div style={{display: 'flex'}}>
               <div className={'input-group'}>
-                <label>Check-in</label> <DayPickerInput onDayChange={day => this.setDate('checkInDate', day)} />
+                <label>Email</label> <input name={'email'} onChange={this.handleChange}/>
               </div>
               <div className={'input-group'}>
-                <label>check-out</label> <DayPickerInput onDayChange={day => this.setDate('checkOutDate', day)} />
-              </div>
-              <div className={'input-group'}>
-                <label>Create booking </label> <br />
-                <input name={'createBooking'} type={'checkbox'} onChange={this.handleChange} />
+                <label>Phone number</label> <input name={'phone'} onChange={this.handleChange} autoFocus={true}/>
               </div>
             </div>
+            <div className={'input-group'}>
+              <label>Rank</label> <input name={'rank'} onChange={this.handleChange}/>
+            </div>
+            <div style={{display: 'flex'}}>
+              <div className={'input-group'}>
+                <label>Address</label> <input name={'address'} onChange={this.handleChange}/>
+              </div>
+              <div className={'input-group'}>
+                <label>City</label> <input name={'city'} onChange={this.handleChange}/>
+              </div>
+            </div>
+            <div style={{display: 'flex'}}>
+              <div className={'input-group'}>
+                <label>State</label> <input name={'state'} onChange={this.handleChange}/>
+              </div>
+              <div className={'input-group'}>
+                <label>Zipcode</label> <input name={'zipcode'} onChange={this.handleChange}/>
+              </div>
+            </div>
+            <div className={'input-group'}>
+              <label>Notes</label> 
+              {/* <textarea name={'notes'} onChange={this.handleChange} /> */}
+              <input name={'notes'} onChange={this.handleChange}/>
+            </div>
+            <div className={'input-group'}>
+                <label>Create booking </label> <br />
+                <input name={'createBooking'} type={'checkbox'} onChange={this.handleChange} checked={this.state.createBooking}/>
+            </div>
+            { this.state.createBooking &&
+            <section>
+              <div style={{display: 'flex'}}>
+                <div className={'input-group'}>
+                  <label>Check-in</label> <DayPickerInput onDayChange={day => this.setDate('checkInDate', day)} />
+                </div>
+                <div className={'input-group'}>
+                  <label>check-out</label> <DayPickerInput onDayChange={day => this.setDate('checkOutDate', day)} />
+                </div>
+              </div>
+              <div style={{display: 'flex'}}>
+                <div className={'input-group'}>
+                  <label>Number of guests</label> <input type="text" name="numberofguests" value={this.state.numberofguests} onChange={this.handleChange}/>
+                </div>
+                <div className={'input-group'}>
+                  <label>Purpose</label> <input type="text" name="purpose" onChange={this.handleChange}/>
+                </div>
+              </div>
+              <div style={{display: 'flex'}}>
+                <div className={'input-group'}>
+                  <label>Room</label><br />
+                  <select name={'activeRoomId'} onChange={this.handleChange}>
+                    {this.state.rooms.map(room => {
+                      return <option value={room.id}>{room.name}</option>
+                    })}
+                  </select>
+                </div>
+                <div className={'input-group'}>
+                  <label>Are they bringing a pet? </label> <br />
+                  <input name={'pet'} type={'checkbox'} onChange={this.handleChange} />
+                </div>
+              </div>
+            </section>
+            }
             <div className={'input-group'} style={{display: 'flex'}}>
               <button onClick={this.props.closeModal} className={'pull-left btn__new dangerous'}>Cancel</button>
               <button onClick={this.createNewLessee} className={'pull-right btn__new'}>Create</button>

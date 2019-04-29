@@ -13,7 +13,7 @@ def add_new_lessee(info) -> models.Lessee:
 
 
 def get_all_lessees() -> list:
-    return models.Lessee.query.all()
+    return models.Lessee.query.order_by(models.Lessee.id.desc()).all()
 
 
 def get_lessee_info(lid: int) -> models.Lessee:

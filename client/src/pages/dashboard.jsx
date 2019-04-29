@@ -39,8 +39,13 @@ class Dashboard extends React.Component {
             email: value.email,
             phone: value.phone || '',
             rank: value.rank || '',
-            reservations: '',
-            exandableInfo: `Address: ${value.address} City: ${value.city} State: ${value.state}`
+            reservations: value.reservations && value.reservations.length > 0 
+                          ? `${value.reservations[0].room} - ${value.reservations[0].checkindate}` 
+                          : '',
+            exandableInfo: `Address: ${value.address}
+              City: ${value.city}
+              State: ${value.state}
+              Notes: ${value.notes}`
           })
         })
         this.setState({lessees: result})
@@ -53,10 +58,11 @@ class Dashboard extends React.Component {
       <div>
         <Navi />
         <Schedule />
+        {/* <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} /> */}
         <div className={'grid-container'}>
           <div className='table large-screen' style={{gridArea: 'tbl'}}>
             <div>
-              <Question helpText={'Search to find a lessee. Click on their name to get more information.'} />
+              <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} />
               <label>Locate a lessee</label>
               <Table data={this.state.lessees}/>
             </div>

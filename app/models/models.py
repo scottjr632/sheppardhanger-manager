@@ -54,6 +54,8 @@ class Lessee(db.Model):
     state = db.Column(db.String)
     zipcode = db.Column(db.String)
     notes = db.Column(db.String)
+    reservationid = db.Column(db.Integer)
+    reservation = db.relationship('Reservation', backref=db.backref('reservations', lazy=True))
 
     def serialize(self):
         return {
@@ -67,7 +69,8 @@ class Lessee(db.Model):
             'city': self.city,
             'state': self.state,
             'zipcode': self.zipcode,
-            'notes': self.notes
+            'notes': self.notes,
+            'reservations': [res.serialize() for res in self.reservation],
         }
 
 

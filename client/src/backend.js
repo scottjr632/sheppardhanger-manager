@@ -138,6 +138,15 @@ export function getAllReservations(callback) {
     })
 }
 
+export function updateReservation(data, callback) {
+  axios.put('/reservations/', data)
+    .then(res => {
+      return callback(res)
+    }).catch(err => {
+      console.log(err)
+  })
+}
+
 export function logout(callback) {
   axios.post('/auth/logout')
     .then(res => {

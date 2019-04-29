@@ -171,8 +171,6 @@ button.btn {
       display: none; }
     .large-screen .card-list-table tbody td:before {
       content: ''; }
-  .large-screen .card-list-table tbody tr:hover td {
-    background: #fcf3d0; }
 
 .buttons {
   margin: 10px 0 50px; }
@@ -180,7 +178,7 @@ button.btn {
 .table-wrapper {
   width: 100%;
   margin: 0 auto 0;
-  max-height: 500px;
+  max-height: 100vh;
   overflow-y: scroll;
   position: relative;
   transition: all .2s ease-out; }
@@ -196,6 +194,8 @@ button.btn {
   width: 100%; }
   .card-list-table thead {
     display: none; }
+  .card-list-table th {
+    cursor: pointer; }
   .card-list-table tbody tr {
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
     background: #fff;
@@ -359,6 +359,10 @@ tr {
   .btn__new.minimized:hover {
     min-width: 1px;
     width: 100% !important; }
+  .btn__new.more-info {
+    height: 30% !important;
+    position: relative;
+    transform: translateY(150%); }
 
 a.tip {
   text-decoration: none;

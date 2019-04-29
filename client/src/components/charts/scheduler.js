@@ -2,12 +2,14 @@ import React from 'react'
 import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
 import 'react-big-scheduler/lib/css/style.css'
 import withDragDropContext from './withDnDContext'
+import moment from 'moment'
 import { inject, observer } from 'mobx-react'
+import { NotificationManager } from 'react-notifications'
 
 import * as backend from '../../backend'
 
 const BOOKINGTYPECOLORS = {
-  'TENTATIVE': 'grey',
+  'TENTATIVE': '#727373',
   'CONFIRMED': '#128de9'
 }
 
@@ -17,17 +19,19 @@ class Schedule extends React.Component{
   constructor(props){
     super(props);
 
-    let schedulerData = new SchedulerData(new Date(), ViewTypes['Month']);
+    let schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Month);
     schedulerData.localeMoment.locale('en');
 
     this.state = {
       viewModel: schedulerData,
-      color: 'purple'
+      schedulerData: schedulerData,
+      resources: [],
+      events: []
     }
   }
 
   componentDidMount() {
-    let schedulerData = new SchedulerData(new Date(), ViewTypes['Month']);
+    let { schedulerData } = this.state
     schedulerData.localeMoment.locale('en');
 
     backend.getRooms(res => {
@@ -54,7 +58,8 @@ class Schedule extends React.Component{
               })
             })
           }
-          this.setState({ viewModel: schedulerData })
+          this.setState({ viewModel: schedulerData, schedulerData, resources: schedulerData.resources, events: schedulerData.events })
+          console.log(schedulerData)
         })
       }
     })
@@ -79,8 +84,8 @@ class Schedule extends React.Component{
                      onViewChange={this.onViewChange}
                      eventItemClick={this.eventClicked}
                      viewEventClick={this.ops1}
-                     viewEventText="Ops 1"
-                     viewEvent2Text="Ops 2"
+                     viewEventText="Update reservation"
+                     viewEvent2Text="More info"
                      viewEvent2Click={this.ops2}
                      updateEventStart={this.updateEventStart}
                      updateEventEnd={this.updateEventEnd}
@@ -98,7 +103,7 @@ class Schedule extends React.Component{
 
   prevClick = (schedulerData)=> {
     schedulerData.prev();
-    schedulerData.setEvents(DemoData.events);
+    schedulerData.setEvents(this.state.events);
     this.setState({
       viewModel: schedulerData
     })
@@ -106,7 +111,7 @@ class Schedule extends React.Component{
 
   nextClick = (schedulerData)=> {
     schedulerData.next();
-    schedulerData.setEvents(DemoData.events);
+    schedulerData.setEvents(this.state.events);
     this.setState({
       viewModel: schedulerData
     })
@@ -114,7 +119,7 @@ class Schedule extends React.Component{
 
   onViewChange = (schedulerData, view) => {
     schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-    schedulerData.setEvents(DemoData.events);
+    schedulerData.setEvents(this.state.events);
     this.setState({
       viewModel: schedulerData
     })
@@ -122,7 +127,7 @@ class Schedule extends React.Component{
 
   onSelectDate = (schedulerData, date) => {
     schedulerData.setDate(date);
-    schedulerData.setEvents(DemoData.events);
+    schedulerData.setEvents(this.state.events);
     this.setState({
       viewModel: schedulerData
     })
@@ -137,6 +142,10 @@ class Schedule extends React.Component{
   };
 
   ops2 = (schedulerData, event) => {
+    alert(`You just executed ops2 to event: {id: ${event.id}, title: ${event.title}}`);
+  };
+
+  ops3 = (schedulerData, event) => {
     alert(`You just executed ops2 to event: {id: ${event.id}, title: ${event.title}}`);
   };
 
@@ -191,7 +200,13 @@ class Schedule extends React.Component{
   updateEventStart = (schedulerData, event, newStart) => {
     // if(confirm(`Do you want to adjust the start of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newStart: ${newStart}}`)) {
     // }
+    let newEvent = { id: event.id, checkindate: newStart, checkoutdate: event.end, roomid: event.resourceId}
     schedulerData.updateEventStart(event, newStart);
+    backend.updateReservation(newEvent, res=>{
+      if (res.status !== 200) {
+        NotificationManager.error('Unable to update event')
+      }
+    })
     this.setState({
       viewModel: schedulerData
     })
@@ -200,7 +215,13 @@ class Schedule extends React.Component{
   updateEventEnd = (schedulerData, event, newEnd) => {
     // if(confirm(`Do you want to adjust the end of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newEnd: ${newEnd}}`)) {
     // }
+    let newEvent = { id: event.id, checkindate: event.start, checkoutdate: newEnd, roomid: event.resourceId}
     schedulerData.updateEventEnd(event, newEnd);
+    backend.updateReservation(newEvent, res=>{
+      if (res.status !== 200) {
+        NotificationManager.error('Unable to update event')
+      }
+    })
     this.setState({
       viewModel: schedulerData
     })
@@ -209,7 +230,13 @@ class Schedule extends React.Component{
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
     // if(confirm(`Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`)) {
     // }
+    let newEvent = { id: event.id, checkindate: start, checkoutdate: end, roomid: slotId }
     schedulerData.moveEvent(event, slotId, slotName, start, end);
+    backend.updateReservation(newEvent, res=>{
+      if (res.status !== 200) {
+        NotificationManager.error('Unable to update event')
+      }
+    })
     this.setState({
       viewModel: schedulerData
     })
@@ -218,7 +245,7 @@ class Schedule extends React.Component{
   onScrollRight = (schedulerData, schedulerContent, maxScrollLeft) => {
     if(schedulerData.ViewTypes === ViewTypes.Day) {
       schedulerData.next();
-      schedulerData.setEvents(DemoData.events);
+      schedulerData.setEvents(this.state.events);
       this.setState({
         viewModel: schedulerData
       });
@@ -230,7 +257,7 @@ class Schedule extends React.Component{
   onScrollLeft = (schedulerData, schedulerContent, maxScrollLeft) => {
     if(schedulerData.ViewTypes === ViewTypes.Day) {
       schedulerData.prev();
-      schedulerData.setEvents(DemoData.events);
+      schedulerData.setEvents(this.state.events);
       this.setState({
         viewModel: schedulerData
       });

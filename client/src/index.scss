@@ -117,9 +117,13 @@ button.btn {
           content: '';
         }
       }
-      tr:hover td {
-        background: $faded-yellow;
-      }
+      // tr:hover td {
+      //   background: $faded-yellow;
+
+      //   &.no-color {
+      //     background: white !important;
+      //   }
+      // }
     }
   }
 }
@@ -132,7 +136,7 @@ button.btn {
   //max-width: 300px;
   width: 100%;
   margin: 0 auto 0;
-  max-height: 500px;
+  max-height: 100vh;
   overflow-y: scroll;
   position: relative;
   transition: all .2s ease-out;
@@ -149,6 +153,9 @@ button.btn {
   width: 100%;
   thead {
     display: none;
+  }
+  th {
+    cursor: pointer;
   }
   tbody tr {
     box-shadow: $shadow;
@@ -355,6 +362,12 @@ tr{
   &.minimized:hover {
     min-width: 1px;
     width: 100% !important;
+  }
+
+  &.more-info {
+    height: 30% !important;
+    position: relative;
+    transform: translateY(150%);
   }
 
 }
