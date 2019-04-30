@@ -1,3 +1,4 @@
+const ServiceWorkerWebpackPlugin = require('serviceworker-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const DashboardPlugin = require('webpack-dashboard/plugin')
 const path = require('path');
@@ -65,6 +66,9 @@ module.exports = {
     new DashboardPlugin(),
     new Visualizer({
       filename: './statistics.html'
-    })
+    }),
+    new ServiceWorkerWebpackPlugin({
+      entry: path.join(__dirname, 'src/serviceWorker.js'),
+    }),
   ]
 }
