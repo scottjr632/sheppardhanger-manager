@@ -17,13 +17,13 @@ def _serve_client(app):
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')
     def serve(path):
-        if path != "" and os.path.exists('app/client/' + path):
+        if path != "" and os.path.exists('app/dist/' + path):
             print(os.getcwd())
-            return send_from_directory(os.getcwd() + '/app/client/', path)
+            return send_from_directory(os.getcwd() + '/app/dist/', path)
         else:
             print(os.getcwd())
 
-            return send_from_directory(os.getcwd() + '/app/client/', 'index.html')
+            return send_from_directory(os.getcwd() + '/app/dist/', 'index.html')
 
 
 def _add_blueprints(app):

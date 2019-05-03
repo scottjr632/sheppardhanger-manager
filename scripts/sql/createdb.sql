@@ -62,6 +62,21 @@ SET default_tablespace = '';
 
 SET default_with_oids = false;
 
+CREATE TABLE tydtype (
+    id serial primary key,
+    name text
+);
+
+CREATE TABLE guesttype (
+    id serial primary key,
+    name text
+);
+
+CREATE TABLE ranktype (
+    id serial primary key,
+    name varchar(3)
+);
+
 --
 -- Name: bookingtype; Type: TABLE; Schema: public; Owner: -
 --
@@ -131,7 +146,7 @@ CREATE TABLE public.lessee (
     fname character varying(100),
     lname character varying(100),
     email character varying(254) unique,
-    rank text,
+    rank integer references ranktype(id),
     phone text,
     address text,
     city text,
@@ -227,7 +242,6 @@ CREATE SEQUENCE public.referrerlog_id_seq
 
 ALTER SEQUENCE public.referrerlog_id_seq OWNED BY public.referrerlog.id;
 
-
 --
 -- Name: reservations; Type: TABLE; Schema: public; Owner: -
 --
@@ -237,7 +251,8 @@ CREATE TABLE public.reservations (
     lesseeid bigint,
     purpose text,
     numberofguests integer,
-    pet boolean,
+    guesttype integer references guesttype(id),
+    tdytype integer references tdytype(id)
     checkindate date,
     checkoutdate date,
     roomid bigint,
@@ -358,7 +373,7 @@ CREATE SEQUENCE public.users_id_seq
 
 
 CREATE TABLE user_preferences (
-    id serial,
+    id serial primary key,
     userid bigint references users(id),
     preferences text
 );

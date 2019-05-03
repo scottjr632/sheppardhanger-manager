@@ -37,3 +37,6 @@ values (
        );
 
 insert into bookingtype (name) values ('TENTATIVE'), ('CONFIRMED'), ('CLEANING');
+insert into tdytype (name) values ('AMOC'), ('IFF'), ('LRO');
+insert into guesttype (name) values ('NONE'), ('PET'), ('GUEST'), ('GUEST AND PET');
+insert into ranktype (name) values ('O1'), ('O2'), ('O3'), ('O4');

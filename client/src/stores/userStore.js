@@ -40,7 +40,7 @@ class UserStore {
 
   @action setUserInfo() {
     backend.getUserInfo(res => {
-      let { id, email, lname, fname, role } = res
+      let { id, email, lname, fname, role } = res.data
       if ( id && email ) {
         this.id = id
         this.email = email

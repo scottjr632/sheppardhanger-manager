@@ -16,11 +16,21 @@ class Login extends React.Component {
       password: "",
       loginPending: false,
       left: false,
+      emailIsFocused: false,
+      passwordIsFocused: false,
       loginError: this.props.userStore.loginError,
       passwordLengthReq: this.props.passwordLengthReq || 6,
       emailLengthReq: this.props.emailLengthReq || 5,
       showResetPassword: this.props.showResetPassword || true
     };
+  }
+
+  emailFocused = (emailIsFocused) => {
+    this.setState({emailIsFocused})
+  }
+
+  passwordFocused = (passwordIsFocused) => {
+    this.setState({passwordIsFocused})
   }
 
   toggleLeft = () => {
@@ -87,12 +97,12 @@ class Login extends React.Component {
             <div>
               <form _lpchecked="1" autocomplete="off">
                 <div className="authpage_field">
-                  <input type="text" name="email" onChange={this.handleChange} label="Username" value={this.state.email} placeholder="Username" autoComplete={'false'} />
-                  <label htmlFor="email">Username</label>
+                  <input type="text" name="email" onChange={this.handleChange} label="Username" value={this.state.email} autoComplete={'false'} onBlur={()=>{this.emailFocused(false)}} onFocus={()=>{this.emailFocused(true)}}/>
+                  <label htmlFor="email" className={this.state.email.length > 0 || this.state.emailIsFocused? 'float' : ''}>Username</label>
                 </div>
                 <div className="authpage_field">
-                  <input type="password" name="password" onChange={this.handleChange} label="Password" value={this.state.password} placeholder="Password" autoComplete={'false'}/>
-                  <label htmlFor="password">Password</label>
+                  <input type="password" name="password" onChange={this.handleChange} label="Password" value={this.state.password} autoComplete={'false'} onBlur={()=>{this.passwordFocused(false)}} onFocus={()=>{this.passwordFocused(true)}}/>
+                  <label htmlFor="password" className={this.state.password.length > 0 || this.state.passwordIsFocused ? 'float' : ''}>Password</label>
                 </div>
                 <span><span>Not sure of your password?<a href="#" className={'authpage_link'} onClick={this.toggleLeft}>Set a new one</a></span></span>
                 <input type="submit" className="authpage_submit" value="Sign in" onClick={this.onSubmit}/>
