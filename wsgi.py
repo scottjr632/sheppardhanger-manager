@@ -5,6 +5,7 @@ from app.config import configure_app
 
 application = create_app('production')
 
+
 configure_app(application, status="production")
 
 
