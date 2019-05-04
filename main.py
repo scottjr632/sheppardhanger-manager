@@ -6,7 +6,6 @@ import sys
 import signal
 import subprocess
 
-
 parser = argparse.ArgumentParser(description=r"""
 Starts the application with all known dependecies.
 
