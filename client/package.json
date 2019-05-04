@@ -32,11 +32,8 @@
     "validatorjs": "^3.15.1"
   },
   "scripts": {
+    "build": "webpack --config webpack.config.js",
     "start": "webpack --config webpack.config.js --watch --mode development",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build-deploy": "react-scripts build && mv ../app/client ../app/client.old && cp -r ./build ../app/client",
     "coverage": "react-scripts test --env=jsdom --coverage",
     "webpack": "webpack --config webpack.config.js --watch --mode development",
     "dashboard": "webpack-dashboard -- node /src/index.js"

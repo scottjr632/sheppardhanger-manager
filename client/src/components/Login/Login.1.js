@@ -4,8 +4,6 @@ import { inject, observer } from 'mobx-react'
 import { NotificationManager } from 'react-notifications'
 
 
-
-
 @inject('userStore')
 @observer
 class Login extends React.Component {

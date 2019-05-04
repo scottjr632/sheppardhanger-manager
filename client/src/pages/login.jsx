@@ -3,7 +3,7 @@ import React from 'react'
 import Login from '../components/Login/Login.1'
 
 const style = {
-  background: 'url(http://localhost:5000/bg.jpg) center center / cover fixed',
+  background: 'url(bg.jpg) center center / cover fixed',
   width: '100%',
   minHeight: '100%',
   display: '-ms-flexbox',
