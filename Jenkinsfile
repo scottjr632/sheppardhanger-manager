@@ -4,7 +4,9 @@ pipeline {
 
 		stage('build') {
 			steps {
-				docker.build 'shmanager:$BUILD_NUMBER'	
+				script {
+					docker.build 'shmanager:$BUILD_NUMBER'	
+				}
 			}
 		}
 	}
