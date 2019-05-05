@@ -51,6 +51,12 @@ export const authenticateUser = (data, callback) => BuildApi('/auth/login', data
   } 
   return callback
 })
+export const authenticateUserStay = (data, callback) => BuildApi('/auth/login?stayloggedin=1', data, 'Unable to authenticate user').post(res => { 
+  if (res.data) {
+    return callback(res.data)
+  } 
+  return callback
+})
 
 export const createNewUser = (data, callback) => BuildApi('/auth/user', data, 'Unable to create new user').post(callback)
 export const getUserInfo = (callback) => BuildApi('/auth/user', '', 'Unable to get user info').get(callback)

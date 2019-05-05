@@ -5,11 +5,12 @@ TOKEN_EXPIRED = 'Signature expired. Please log in again.'
 INVALID_TOKEN = 'Invalid token. Please log in again.'
 
 
-def encode_auth_token(user_id: str, secret_key: str = "notasecret") -> str:
+def encode_auth_token(user_id: str, expire_time: dict = {'hours': 3, 'seconds': 5}, secret_key: str = "notasecret") -> str:
     """ Generates the Auth Token """
+
     try:
         payload = {
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(**expire_time),
             'iat': datetime.datetime.utcnow(),
             'sub': str(user_id)
         }

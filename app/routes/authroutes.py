@@ -15,15 +15,22 @@ mod = Blueprint('authroutes', __name__)
 def login():
 
     data = request.get_json(force=True)
+    keep_login = request.args.get('stayloggedin')
 
     try:
         user = usermodel.authenticate_user(data['email'], data['password'])
-        if user is not None:
+        auth_token = None
+        if keep_login is not None and user is not None:
+            auth_token = utils.encode_auth_token(user.id, expire_time={'days': 15, 'seconds': 5})
+        elif user is not None:
+            auth_token = utils.encode_auth_token(user.id)
+
+        if user is not None and auth_token is not None:
             resp = make_response(jsonify({'id': user.id,
                                           'fname': user.fname,
                                           'lname': user.lname,
                                           'email': user.email}), 200)
-            resp.set_cookie('access_token', utils.encode_auth_token(user.id), httponly=True)
+            resp.set_cookie('access_token', auth_token, httponly=True)
             return resp
         return make_response('User could not be authenticated', 401)
 

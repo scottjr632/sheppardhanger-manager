@@ -16,6 +16,7 @@ class Login extends React.Component {
       left: false,
       emailIsFocused: false,
       passwordIsFocused: false,
+      stayLoggedIn: false,
       loginError: this.props.userStore.loginError,
       passwordLengthReq: this.props.passwordLengthReq || 6,
       emailLengthReq: this.props.emailLengthReq || 5,
@@ -49,21 +50,25 @@ class Login extends React.Component {
   }
 
   handleChange = event => {
+    let { target } = event
+    let value = target.type === 'checkbox' ? target.checked : target.value
     this.setState({
-      [event.target.name]: event.target.value
+      [target.name]: value
     });
   };
 
   onSubmit = e => {
     e.preventDefault();
-    console.log(this.props)
     let { email, password } = this.state
     if (this.validateForm()) {
+      this.state.stayLoggedIn ?
+      this.props.userStore.loginUserStay({ email, password }, (auth) => {
+        if (auth) this.props.onLoginSuccess()
+      }) :
       this.props.userStore.loginUser({ email, password }, (auth) => {
         if (auth) this.props.onLoginSuccess()
       })
-    }
-    else {
+    } else {
       if (this.state.email.length < this.state.emailLengthReq) NotificationManager.warning(
         `Email length needs to be more than ${this.state.emailLengthReq} characters`)
       if (this.state.password.length < this.state.passwordLengthReq) NotificationManager.warning(
@@ -104,6 +109,7 @@ class Login extends React.Component {
                 </div>
                 <span><span>Not sure of your password?<a href="#" className={'authpage_link'} onClick={this.toggleLeft}>Set a new one</a></span></span>
                 <input type="submit" className="authpage_submit" value="Sign in" onClick={this.onSubmit}/>
+                <span><span>Stay logged in<input type="checkbox" name="stayLoggedIn" className={'authpage_body'} onChange={this.handleChange} /></span></span>
               </form>
             </div>
           </div>

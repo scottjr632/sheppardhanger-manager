@@ -896,7 +896,7 @@ h4 {
   display: inline-block;
   outline: none;
   width: 100%;
-  margin-top: 35px;
+  margin-top: 15px;
   margin-bottom: 24px;
   box-sizing: border-box;
   text-align: center;
@@ -908,4 +908,8 @@ h4 {
   text-decoration: none;
   margin: 5px;
   color: green;
+}
+
+.ç input[type=checkbox]{
+  margin: 0 5px;
 }

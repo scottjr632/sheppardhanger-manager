@@ -8,6 +8,7 @@ RUN apt-get install --assume-yes curl
 
 COPY ./requirements.txt /shmanager/requirements.txt
 COPY ./client/package.json /shmanager/client/package.json
+COPY ./client/package-lock.json /shmanager/client/package-lock.json
 
 WORKDIR /shmanager
 

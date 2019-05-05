@@ -38,6 +38,24 @@ class UserStore {
     })
   }
 
+  @action loginUserStay (userInfo, callback) {
+    backend.authenticateUserStay(userInfo, res => {
+      this.loginError = false
+      this.authenticated = false
+
+      let { id, email } = res
+      if ( id && email ) {
+        this.authenticated = true
+        return callback(true)
+      } else {
+        NotificationManager.error('Username or password was incorrect.', '', 5000)
+        this.loginError = true
+        this.authenticated = false
+        return callback(false)
+      }
+    })
+  }
+
   @action setUserInfo() {
     backend.getUserInfo(res => {
       let { id, email, lname, fname, role } = res.data
