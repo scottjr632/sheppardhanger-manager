@@ -9,4 +9,3 @@ requests
 flask-sqlalchemy
 gevent
 eventlet
-dotenv
