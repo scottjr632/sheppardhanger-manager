@@ -3,6 +3,7 @@ import React from 'react'
 import Navi from '../components/HeaderComponents/Navbar'
 import Emails from '../components/Dashboard/Emails.jsx'
 import UserInfo from '../components/Dashboard/UserInfo.jsx'
+import * as backend from '../backend'
 
 const emailTestInfo = {
   welcome: {prettyName: 'Welcome', done: false},
@@ -30,16 +31,36 @@ const gridStyle = {
 
 class Info extends React.Component {
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      userId: 0,
+      userInfo: {},
+    }
+  }
+
+  componentDidMount() {
+    let { search } = this.props.location
+    if (search && search.length > 1) {
+      let id = search.match(/=(.*)/)
+      if (id[1]) backend.getLesseeById(id[1], (res) => {
+        let { data } = res
+        if (data) this.setState({userInfo: data}, () => console.log(this.state.userInfo, 'state info')) 
+      })
+    }
+    // this.setState({userInfo : testUserInfo})
+  }
+
   render() {
     return (
       <div>
       <Navi />
-      <div className={'container'} style={{...gridStyle}}>
+        <div className={'container'} style={{...gridStyle}}>
           <section style={{gridArea: 'left'}}>
             <Emails data={emailTestInfo} />
           </section>
           <section style={{gridArea: 'right'}}>
-            <UserInfo data={testUserInfo} />
+            <UserInfo data={this.state.userInfo} />
           </section>
         </div>
       </div>

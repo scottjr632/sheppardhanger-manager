@@ -118,7 +118,7 @@ class Table extends React.Component {
               </thead>
               <tbody>
                 {this.state.data.map(value => {
-                    return <ExpandableRow data={value} moreInfo={true} moreInfoClick={this.props.moreInfo}/>
+                    return <ExpandableRow data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }}/>
                   })
                 }
               </tbody>

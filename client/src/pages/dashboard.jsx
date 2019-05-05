@@ -24,12 +24,11 @@ class Dashboard extends React.Component {
   }
 
   toggleModal = () => {
-    console.log('clicked')
     this.setState({showModal: !this.state.showModal})
   }
 
-  moreInfo = () => {
-    this.props.history.push('/info')
+  moreInfo = (id) => {
+    this.props.history.push(`/info?id=${id}`)
   }
 
   formatLessees = () => {
@@ -49,7 +48,8 @@ class Dashboard extends React.Component {
             exandableInfo: `Address: ${value.address}
               City: ${value.city}
               State: ${value.state}
-              Notes: ${value.notes}`
+              Notes: ${value.notes}`,
+              id: value.id,
           })
         })
         this.setState({lessees: result})

@@ -74,6 +74,7 @@ export const createNewReservation = (data, callback) => BuildApi('/reservations/
 
 export const createNewLessee = (data, callback) => BuildApi('/lessee/', data).post(callback)
 export const getAllLessees = (callback) => BuildApi('/lessee/').get(callback)
+export const getLesseeById = (id, callback) => BuildApi(`/lessee/${id}`).get(callback)
 
 export const getAllRanks = (callback) => BuildApi('/ranks').get(callback)
 export const addNewRank = (data, callback) => BuildApi('/ranks', data).post(callback)
