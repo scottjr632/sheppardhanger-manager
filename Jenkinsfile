@@ -11,7 +11,7 @@ pipeline {
 		stage('test') {
 			steps {
 				script {
-					app.inside {
+					dockerImage.inside {
 						sh 'echo "Tests passed"'
 					}
 				}	
