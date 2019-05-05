@@ -21,6 +21,10 @@ const Dashboard = asyncComponent(() =>
   import('./pages/dashboard.jsx').then(module => module.default)
 )
 
+const Info = asyncComponent(() =>
+  import('./pages/info.jsx').then(module => module.default)
+)
+
 const NotFound = asyncComponent(() =>
   import('./pages/notFound.jsx').then(module => module.default)
 )
@@ -45,6 +49,7 @@ class App extends Component {
               <Switch>
                 <Route exact path='/login' component={ Login } />
                 <Route exact path='/' component={ Login } />
+                <Route exact path='/info' component={ Info } />
                 <PrivateRoute path='/dashboard' component={ Dashboard } />
                 <Route name="not-found" path='*' component={ NotFound } />
               </Switch>
@@ -52,7 +57,6 @@ class App extends Component {
             <NotificationContainer/>
         </div>
       </Router>
-      
     );
   }
 }
