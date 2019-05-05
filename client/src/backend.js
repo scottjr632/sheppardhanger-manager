@@ -75,10 +75,12 @@ export const createNewReservation = (data, callback) => BuildApi('/reservations/
 export const createNewLessee = (data, callback) => BuildApi('/lessee/', data).post(callback)
 export const getAllLessees = (callback) => BuildApi('/lessee/').get(callback)
 
-export const getAllRanks = (callback) => BuildApi('/ranks').get(callback)
-export const addNewRank = (data, callback) => BuildApi('/ranks', data).post(callback)
-export const getAllTDYTypes = (callback) => BuildApi('/tyds').get(callback)
-export const addNewTDYType = (data, callback) => BuildApi('/tdys', data).post(callback)
+export const getAllRanks = (callback) => BuildApi('/lessee/ranks').get(callback)
+export const addNewRank = (data, callback) => BuildApi('/lessee/ranks', data).post(callback)
+export const getAllTDYTypes = (callback) => BuildApi('/lessee/tdys').get(callback)
+export const addNewTDYType = (data, callback) => BuildApi('/lessee/tdys', data).post(callback)
+export const getAllGuestTypes = (callback) => BuildApi('/lessee/guests').get(callback)
+export const addNewGuestType = (data, callback) => BuildApi('/lessee/guests', data).post(callback)
 
 export async function coolAuthenticate() {
   let res = await axios.get('/auth/authenticate')

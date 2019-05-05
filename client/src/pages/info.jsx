@@ -3,7 +3,6 @@ import React from 'react'
 import Navi from '../components/HeaderComponents/Navbar'
 
 
-
 const testUserInfo = {
     name: 'TEST, User', 
     reservation: 'Ressee',

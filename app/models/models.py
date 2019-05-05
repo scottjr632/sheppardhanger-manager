@@ -4,6 +4,45 @@ from sqlalchemy import text as sa_text
 from app import db
 
 
+class TDYType(db.Model):
+    __tablename__ = 'tdytype'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+
+class GuestType(db.Model):
+    __tablename__ = 'guesttype'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+
+class RankType(db.Model):
+    __tablename__ = 'ranktype'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+
 class House(db.Model):
     __tablename__ = 'houses'
 

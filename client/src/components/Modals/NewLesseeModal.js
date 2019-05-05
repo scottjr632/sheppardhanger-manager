@@ -29,6 +29,9 @@ class NewLesseeModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      tdys: [],
+      ranks: [],
+      guests: [],
       checkInDate: undefined,
       checkOutDate: undefined,
       isCheckInEmpty: true,
@@ -58,6 +61,21 @@ class NewLesseeModal extends React.Component {
       if (data) {
         this.setState({ rooms: data})
       }
+    })
+
+    backend.getAllTDYTypes(res => {
+      let { data } = res
+      if(data) { this.setState({tdys: data})}
+    })
+
+    backend.getAllGuestTypes(res => {
+      let { data } = res
+      if(data) { this.setState({guests: data})}
+    })
+
+    backend.getAllRanks(res => {
+      let { data } = res
+      if(data) { this.setState({ranks: data})}
     })
   }
 
@@ -138,7 +156,13 @@ class NewLesseeModal extends React.Component {
               </div>
             </div>
             <div className={'input-group'}>
-              <label>Rank</label> <input name={'rank'} onChange={this.handleChange}/>
+              <label>Rank</label>
+              <select onChange={this.handleChange}>
+                {this.state.ranks.map(rank => {
+                    return <option value={rank.id}>{rank.name}</option>
+                  })
+                }
+              </select>
             </div>
             <div style={{display: 'flex'}}>
               <div className={'input-group'}>
@@ -176,11 +200,23 @@ class NewLesseeModal extends React.Component {
                 </div>
               </div>
               <div style={{display: 'flex'}}>
-                <div className={'input-group'}>
-                  <label>Number of guests</label> <input type="text" name="numberofguests" value={this.state.numberofguests} onChange={this.handleChange}/>
+              <div className={'input-group'}>
+                  <label>Purpose</label> 
+                  <select onChange={this.handleChange}>
+                  {
+                    this.state.tdys.map(tdy => {
+                      return <option value={tdy.id}>{tdy.name}</option>
+                    })
+                  }
+                  </select>
                 </div>
                 <div className={'input-group'}>
-                  <label>Purpose</label> <input type="text" name="purpose" onChange={this.handleChange}/>
+                  <label>Any guests? </label> <br />
+                  <select onChange={this.handleChange}>
+                    {this.state.guests.map(guest => {
+                      return <option value={guest.id}>{guest.name}</option>
+                    })}
+                  </select>
                 </div>
               </div>
               <div style={{display: 'flex'}}>
@@ -191,10 +227,6 @@ class NewLesseeModal extends React.Component {
                       return <option value={room.id}>{room.name}</option>
                     })}
                   </select>
-                </div>
-                <div className={'input-group'}>
-                  <label>Are they bringing a pet? </label> <br />
-                  <input name={'pet'} type={'checkbox'} onChange={this.handleChange} />
                 </div>
               </div>
             </section>
