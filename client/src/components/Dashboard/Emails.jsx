@@ -26,7 +26,7 @@ const rightBorder = {
 
 const Emails = props => {
   return (
-    <div style={{position: 'relative', fontStyle: '13pt', width: '40%'}}>
+    <div style={{position: 'relative', fontStyle: '13pt'}}>
       <span style={{fontSize: '15pt', textDecoration: 'underline'}}>EMAILS</span>
       <div style={gridStyle}>
         {

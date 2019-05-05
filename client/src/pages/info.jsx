@@ -2,6 +2,7 @@ import React from 'react'
 
 import Navi from '../components/HeaderComponents/Navbar'
 import Emails from '../components/Dashboard/Emails.jsx'
+import UserInfo from '../components/Dashboard/UserInfo.jsx'
 
 const emailTestInfo = {
   welcome: {prettyName: 'Welcome', done: false},
@@ -22,19 +23,24 @@ const testUserInfo = {
     zipcode: '999999',
 }
 
+const gridStyle = {
+  display: 'grid',
+  gridTemplateColumns: '[left] 50% [right] 50%'
+}
+
 class Info extends React.Component {
 
   render() {
     return (
       <div>
       <Navi />
-      <div className={'container'} style={{display: 'flex', flexDirection: 'row'}}>
-          {/* EMAIL SECTION */}
-          <Emails data={emailTestInfo} />
-          {/* User info section */}
-          {/* EMAIL SECTION */}
-          <div style={{position: 'relative', width: '50%', fontStyle: '13pt'}}>
-          </div>
+      <div className={'container'} style={{...gridStyle}}>
+          <section style={{gridArea: 'left'}}>
+            <Emails data={emailTestInfo} />
+          </section>
+          <section style={{gridArea: 'right'}}>
+            <UserInfo data={testUserInfo} />
+          </section>
         </div>
       </div>
     )
