@@ -28,6 +28,10 @@ class Dashboard extends React.Component {
     this.setState({showModal: !this.state.showModal})
   }
 
+  moreInfo = () => {
+    this.props.history.push('/info')
+  }
+
   formatLessees = () => {
     backend.getAllLessees(res => {
       let { data } = res
@@ -64,7 +68,7 @@ class Dashboard extends React.Component {
             <div>
               <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} />
               <label>Locate a lessee</label>
-              <Table data={this.state.lessees}/>
+              <Table data={this.state.lessees} moreInfo={this.moreInfo}/>
             </div>
           </div>
         </div>

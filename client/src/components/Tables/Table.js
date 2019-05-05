@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 
 import ExpandableRow from './ExpandableRow'
 
@@ -116,7 +118,7 @@ class Table extends React.Component {
               </thead>
               <tbody>
                 {this.state.data.map(value => {
-                    return <ExpandableRow data={value} moreInfo={true}/>
+                    return <ExpandableRow data={value} moreInfo={true} moreInfoClick={this.props.moreInfo}/>
                   })
                 }
               </tbody>
@@ -124,6 +126,11 @@ class Table extends React.Component {
           </div>
         )
     }
+}
+
+Table.propTypes = {
+  data: PropTypes.array.isRequired,
+  moreInfo: PropTypes.func
 }
 
 export default Table
