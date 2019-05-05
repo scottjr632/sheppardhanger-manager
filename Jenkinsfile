@@ -8,5 +8,9 @@ pipeline {
 				}
 			}
 		}
+		stage('deploy') {
+			sh 'docker rm -f shmanager || true'
+			sh 'docker run -d --name shmanager --restart=unless-stopped shmanager:latest'
+		}
 	}
 }
