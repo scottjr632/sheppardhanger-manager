@@ -5,7 +5,7 @@ pipeline {
 		stage('build') {
 			steps {
 				script {
-					docker.build 'shmanager:$BUILD_NUMBER'	
+					docker.build 'shmanager:latest'	
 				}
 			}
 		}
