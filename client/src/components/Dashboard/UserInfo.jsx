@@ -22,6 +22,10 @@ class UserInfo extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({...nextProps.data})
+  }
+
   handleChange = (event) => {
     let { target } = event
     this.setState({
@@ -30,6 +34,8 @@ class UserInfo extends React.Component {
   }
 
   toggleEdit = () => {
+    console.log(this.state, 'STATE')
+    console.log(this.props, 'PROPS')
     this.setState({ edit: !this.state.edit })
   }
 
