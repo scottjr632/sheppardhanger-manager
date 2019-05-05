@@ -2,6 +2,7 @@ pipeline {
 	environement {
 		registry = "scottjr632/shmanager"
 	}
+	agent any
 	stages {
 		stage('build') {
 			steps {
