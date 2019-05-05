@@ -73,9 +73,9 @@ class Table extends React.Component {
 
     render(){
         return (
-        <div class="table-wrapper">
+        <div className="table-wrapper">
             <div className='input-search'>
-                <i class="fas fa-search search-icon"></i>
+                <i className="fas fa-search search-icon"></i>
                 <input type="text" placeholder={'Search'} onKeyUp={this.search}/>
                 <select onChange={this.handleSelectChange}>
                     <option value={'name'}>Name</option>
@@ -85,7 +85,7 @@ class Table extends React.Component {
                     <option value={'reservation'}>Reservation</option>
                 </select>
             </div>
-            <table class="table-responsive card-list-table">
+            <table className="table-responsive card-list-table">
               <thead>
                 <tr>
                   <th 
