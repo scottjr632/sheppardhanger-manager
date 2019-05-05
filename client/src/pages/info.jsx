@@ -1,8 +1,14 @@
 import React from 'react'
 
 import Navi from '../components/HeaderComponents/Navbar'
+import Emails from '../components/Dashboard/Emails.jsx'
 
-
+const emailTestInfo = {
+  welcome: {prettyName: 'Welcome', done: false},
+  contract: {prettyName: 'Contract', done: true},
+  noRooms:  {prettyName: 'No Rooms', done: true},
+  reciept:  {prettyName: 'Reciept', done: true}
+}
 
 const testUserInfo = {
     name: 'TEST, User', 
@@ -16,65 +22,18 @@ const testUserInfo = {
     zipcode: '999999',
 }
 
-const emailTestInfo = {
-    welcome: false,
-    contract: true,
-    noRooms: false,
-    reciept: false
-}
-
-const gridStyle = {
-  textTransform: 'uppercase',
-  display: 'grid',
-  gridTemplateColumns: '3fr',
-  gridTemplateRows: 'auto'
-}
-
 class Info extends React.Component {
 
   render() {
     return (
       <div>
       <Navi />
-      <div>
+      <div className={'container'} style={{display: 'flex', flexDirection: 'row'}}>
           {/* EMAIL SECTION */}
-          <div style={{position: 'relative', top: '25vh', fontStyle: '13pt', display: 'flex', flexDirection: 'row'}}>
-              <span>EMAILS</span>
-            <div style={gridStyle}>
-              {
-                Object.keys(emailTestInfo).map(key => {
-                  return (
-                    <span style={{display: 'grid', gridTemplateColumns: '[left] 1.5fr [right] 1.5fr', gridRowGap: '10px'}}>
-                      <div style={{textAlign: 'left', gridArea: 'left'}}>{key}</div>
-                      <span style={{gridArea: 'right'}}>
-                        <input type="checkbox" checked={emailTestInfo[key]} style={{transform: 'scale(1.5)'}}/>
-                      </span>
-                    </span>
-                  )
-                })
-
-              }
-            </div>
-          </div>
+          <Emails data={emailTestInfo} />
           {/* User info section */}
           {/* EMAIL SECTION */}
-          <div style={{position: 'relative', top: '25vh', left: '75%', fontStyle: '13pt'}}>
-              <span>EMAILS</span>
-            <div style={gridStyle}>
-              {
-                Object.keys(emailTestInfo).map(key => {
-                  return (
-                    <span style={{display: 'grid', gridTemplateColumns: '[left] 1.5fr [right] 1.5fr', gridRowGap: '10px'}}>
-                      <div style={{textAlign: 'left', gridArea: 'left'}}>{key}</div>
-                      <span style={{gridArea: 'right'}}>
-                        <input type="checkbox" checked={emailTestInfo[key]} style={{transform: 'scale(1.5)'}}/>
-                      </span>
-                    </span>
-                  )
-                })
-
-              }
-            </div>
+          <div style={{position: 'relative', width: '50%', fontStyle: '13pt'}}>
           </div>
         </div>
       </div>
