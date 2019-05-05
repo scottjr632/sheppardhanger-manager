@@ -4,7 +4,7 @@ pipeline {
 		stage('build') {
 			steps {
 				script {
-					app = docker.build 'shmanager:latest'	
+					app = docker.build 'scottjr632/shmanager:latest'	
 				}
 			}
 		}
