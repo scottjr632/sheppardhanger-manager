@@ -4,7 +4,7 @@ pipeline {
 		stage('build') {
 			steps {
 				script {
-					app = docker.build 'scottjr632/shmanager:latest'	
+					dockerImage = docker.build 'scottjr632/shmanager:latest'	
 				}
 			}
 		}
@@ -17,6 +17,15 @@ pipeline {
 				}	
 			}
 		}
+		stage('publish') {
+			steps {
+				script {
+					docker.withRegistry( '', 'dockerhub' ) {
+						dockerImage.push()
+					}
+				}
+			}
+		}
 		stage('deploy') {
 			steps {
 				sh 'docker rm -f shmanager || true'
@@ -26,8 +35,8 @@ pipeline {
 		}
 		stage('cleanup') {
 			steps {
-				sh 'docker rmi $(docker images -a --filter=dangling=true -q) -f'
-				sh 'docker rm $(docker ps --filter=status=exited --filter=status=created -q) -f'
+				sh 'docker rmi $(docker images -a --filter=dangling=true -q) -f || true'
+				sh 'docker rm $(docker ps --filter=status=exited --filter=status=created -q) -f || true'
 			}
 		}
 	}
