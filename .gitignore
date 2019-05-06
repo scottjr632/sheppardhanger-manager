@@ -9,4 +9,11 @@ include/
 bin/
 node_modules/
 .vscode/
-dist/
+**/dist/*
+
+# allow the image to be pushed
+
+!**/dist/bg.jpg
+!**/dist/sw.js
+!**/dist/favicon.ico
+!**/dist/manifest.json
