@@ -23,6 +23,10 @@ def get_all_res() -> list:
     return models.Reservation.query.all()
 
 
+def get_all_bookingtypes() -> list:
+    return models.BookingType.query.all()
+
+
 @utils.rollback_on_error
 def new_reservation(data):
     reservation = models.Reservation(**data)

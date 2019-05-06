@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes, { array } from 'prop-types'
 
+import * as backend from '../../backend'
 
 const inputStyle = {
   borderBottom: '1pt #d8d5d5 solid'
@@ -19,6 +20,16 @@ class UserInfo extends React.Component {
       ...this.props.data,
       editable: this.props.editable || false,
       edit: false,
+      bookingTypes: []
+    }
+  }
+
+  componentWillMount(){
+    if (this.state.bookingTypes.length === 0) {
+      backend.getAllBookingTypes((res) => {
+        let { data } = res
+        if (data) this.setState({ bookingTypes: data }) 
+      })
     }
   }
 
@@ -54,22 +65,29 @@ class UserInfo extends React.Component {
               <tr>
                 {!this.state.edit &&
                   Object.keys(data).map(key => {
-                    return typeof data[key] === 'object' ?
-                     <td data-title={'TEST'}>TEST</td>:
+                    return key === 'reservations' ?
+                     <td data-title={'RES STATUS'}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}</td>:
                      <td data-title={key}>{data[key]}</td>
                   })
                 }
                 {this.state.edit && 
                   Object.keys(data).map(key => {
-                    return typeof data[key] === 'object' ?
-                     <td data-tile={'TEST'}>TEST</td>:
+                    return key === 'reservations' ?
+                     <td data-title={'RES STATUS'}>
+                      <select value={ data[key].length > 0 ? data[key][0].bookingtypeid : 0} name={key}>
+                        <option value={0}>-- NONE --</option>
+                        {this.state.bookingTypes.map(btype => {
+                          return <option value={btype.id}>{btype.name}</option>
+                        })}
+                      </select>
+                    </td> :
                      <td data-title={key}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
                   })
                 }
               </tr>
             </tbody>
           </table>
-          <button className={'btn__new dangerous'}>Archive <i className="fas fa-archive" style={{float: 'left'}}></i></button>
+          <button className={'btn__new dangerous'}><i className="fas fa-archive" style={{float: 'left'}}></i>Archive</button>
 
           {!this.state.edit && <button className={'btn__new'} style={editStyle} onClick={this.toggleEdit}>Edit <i className="fas fa-edit" style={{float: 'left'}}></i></button>}
           {this.state.edit && <button className={'btn__new save'} style={editStyle} onClick={this.toggleEdit}>Save! <i className="fas fa-save" style={{float: 'left'}}></i></button>}
