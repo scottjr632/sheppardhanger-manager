@@ -1,6 +1,13 @@
 pipeline {
     agent any
 	stages {
+		stage('git') {
+			steps {
+				sh 'git fetch'
+				sh 'git checkout master'
+				sh 'git pull'
+			}
+		}
 		stage('build') {
 			steps {
 				script {

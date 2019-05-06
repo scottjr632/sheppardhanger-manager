@@ -31,14 +31,12 @@ class Navi extends React.Component {
 
   handleSelect = (selectedKey) => {
 
-    if (selectedKey !== this.currentKey) {
-      let selected = links.find(link => link.key === selectedKey)
-      this.props.history.push(selected.path)
-  
-      this.setState({
-        currentKey: selectedKey
-      })
-    }
+    let selected = links.find(link => link.key === selectedKey)
+    this.props.history.push(selected.path)
+
+    this.setState({
+      currentKey: selectedKey
+    })
   }
 
   showDropdown = () => {

@@ -29,6 +29,12 @@ def get_res_by_lessee(user, lesseeid):
     return jsonify([res.serialize() for res in helpers.get_res_by_lessee(lesseeid)])
 
 
+@mod.route('/bookingtypes', methods=['GET'])
+@utils.login_required
+def get_booking_types(user):
+    return jsonify([btype.serialize() for btype in helpers.get_all_bookingtypes()])
+
+
 @mod.route('/', methods=['POST'])
 @utils.login_required
 def new_reservation(user):
