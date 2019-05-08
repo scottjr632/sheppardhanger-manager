@@ -40,8 +40,8 @@ def get_booking_types(user):
 def new_reservation(user):
     data = request.get_json(force=True)
     try:
-        helpers.new_reservation(data)
-        return make_response('Added new reservation for {}'.format(data['lesseeid']), 200)
+        reservation = helpers.new_reservation(data)
+        return make_response(jsonify(reservation.serialize()), 200)
     except Exception as e:
         print(e, file=sys.stderr)
         return make_response('Something went wrong', 500)

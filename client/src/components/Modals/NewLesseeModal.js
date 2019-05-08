@@ -3,6 +3,8 @@ import Modal from 'react-modal'
 import PropTypes from 'prop-types'
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { NotificationManager } from 'react-notifications'
+import { inject, observer } from 'mobx-react'
+
 
 import * as backend from '../../backend'
 import 'react-day-picker/lib/style.css';
@@ -24,6 +26,10 @@ const customStyles = {
   }
 };
 
+@inject ('reservationStore')
+@inject ('scheduleStore')
+@inject ('lesseeStore')
+@observer
 class NewLesseeModal extends React.Component {
 
   constructor(props) {
@@ -48,7 +54,7 @@ class NewLesseeModal extends React.Component {
       purpose: '',
       createBooking: false,
       rooms: [],
-      activeRoomId: undefined
+      activeRoomId: 1
     }
   }
 
@@ -56,7 +62,7 @@ class NewLesseeModal extends React.Component {
     backend.getRooms(res => {
       let { data } = res
       if (data) {
-        this.setState({ rooms: data})
+        this.setState({ rooms: data })
       }
     })
   }
@@ -72,11 +78,12 @@ class NewLesseeModal extends React.Component {
     let lessee
     try {
       lessee = await backend.createNewLesseeAsync(lesseeData)
+      this.props.lesseeStore.addNewFormattedLesseeFromObj(lessee)
     } catch (error) {
+      console.log(error)
       NotificationManager.error(`User already exists with email ${this.state.email}`) 
       return   
     }
-    console.log(lessee)
     if (createBooking) {
       let resData = {
         lesseeid: lessee.id,
@@ -88,10 +95,15 @@ class NewLesseeModal extends React.Component {
         purpose: this.state.purpose,
         numberofguests: this.state.numberofguests
       }
-      backend.createNewReservation(resData, (res)=>{
+      backend.createNewReservation(resData, (res) => {
         if (res.status !== 200) {
           NotificationManager.error(`Unable to create reservation for ${this.state.lname}, ${this.state.fname}`)
           return
+        }
+        let { data } = res
+        if (data){
+          let res = this.props.reservationStore.addReservationFromResObject(data)
+          this.props.scheduleStore.addEvent(res)
         }
       })
       NotificationManager.info(`Created reservation for ${this.state.lname}, ${this.state.fname}`)
@@ -186,7 +198,7 @@ class NewLesseeModal extends React.Component {
               <div style={{display: 'flex'}}>
                 <div className={'input-group'}>
                   <label>Room</label><br />
-                  <select name={'activeRoomId'} onChange={this.handleChange}>
+                  <select name={'activeRoomId'} onChange={this.handleChange} value={this.state.activeRoomId}>
                     {this.state.rooms.map(room => {
                       return <option value={room.id}>{room.name}</option>
                     })}

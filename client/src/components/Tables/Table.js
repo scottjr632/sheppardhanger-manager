@@ -1,9 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { observer, inject } from 'mobx-react'
 
 import ExpandableRow from './ExpandableRow'
 
+@inject ('lesseeStore')
+@observer
 class Table extends React.Component {
 
     constructor(props) {
@@ -77,7 +80,7 @@ class Table extends React.Component {
         return (
         <div className="table-wrapper">
             <div className='input-search'>
-                <i className="fas fa-search search-icon"></i>
+                <i className="fas fa-search search-icon" />
                 <input type="text" placeholder={'Search'} onKeyUp={this.search}/>
                 <select onChange={this.handleSelectChange}>
                     <option value={'name'}>Name</option>
@@ -117,7 +120,7 @@ class Table extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.state.data.map(value => {
+                {this.props.lesseeStore.formattedLessees.map(value => {
                     return <ExpandableRow data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }}/>
                   })
                 }
