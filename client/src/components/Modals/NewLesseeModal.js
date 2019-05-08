@@ -45,7 +45,7 @@ class NewLesseeModal extends React.Component {
       fname: '',
       lname: '',
       email: '',
-      rank: '',
+      rank: 1,
       phone: '',
       address: '',
       city: '',
@@ -169,7 +169,7 @@ class NewLesseeModal extends React.Component {
             </div>
             <div className={'input-group'}>
               <label>Rank</label>
-              <select onChange={this.handleChange}>
+              <select onChange={this.handleChange} name={'rank'}>
                 {this.state.ranks.map(rank => {
                     return <option value={rank.id}>{rank.name}</option>
                   })
@@ -214,7 +214,7 @@ class NewLesseeModal extends React.Component {
               <div style={{display: 'flex'}}>
               <div className={'input-group'}>
                   <label>Purpose</label> 
-                  <select onChange={this.handleChange}>
+                  <select onChange={this.handleChange} name={'purpose'}>
                   {
                     this.state.tdys.map(tdy => {
                       return <option value={tdy.id}>{tdy.name}</option>
@@ -224,7 +224,7 @@ class NewLesseeModal extends React.Component {
                 </div>
                 <div className={'input-group'}>
                   <label>Any guests? </label> <br />
-                  <select onChange={this.handleChange}>
+                  <select onChange={this.handleChange} name={'numberofguests'}>
                     {this.state.guests.map(guest => {
                       return <option value={guest.id}>{guest.name}</option>
                     })}
