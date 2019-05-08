@@ -121,6 +121,7 @@ class Table extends React.Component {
               </thead>
               <tbody>
                 {this.props.lesseeStore.formattedLessees.map(value => {
+                    console.log(this.props.lesseeStore.formattedLessees)
                     return <ExpandableRow data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }}/>
                   })
                 }

@@ -78,7 +78,7 @@ class NewLesseeModal extends React.Component {
     let lessee
     try {
       lessee = await backend.createNewLesseeAsync(lesseeData)
-      this.props.lesseeStore.addNewFormattedLesseeFromObj(lessee)
+      this.props.lesseeStore.addNewLessee(lessee)
     } catch (error) {
       console.log(error)
       NotificationManager.error(`User already exists with email ${this.state.email}`) 

@@ -46,7 +46,7 @@ class Dashboard extends React.Component {
             <div>
               <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} />
               <label>Locate a lessee</label>
-              <Table data={this.props.lesseeStore.formattedLessees} moreInfo={this.moreInfo}/>
+              <Table moreInfo={this.moreInfo}/>
             </div>
           </div>
         </div>
