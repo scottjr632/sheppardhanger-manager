@@ -6,6 +6,10 @@ import { NotificationManager } from 'react-notifications'
 
 import * as backend from '../../backend'
 
+const links = [
+  {key: 1, name: 'Home', path: '/dashboard'},
+  {key: 2, name: 'Admin', path: '/admin'}
+]
 
 @inject('userStore')
 @observer
@@ -21,29 +25,15 @@ class Navi extends React.Component {
   }
 
   componentDidMount(){
-    switch(window.location.pathname) {
-      case '/dashboard':
-        this.setState({
-          currentKey: 1
-        })
-        break
-      case '/user/alerts':
-        this.setState({
-          currentKey: 2
-        })
-        break
-      case '/stocks':
-        this.setState({
-          currentKey: 3
-        })
-        break
-      default:
-        break
-    }
+    let activeLink = links.find(link => link.path == window.location.pathname)
+    if (activeLink) this.setState({currentKey: activeLink.key})
   }
 
-
   handleSelect = (selectedKey) => {
+
+    let selected = links.find(link => link.key === selectedKey)
+    this.props.history.push(selected.path)
+
     this.setState({
       currentKey: selectedKey
     })
@@ -71,8 +61,9 @@ class Navi extends React.Component {
           The Sheppard Hanger <span style={{textTransform: 'uppercase', fontSize: '15pt'}}>Manager</span>
         </div>
         <div className={'pull-right nav__link'}>
-          <a className={this.state.currentKey === 1 ? 'active' : ''} onClick={() => this.handleSelect(1)}>Home</a>
-          <a className={this.state.currentKey === 2 ? 'active' : ''} onClick={() => this.handleSelect(2)}>Admin</a>
+          {links.map(link => {
+            return <a className={this.state.currentKey === link.key ? 'active' : ''} onClick={() => this.handleSelect(link.key)}>{link.name}</a>
+          })}
           <span className={'username dropdown__toggle'} onClick={this.showDropdown}>
               <a className={this.state.currentKey === 3 ? 'active' : ''}>
                   <i className="fas fa-user" />

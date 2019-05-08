@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { inject, observer } from 'mobx-react'
+
 import Navi from '../components/HeaderComponents/Navbar'
 import Schedule from '../components/charts/scheduler'
 import NewLesseeModal from '../components/Modals/NewLesseeModal'
@@ -8,7 +10,8 @@ import Table from '../components/Tables/Table'
 import Question from '../components/Dashboard/Question.jsx'
 import * as backend from '../backend'
 
-
+@inject ('lesseeStore')
+@observer
 class Dashboard extends React.Component {
 
   constructor(props) {
@@ -20,38 +23,17 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    this.formatLessees()
+    this.props.lesseeStore.populateLessees()
   }
 
   toggleModal = () => {
-    console.log('clicked')
     this.setState({showModal: !this.state.showModal})
   }
 
-  formatLessees = () => {
-    backend.getAllLessees(res => {
-      let { data } = res
-      if (data) {
-        let result = []
-        data.forEach(value => {
-          result.push({
-            name: `${value.lname}, ${value.fname}`,
-            email: value.email,
-            phone: value.phone || '',
-            rank: value.rank || '',
-            reservations: value.reservations && value.reservations.length > 0 
-                          ? `${value.reservations[0].room} - ${value.reservations[0].checkindate}` 
-                          : '',
-            exandableInfo: `Address: ${value.address}
-              City: ${value.city}
-              State: ${value.state}
-              Notes: ${value.notes}`
-          })
-        })
-        this.setState({lessees: result})
-      } 
-    })
+  moreInfo = (id) => {
+    this.props.history.push(`/info?id=${id}`)
   }
+
 
   render(){
     return (
@@ -64,7 +46,7 @@ class Dashboard extends React.Component {
             <div>
               <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} />
               <label>Locate a lessee</label>
-              <Table data={this.state.lessees}/>
+              <Table moreInfo={this.moreInfo}/>
             </div>
           </div>
         </div>

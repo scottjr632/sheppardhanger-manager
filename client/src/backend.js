@@ -65,6 +65,7 @@ export const getHouses = (callback) => BuildApi('/houses').get(callback)
 
 export const getRooms = (callback) => BuildApi('/houses/rooms').get(callback)
 
+export const getAllBookingTypes = (callback) => BuildApi('/reservations/bookingtypes').get(callback)
 export const getReservationsByRoom = (roomId, callback) => BuildApi(`/reservations/room/${roomId}`).get(callback)
 export const getReservationsByHouse = (houseId, callback) => BuildApi(`/reservations/house/${houseId}`).get(callback)
 export const getReservationsByLesseeId = (lesseeId, callback) => BuildApi(`/reservations/${lesseeId}`).get(callback)
@@ -74,6 +75,7 @@ export const createNewReservation = (data, callback) => BuildApi('/reservations/
 
 export const createNewLessee = (data, callback) => BuildApi('/lessee/', data).post(callback)
 export const getAllLessees = (callback) => BuildApi('/lessee/').get(callback)
+export const getLesseeById = (id, callback) => BuildApi(`/lessee/${id}`).get(callback)
 
 export const getAllRanks = (callback) => BuildApi('/lessee/ranks').get(callback)
 export const addNewRank = (data, callback) => BuildApi('/lessee/ranks', data).post(callback)
@@ -86,6 +88,9 @@ export async function coolAuthenticate() {
   let res = await axios.get('/auth/authenticate')
   return res
 }
+
+export const getRoomsAsync = async () => {const data = await axios.get('/houses/rooms'); return data }
+export const getAllReservationsAsync = async () => {const data = await axios.get('/reservations/'); return data}
 
 export async function createNewLesseeAsync(data) {
   console.log('stuff happening')

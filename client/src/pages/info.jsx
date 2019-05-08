@@ -1,8 +1,16 @@
 import React from 'react'
 
 import Navi from '../components/HeaderComponents/Navbar'
+import Emails from '../components/Dashboard/Emails.jsx'
+import UserInfo from '../components/Dashboard/UserInfo.jsx'
+import * as backend from '../backend'
 
-
+const emailTestInfo = {
+  welcome: {prettyName: 'Welcome', done: false},
+  contract: {prettyName: 'Contract', done: true},
+  noRooms:  {prettyName: 'No Rooms', done: true},
+  reciept:  {prettyName: 'Reciept', done: true}
+}
 const testUserInfo = {
     name: 'TEST, User', 
     reservation: 'Ressee',
@@ -15,66 +23,44 @@ const testUserInfo = {
     zipcode: '999999',
 }
 
-const emailTestInfo = {
-    welcome: false,
-    contract: true,
-    noRooms: false,
-    reciept: false
-}
-
 const gridStyle = {
-  textTransform: 'uppercase',
   display: 'grid',
-  gridTemplateColumns: '3fr',
-  gridTemplateRows: 'auto'
+  gridTemplateColumns: '[left] 50% [right] 50%'
 }
 
 class Info extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      userId: 0,
+      userInfo: {},
+    }
+  }
+
+  componentDidMount() {
+    let { search } = this.props.location
+    if (search && search.length > 1) {
+      let id = search.match(/=(.*)/)
+      if (id[1]) backend.getLesseeById(id[1], (res) => {
+        let { data } = res
+        if (data) this.setState({userInfo: data}, () => console.log(this.state.userInfo, 'state info'))
+      })
+    }
+    // this.setState({userInfo : testUserInfo})
+  }
 
   render() {
     return (
       <div>
       <Navi />
-      <div>
-          {/* EMAIL SECTION */}
-          <div style={{position: 'relative', top: '25vh', fontStyle: '13pt', display: 'flex', flexDirection: 'row'}}>
-              <span>EMAILS</span>
-            <div style={gridStyle}>
-              {
-                Object.keys(emailTestInfo).map(key => {
-                  return (
-                    <span style={{display: 'grid', gridTemplateColumns: '[left] 1.5fr [right] 1.5fr', gridRowGap: '10px'}}>
-                      <div style={{textAlign: 'left', gridArea: 'left'}}>{key}</div>
-                      <span style={{gridArea: 'right'}}>
-                        <input type="checkbox" checked={emailTestInfo[key]} style={{transform: 'scale(1.5)'}}/>
-                      </span>
-                    </span>
-                  )
-                })
-
-              }
-            </div>
-          </div>
-          {/* User info section */}
-          {/* EMAIL SECTION */}
-          <div style={{position: 'relative', top: '25vh', left: '75%', fontStyle: '13pt'}}>
-              <span>EMAILS</span>
-            <div style={gridStyle}>
-              {
-                Object.keys(emailTestInfo).map(key => {
-                  return (
-                    <span style={{display: 'grid', gridTemplateColumns: '[left] 1.5fr [right] 1.5fr', gridRowGap: '10px'}}>
-                      <div style={{textAlign: 'left', gridArea: 'left'}}>{key}</div>
-                      <span style={{gridArea: 'right'}}>
-                        <input type="checkbox" checked={emailTestInfo[key]} style={{transform: 'scale(1.5)'}}/>
-                      </span>
-                    </span>
-                  )
-                })
-
-              }
-            </div>
-          </div>
+        <div className={'container'} style={{...gridStyle}}>
+          <section style={{gridArea: 'left'}}>
+            <Emails data={emailTestInfo} />
+          </section>
+          <section style={{gridArea: 'right'}}>
+            <UserInfo data={this.state.userInfo} />
+          </section>
         </div>
       </div>
     )

@@ -35,7 +35,7 @@ class ExpandableRow extends React.Component {
       <React.Fragment>
           <tr onClick={this.toggleExpanded}>
           {Object.keys(data).map((key, index) => {
-            if (key !== 'exandableInfo') {
+            if (key !== 'exandableInfo' && key !== 'id') {
               return index === 0
               ? <td><i className={`fas fa-plus ${this.state.expanded ? 'rotated' : ''}`}></i>{data[key]}</td>
               : <td>{data[key]}</td>
@@ -46,8 +46,7 @@ class ExpandableRow extends React.Component {
             <td style={{padding: '0'}} colSpan={Object.keys(data).length-1}>
               <div style={this.state.expanded ? expandedStyle : minimizedStyle}>
                 {data['exandableInfo']}
-                {this.state.moreInfo && <button style={{display: this.state.expanded ? '' : 'none'}} className={'btn__new more-info'}>More info</button>}
-                {this.state.moreInfo && <button style={{display: this.state.expanded ? '' : 'none'}} className={'btn__new more-info'}>Email user</button>}
+                {this.state.moreInfo && <button style={{display: this.state.expanded ? '' : 'none'}} className={'btn__new more-info'} onClick={this.props.moreInfoClick}>More info / Email</button>}
               </div>
             </td>
           </tr>
@@ -61,7 +60,10 @@ ExpandableRow.popTypes = {
     ...PropTypes.Object,
     expandableInfo: PropTypes.string
   }),
-  moreInfo: PropTypes.bool
+  moreInfo: PropTypes.bool,
+  moreInfoClick: PropTypes.func,
+  emailUserClick: PropTypes.func,
+
 }
 
 export default ExpandableRow

@@ -33,7 +33,11 @@ def get_all_lessees(user):
 @mod.route('/<lid>', methods=['GET'])
 @utils.login_required
 def get_lessee_by_id(user, lid):
-    return helpers.get_lessee_info(lid)
+    lessee = helpers.get_lessee_info(lid)
+    if lessee is not None:
+        return jsonify(helpers.get_lessee_info(lid).serialize())
+    else:
+        return make_response('Cannot find lessee with id {}'.format(lid), 404)
 
 
 @mod.route('/filter', methods=['GET'])

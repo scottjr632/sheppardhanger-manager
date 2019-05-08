@@ -78,6 +78,12 @@ class BookingType(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
 
 class Lessee(db.Model):
     __tablename__ = 'lessee'
@@ -145,6 +151,7 @@ class Reservation(db.Model):
             'room': self.room.name,
             'house': self.room.house.name,
             'notes': self.notes,
+            'bookingtypeid': self.bookingtypeid,
             'bookingtype': self.bookingtype.name
         }
 

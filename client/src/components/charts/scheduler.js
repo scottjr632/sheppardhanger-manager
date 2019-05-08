@@ -1,19 +1,17 @@
 import React from 'react'
+
 import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
-import 'react-big-scheduler/lib/css/style.css'
 import withDragDropContext from './withDnDContext'
 import moment from 'moment'
 import { inject, observer } from 'mobx-react'
 import { NotificationManager } from 'react-notifications'
+import 'react-big-scheduler/lib/css/style.css'
 
 import * as backend from '../../backend'
 
-const BOOKINGTYPECOLORS = {
-  'TENTATIVE': '#727373',
-  'CONFIRMED': '#128de9'
-}
-
 @inject ('roomStore')
+@inject ('reservationStore')
+@inject ('scheduleStore')
 @observer
 class Schedule extends React.Component{
   constructor(props){
@@ -23,6 +21,7 @@ class Schedule extends React.Component{
     schedulerData.localeMoment.locale('en');
 
     this.state = {
+      forceRerender: false,
       viewModel: schedulerData,
       schedulerData: schedulerData,
       resources: [],
@@ -30,39 +29,24 @@ class Schedule extends React.Component{
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {0
+
     let { schedulerData } = this.state
-    schedulerData.localeMoment.locale('en');
+    schedulerData.localeMoment.locale('en')
 
-    backend.getRooms(res => {
-      let { data } = res
-      if (data) {
-        schedulerData.setResources(data)
-        data.forEach(room => {
-          setTimeout(() => {
-            this.props.roomStore.addRoom(room) 
-          },0)
-        })
+    await this.props.roomStore.populateRoomsAsync()
+    let { rooms } = this.props.roomStore
+    this.props.scheduleStore.setSchedulerResources(rooms)
 
-        backend.getAllReservations(res => {
-          let { data } = res
-          if (data) {
-            data.forEach((reservation) => {
-              schedulerData.addEvent({
-                id: reservation.id,
-                resourceId: reservation.roomid,
-                title: `${reservation.lesseelname}, ${reservation.lesseefname}  -  ${reservation.house}`,
-                start: reservation.checkindate,
-                end: reservation.checkoutdate,
-                bgColor: BOOKINGTYPECOLORS[reservation.bookingtype]
-              })
-            })
-          }
-          this.setState({ viewModel: schedulerData, schedulerData, resources: schedulerData.resources, events: schedulerData.events })
-          console.log(schedulerData)
-        })
-      }
+    this.props.reservationStore.populateReservations(reservations => {
+      this.props.scheduleStore.setEvents(reservations)
+      this.setState({ resources: schedulerData.resources, events: schedulerData.events })
     })
+
+  }
+
+  forceRerender = () => {
+    this.setState({forceRerender: !this.state.forceRerender})
   }
 
   handleChange = (e) => {
@@ -73,11 +57,10 @@ class Schedule extends React.Component{
   }
 
   render(){
-    const {viewModel} = this.state;
     return (
       <div>
         <div>
-          <Scheduler schedulerData={viewModel}
+          <Scheduler schedulerData={this.props.scheduleStore.viewModel}
                      prevClick={this.prevClick}
                      nextClick={this.nextClick}
                      onSelectDate={this.onSelectDate}
@@ -104,9 +87,10 @@ class Schedule extends React.Component{
   prevClick = (schedulerData)=> {
     schedulerData.prev();
     schedulerData.setEvents(this.state.events);
-    this.setState({
-      viewModel: schedulerData
-    })
+    this.props.scheduleStore.setViewModel(schedulerData)
+    // this.setState({
+    //   viewModel: schedulerData
+    // })
   }
 
   nextClick = (schedulerData)=> {
@@ -118,8 +102,7 @@ class Schedule extends React.Component{
   }
 
   onViewChange = (schedulerData, view) => {
-    schedulerData.setViewType(view.viewType, view.showAgenda, view.isEventPerspective);
-    schedulerData.setEvents(this.state.events);
+    this.props.scheduleStore.setViewType(view.viewType, view.showAgenda, view.isEventPerspective)
     this.setState({
       viewModel: schedulerData
     })
@@ -202,6 +185,7 @@ class Schedule extends React.Component{
     // }
     let newEvent = { id: event.id, checkindate: newStart, checkoutdate: event.end, roomid: event.resourceId}
     schedulerData.updateEventStart(event, newStart);
+    this.props.reservationStore.updateReservation(newEvent)
     backend.updateReservation(newEvent, res=>{
       if (res.status !== 200) {
         NotificationManager.error('Unable to update event')
@@ -217,6 +201,8 @@ class Schedule extends React.Component{
     // }
     let newEvent = { id: event.id, checkindate: event.start, checkoutdate: newEnd, roomid: event.resourceId}
     schedulerData.updateEventEnd(event, newEnd);
+    this.props.reservationStore.updateReservation(newEvent)
+
     backend.updateReservation(newEvent, res=>{
       if (res.status !== 200) {
         NotificationManager.error('Unable to update event')
@@ -232,6 +218,8 @@ class Schedule extends React.Component{
     // }
     let newEvent = { id: event.id, checkindate: start, checkoutdate: end, roomid: slotId }
     schedulerData.moveEvent(event, slotId, slotName, start, end);
+    this.props.reservationStore.updateReservation(newEvent)
+
     backend.updateReservation(newEvent, res=>{
       if (res.status !== 200) {
         NotificationManager.error('Unable to update event')
