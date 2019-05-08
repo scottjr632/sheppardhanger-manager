@@ -28,10 +28,12 @@ def get_all_bookingtypes() -> list:
 
 
 @utils.rollback_on_error
-def new_reservation(data):
+def new_reservation(data) -> models.Reservation:
     reservation = models.Reservation(**data)
     db.session.add(reservation)
     db.session.commit()
+    print(reservation.serialize(), 'reservation stuff')
+    return reservation
 
 
 @utils.rollback_on_error
