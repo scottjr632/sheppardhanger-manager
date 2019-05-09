@@ -6,6 +6,15 @@ import { NotificationManager } from 'react-notifications'
 
 import * as backend from '../../backend'
 
+const dropDownStyle = {
+  display: 'flex', 
+  flexDirection: 'column'
+}
+
+const navStyle = {
+  display: 'inline-flex'
+}
+
 const links = [
   {key: 1, name: 'Home', path: '/dashboard'},
   {key: 2, name: 'Admin', path: '/admin'}
@@ -60,11 +69,11 @@ class Navi extends React.Component {
         <div className={'pull-left header-title'}>
           The Sheppard Hanger <span style={{textTransform: 'uppercase', fontSize: '15pt'}}>Manager</span>
         </div>
-        <div className={'pull-right nav__link'}>
+        <div className={'pull-right nav__link'} style={navStyle}>
           {links.map(link => {
             return <a className={this.state.currentKey === link.key ? 'active' : ''} onClick={() => this.handleSelect(link.key)}>{link.name}</a>
           })}
-          <span className={'username dropdown__toggle'} onClick={this.showDropdown}>
+          <span className={'username dropdown__toggle'} style={dropDownStyle} onClick={this.showDropdown}>
               <a className={this.state.currentKey === 3 ? 'active' : ''}>
                   <i className="fas fa-user" />
                 {this.props.userStore.email}
