@@ -318,12 +318,10 @@ tr{
 }
 
 .dropdown__menu {
-  position: absolute;
-  right: 5%;
+  position: relative;
   background-color: #e2e2e2;
   padding: 10px 0 10px 5px;
-  width: 10%;
-  border-radius: 5px;
+  border-radius: 0 0 5px 5px;
 
   a {
     text-decoration: none;
