@@ -68,7 +68,7 @@ class Schedule extends React.Component{
                      eventItemClick={this.eventClicked}
                      viewEventClick={this.ops1}
                      viewEventText="Update reservation"
-                     viewEvent2Text="More info"
+                     viewEvent2Text="View lessee"
                      viewEvent2Click={this.ops2}
                      updateEventStart={this.updateEventStart}
                      updateEventEnd={this.updateEventEnd}
