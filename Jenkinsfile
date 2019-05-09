@@ -1,13 +1,6 @@
 pipeline {
     agent any
 	stages {
-		stage('git') {
-			steps {
-				sh 'git fetch'
-				sh 'git checkout master'
-				sh 'git pull'
-			}
-		}
 		stage('build') {
 			steps {
 				script {
@@ -36,7 +29,7 @@ pipeline {
 		stage('deploy') {
 			steps {
 				sh 'docker rm -f shmanager || true'
-				sh 'docker run -d --name shmanager -p 5000:5000 --restart=unless-stopped shmanager:latest'
+				sh 'docker run -d --name shmanager -p 5000:5000 -e DATABASE_URL=postgresql://shmanager:shmanager@localhost:5432/shmanager --net=host --restart=unless-stopped shmanager:latest'
 			}
 		
 		}

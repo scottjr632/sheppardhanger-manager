@@ -15,6 +15,7 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+
 DROP USER IF EXISTS shmanager;
 ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_roleid_fkey;
 ALTER TABLE IF EXISTS ONLY public.rooms DROP CONSTRAINT IF EXISTS rooms_houseid_fkey;
@@ -772,7 +773,6 @@ CREATE USER shmanager with encrypted  password :password;
 GRANT USAGE ON SCHEMA public TO shmanager;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO shmanager;
 GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to shmanager;
-
 
 --
 -- PostgreSQL database dump complete
