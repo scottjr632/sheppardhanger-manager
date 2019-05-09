@@ -170,6 +170,9 @@ button.btn {
     display: block;
     padding: 10px 10px 20px 40%;
     position: relative;
+    input {
+      width: calc(100% - 5px);
+    }
     &:first-of-type::after {
       visibility: hidden;
     }
