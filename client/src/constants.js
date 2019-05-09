@@ -1,4 +1,5 @@
 export const BOOKINGTYPECOLORS = {
-    'TENTATIVE': '#727373',
-    'CONFIRMED': '#128de9'
+    'TENTATIVE': '#e9c912',
+    'CONFIRMED': '#e95d12',
+    'CLEANING': '#ac12e9'
   }

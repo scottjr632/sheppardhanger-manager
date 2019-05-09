@@ -45,3 +45,18 @@ def get_lessee_by_id(user, lid):
 def get_lessee_by_filter(user):
     data = request.get_json(force=True)
     return helpers.get_lessee_by_email(**data)
+
+
+@mod.route('/ranks', methods=['GET'])
+def get_all_ranks():
+    return jsonify([rank.serialize() for rank in  helpers.get_all_ranktype()])
+
+
+@mod.route('/tdys', methods=['GET'])
+def get_all_tdytypes():
+    return jsonify([tdy.serialize() for tdy in helpers.get_all_tydtypes()])
+
+
+@mod.route('/guests', methods=['GET'])
+def get_all_guesttypes():
+    return jsonify([guest.serialize() for guest in helpers.get_all_guesttype()])

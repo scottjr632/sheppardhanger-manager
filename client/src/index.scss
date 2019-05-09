@@ -102,6 +102,8 @@ button.btn {
       }
       td {
         border-bottom: 1px solid $gray-border;
+        overflow-y: hidden !important; 
+        overflow-x: auto !important;
         cursor: pointer;
         display: table-cell;
         padding: 20px 24px;
@@ -168,6 +170,9 @@ button.btn {
     display: block;
     padding: 10px 10px 20px 40%;
     position: relative;
+    input {
+      width: calc(100% - 5px);
+    }
     &:first-of-type::after {
       visibility: hidden;
     }
@@ -313,12 +318,10 @@ tr{
 }
 
 .dropdown__menu {
-  position: absolute;
-  right: 5%;
+  position: relative;
   background-color: #e2e2e2;
   padding: 10px 0 10px 5px;
-  width: 10%;
-  border-radius: 5px;
+  border-radius: 0 0 5px 5px;
 
   a {
     text-decoration: none;
@@ -346,7 +349,7 @@ tr{
   }
 
   &.dangerous {
-    background-color: red;
+    background-color: #ed645a;
   }
 
   &.save {
@@ -623,7 +626,7 @@ h4 {
     input {
       border: none;
       border-bottom: 1pt solid black;
-      width: 60%;
+      // width: 60%;
       min-width: 100px;
       margin-left: 20px;
       margin-right: 20px;
@@ -640,6 +643,11 @@ h4 {
     .DayPickerInput {
       //float: right;
       width: 100%;
+    }
+
+    select {
+      // margin-left: 10px;
+      vertical-align: middle
     }
   }
   

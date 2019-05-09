@@ -8,6 +8,16 @@ insert into users (fname, lname, email, password, salt, roleid) values (
     1
 );
 insert into houses (name) values ('River Creek'), ('Phoenix'), ('Sparrow');
+insert into roles (name) values ('admin'), ('user');
+insert into users (fname, lname, email, password, salt, roleid)
+values (
+    'administrator',
+    'account',
+    'admin@admin.sheppardhanger.com',
+    '5dff03a060dfc941f3432a1a2de113733ee5ea7703c211d5a235cd1fc578ed86c3edae8778d5a5063667831e42c91fd29d83779bfd6805a43bd10cd3f271d1bc',
+    '2f2c0a37a965469ca26e0ad00511b3bb',
+    2
+);
 
 
 insert into rooms (houseid, name)

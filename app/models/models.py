@@ -4,6 +4,45 @@ from sqlalchemy import text as sa_text
 from app import db
 
 
+class TDYType(db.Model):
+    __tablename__ = 'tdytype'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+
+class GuestType(db.Model):
+    __tablename__ = 'guesttype'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+
+class RankType(db.Model):
+    __tablename__ = 'ranktype'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+
 class House(db.Model):
     __tablename__ = 'houses'
 
@@ -52,7 +91,8 @@ class Lessee(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String)
     lname = db.Column(db.String)
-    rank = db.Column(db.String)
+    rank = db.Column(db.String, db.ForeignKey('ranktype.id'))
+    rankname = db.relationship('RankType', backref=db.backref('ranktype', lazy=True))
     email = db.Column(db.String, unique=True)
     phone = db.Column(db.String(length=16))
     address = db.Column(db.String)
@@ -68,7 +108,7 @@ class Lessee(db.Model):
             'id': self.id,
             'fname': self.fname,
             'lname': self.lname,
-            'rank': self.rank,
+            'rank': self.rankname.name,
             'email': self.email,
             'phone': self.phone,
             'address': self.address,
@@ -86,8 +126,10 @@ class Reservation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     lesseeid = db.Column(db.Integer, db.ForeignKey('lessee.id'))
     lessee = db.relationship('Lessee', backref=db.backref('lessee', lazy=True))
-    purpose = db.Column(db.String)
-    numberofguests = db.Column(db.Integer)
+    purpose = db.Column(db.String, db.ForeignKey('tdytype.id'))
+    purposename = db.relationship('TDYType', backref=db.backref('tdytype', lazy=True))
+    numberofguests = db.Column(db.Integer, db.ForeignKey('guesttype.id'))
+    guesttype = db.relationship('GuestType', backref=db.backref('guesttype', lazy=True))
     pet = db.Column(db.Boolean)
     checkindate = db.Column(db.Date)
     checkoutdate = db.Column(db.Date)
@@ -100,17 +142,17 @@ class Reservation(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'lesseefname': self.lessee.fname,
-            'lesseelname': self.lessee.lname,
-            'lesseeemail': self.lessee.email,
-            'purpose': self.purpose,
-            'numberofguests': self.numberofguests,
+            'lesseefname': self.lessee.fname if self.lessee else '',
+            'lesseelname': self.lessee.lname if self.lessee else '',
+            'lesseeemail': self.lessee.email if self.lessee else '',
+            'purpose': self.purposename.name if self.purpose else '',
+            'numberofguests': self.guesttype.name if self.guesttype else '',
             'pet': self.pet,
             'checkindate': self.checkindate,
             'checkoutdate': self.checkoutdate,
             'roomid': self.roomid,
-            'room': self.room.name,
-            'house': self.room.house.name,
+            'room': self.room.name if self.room else '',
+            'house': self.room.house.name if self.room else '',
             'notes': self.notes,
             'bookingtypeid': self.bookingtypeid,
             'bookingtype': self.bookingtype.name

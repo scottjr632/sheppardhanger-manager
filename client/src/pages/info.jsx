@@ -11,7 +11,6 @@ const emailTestInfo = {
   noRooms:  {prettyName: 'No Rooms', done: true},
   reciept:  {prettyName: 'Reciept', done: true}
 }
-
 const testUserInfo = {
     name: 'TEST, User', 
     reservation: 'Ressee',
@@ -45,7 +44,7 @@ class Info extends React.Component {
       let id = search.match(/=(.*)/)
       if (id[1]) backend.getLesseeById(id[1], (res) => {
         let { data } = res
-        if (data) this.setState({userInfo: data}, () => console.log(this.state.userInfo, 'state info')) 
+        if (data) this.setState({userInfo: data}, () => console.log(this.state.userInfo, 'state info'))
       })
     }
     // this.setState({userInfo : testUserInfo})

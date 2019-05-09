@@ -19,33 +19,31 @@ const formatLessee = (lessee) => {
   }
 }
 
-
 class LesseeStore {
   @observable lessees = []
   @observable formattedLessees = []
 
   @action populateLessees() {
-    backend.getAllLessees(res => {
-      let { data } = res
-      if (data) {
-        data.forEach(lessee => {
-          let formattedLessee = formatLessee(lessee)
-          this.formattedLessees.push(formattedLessee)
-          this.lessees.push(lessee)
-        })
-      }
-    })
-  }
-
-  @action addNewFormattedLesseeFromObj(lessee) {
-    let formattedLessee = formatLessee(lessee)
-    this.formattedLessees.push(formattedLessee)
+    if (this.lessees.length === 0) {
+      backend.getAllLessees(res => {
+        let { data } = res
+        if (data) {
+          data.forEach(lessee => {
+            let formattedLessee = formatLessee(lessee)
+            this.formattedLessees.push(formattedLessee)
+            this.lessees.push(lessee)
+          })
+        }
+      })
+    }
   }
 
   @action addNewLessee(lessee) {
 
     if (!this.lessees.find(elem => elem.id === lessee.id)) {
       this.lessees.push(lessee)
+      let formatedLessee = formatLessee(lessee)
+      this.formattedLessees.push(formatedLessee)
     }
   }
 

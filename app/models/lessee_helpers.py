@@ -22,3 +22,15 @@ def get_lessee_info(lid: int) -> models.Lessee:
 
 def get_lessee_by_email(email: str) -> list:
     return models.Lessee.query.filter_by(email=email).all()
+
+
+def get_all_tydtypes() -> list:
+    return models.TDYType.query.all()
+
+
+def get_all_ranktype() -> list:
+    return models.RankType.query.all()
+
+
+def get_all_guesttype() -> list:
+    return models.GuestType.query.all()

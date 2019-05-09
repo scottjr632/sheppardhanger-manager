@@ -35,6 +35,9 @@ class NewLesseeModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      tdys: [],
+      ranks: [],
+      guests: [],
       checkInDate: undefined,
       checkOutDate: undefined,
       isCheckInEmpty: true,
@@ -42,7 +45,7 @@ class NewLesseeModal extends React.Component {
       fname: '',
       lname: '',
       email: '',
-      rank: '',
+      rank: 1,
       phone: '',
       address: '',
       city: '',
@@ -65,6 +68,21 @@ class NewLesseeModal extends React.Component {
         this.setState({ rooms: data })
       }
     })
+
+    backend.getAllTDYTypes(res => {
+      let { data } = res
+      if(data) { this.setState({tdys: data})}
+    })
+
+    backend.getAllGuestTypes(res => {
+      let { data } = res
+      if(data) { this.setState({guests: data})}
+    })
+
+    backend.getAllRanks(res => {
+      let { data } = res
+      if(data) { this.setState({ranks: data})}
+    })
   }
 
   createNewLessee = async () => {
@@ -78,7 +96,7 @@ class NewLesseeModal extends React.Component {
     let lessee
     try {
       lessee = await backend.createNewLesseeAsync(lesseeData)
-      this.props.lesseeStore.addNewFormattedLesseeFromObj(lessee)
+      this.props.lesseeStore.addNewLessee(lessee)
     } catch (error) {
       console.log(error)
       NotificationManager.error(`User already exists with email ${this.state.email}`) 
@@ -150,7 +168,13 @@ class NewLesseeModal extends React.Component {
               </div>
             </div>
             <div className={'input-group'}>
-              <label>Rank</label> <input name={'rank'} onChange={this.handleChange}/>
+              <label style={{width: '100%'}}>Rank</label>
+              <select onChange={this.handleChange} name={'rank'} style={{width: '70%'}}>
+                {this.state.ranks.map(rank => {
+                    return <option value={rank.id}>{rank.name}</option>
+                  })
+                }
+              </select>
             </div>
             <div style={{display: 'flex'}}>
               <div className={'input-group'}>
@@ -170,7 +194,6 @@ class NewLesseeModal extends React.Component {
             </div>
             <div className={'input-group'}>
               <label>Notes</label> 
-              {/* <textarea name={'notes'} onChange={this.handleChange} /> */}
               <input name={'notes'} onChange={this.handleChange}/>
             </div>
             <div className={'input-group'}>
@@ -188,11 +211,23 @@ class NewLesseeModal extends React.Component {
                 </div>
               </div>
               <div style={{display: 'flex'}}>
-                <div className={'input-group'}>
-                  <label>Number of guests</label> <input type="text" name="numberofguests" value={this.state.numberofguests} onChange={this.handleChange}/>
+              <div className={'input-group'}>
+                  <label style={{width: '100%'}}>Purpose</label> 
+                  <select onChange={this.handleChange} name={'purpose'} style={{width: '70%'}}>
+                  {
+                    this.state.tdys.map(tdy => {
+                      return <option value={tdy.id}>{tdy.name}</option>
+                    })
+                  }
+                  </select>
                 </div>
                 <div className={'input-group'}>
-                  <label>Purpose</label> <input type="text" name="purpose" onChange={this.handleChange}/>
+                  <label style={{width: '100%'}}>Any guests? </label> <br />
+                  <select onChange={this.handleChange} name={'numberofguests'} style={{width: '70%'}}>
+                    {this.state.guests.map(guest => {
+                      return <option value={guest.id}>{guest.name}</option>
+                    })}
+                  </select>
                 </div>
               </div>
               <div style={{display: 'flex'}}>
@@ -203,10 +238,6 @@ class NewLesseeModal extends React.Component {
                       return <option value={room.id}>{room.name}</option>
                     })}
                   </select>
-                </div>
-                <div className={'input-group'}>
-                  <label>Are they bringing a pet? </label> <br />
-                  <input name={'pet'} type={'checkbox'} onChange={this.handleChange} />
                 </div>
               </div>
             </section>

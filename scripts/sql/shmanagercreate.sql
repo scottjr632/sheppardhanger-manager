@@ -15,6 +15,8 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+
+DROP USER IF EXISTS shmanager;
 ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_roleid_fkey;
 ALTER TABLE IF EXISTS ONLY public.rooms DROP CONSTRAINT IF EXISTS rooms_houseid_fkey;
 ALTER TABLE IF EXISTS ONLY public.reservations DROP CONSTRAINT IF EXISTS reservations_roomid_fkey;
@@ -183,7 +185,7 @@ CREATE TABLE public.lessee (
     state text,
     zipcode text,
     notes text,
-    rank text,
+    rank integer,
     reservationid bigint,
     archived boolean
 );
@@ -313,7 +315,7 @@ ALTER SEQUENCE public.referrerlog_id_seq OWNED BY public.referrerlog.id;
 CREATE TABLE public.reservations (
     id integer NOT NULL,
     lesseeid bigint,
-    purpose text,
+    purpose integer,
     numberofguests integer,
     pet boolean,
     checkindate date,
@@ -751,6 +753,26 @@ ALTER TABLE ONLY public.rooms
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_roleid_fkey FOREIGN KEY (roleid) REFERENCES public.roles(id);
 
+
+ALTER TABLE ONLY public.reservations
+    ADD CONSTRAINT  reservations_tdytype_fkey FOREIGN KEY (purpose) REFERENCES public.tdytype(id);
+
+
+ALTER TABLE ONLY public.reservations
+    ADD CONSTRAINT  reservations_guesttype_fkey FOREIGN KEY (numberofguests) REFERENCES public.guesttype(id);
+
+
+ALTER TABLE ONLY public.lessee
+    ADD CONSTRAINT  lessee_ranktype_fkey FOREIGN KEY (rank) REFERENCES public.ranktype(id);
+
+
+\prompt 'Enter password of default user:' password
+CREATE USER shmanager with encrypted  password :password;
+\echo 'Created user shmanager'
+
+GRANT USAGE ON SCHEMA public TO shmanager;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO shmanager;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to shmanager;
 
 --
 -- PostgreSQL database dump complete
