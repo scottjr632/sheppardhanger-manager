@@ -37,7 +37,7 @@ class Dashboard extends React.Component {
 
   render(){
     return (
-      <div>
+      <div style={{marginBottom: '100px'}}>
         <Navi />
         <Schedule />
         {/* <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} /> */}

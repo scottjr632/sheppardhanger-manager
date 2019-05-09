@@ -168,8 +168,8 @@ class NewLesseeModal extends React.Component {
               </div>
             </div>
             <div className={'input-group'}>
-              <label>Rank</label>
-              <select onChange={this.handleChange} name={'rank'}>
+              <label style={{width: '100%'}}>Rank</label>
+              <select onChange={this.handleChange} name={'rank'} style={{width: '70%'}}>
                 {this.state.ranks.map(rank => {
                     return <option value={rank.id}>{rank.name}</option>
                   })
@@ -194,7 +194,6 @@ class NewLesseeModal extends React.Component {
             </div>
             <div className={'input-group'}>
               <label>Notes</label> 
-              {/* <textarea name={'notes'} onChange={this.handleChange} /> */}
               <input name={'notes'} onChange={this.handleChange}/>
             </div>
             <div className={'input-group'}>
@@ -213,8 +212,8 @@ class NewLesseeModal extends React.Component {
               </div>
               <div style={{display: 'flex'}}>
               <div className={'input-group'}>
-                  <label>Purpose</label> 
-                  <select onChange={this.handleChange} name={'purpose'}>
+                  <label style={{width: '100%'}}>Purpose</label> 
+                  <select onChange={this.handleChange} name={'purpose'} style={{width: '70%'}}>
                   {
                     this.state.tdys.map(tdy => {
                       return <option value={tdy.id}>{tdy.name}</option>
@@ -223,8 +222,8 @@ class NewLesseeModal extends React.Component {
                   </select>
                 </div>
                 <div className={'input-group'}>
-                  <label>Any guests? </label> <br />
-                  <select onChange={this.handleChange} name={'numberofguests'}>
+                  <label style={{width: '100%'}}>Any guests? </label> <br />
+                  <select onChange={this.handleChange} name={'numberofguests'} style={{width: '70%'}}>
                     {this.state.guests.map(guest => {
                       return <option value={guest.id}>{guest.name}</option>
                     })}
