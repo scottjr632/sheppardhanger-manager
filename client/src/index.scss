@@ -349,7 +349,7 @@ tr{
   }
 
   &.dangerous {
-    background-color: red;
+    background-color: #ed645a;
   }
 
   &.save {
@@ -626,7 +626,7 @@ h4 {
     input {
       border: none;
       border-bottom: 1pt solid black;
-      width: 60%;
+      // width: 60%;
       min-width: 100px;
       margin-left: 20px;
       margin-right: 20px;
@@ -646,7 +646,7 @@ h4 {
     }
 
     select {
-      margin-left: 10px;
+      // margin-left: 10px;
       vertical-align: middle
     }
   }
