@@ -102,6 +102,8 @@ button.btn {
       }
       td {
         border-bottom: 1px solid $gray-border;
+        overflow-y: hidden !important; 
+        overflow-x: auto !important;
         cursor: pointer;
         display: table-cell;
         padding: 20px 24px;
