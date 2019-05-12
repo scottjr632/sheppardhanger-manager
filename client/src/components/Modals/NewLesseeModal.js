@@ -169,7 +169,7 @@ class NewLesseeModal extends React.Component {
               <label style={{width: '100%'}}>Rank</label>
               <select onChange={this.handleChange} name={'rank'} style={{width: '70%'}}>
                 {this.state.ranks.map(rank => {
-                    return <option value={rank.id}>{rank.name}</option>
+                    return <option key={rank.id} value={rank.id}>{rank.name}</option>
                   })
                 }
               </select>
@@ -214,7 +214,7 @@ class NewLesseeModal extends React.Component {
                   <select onChange={this.handleChange} name={'purpose'} style={{width: '70%'}}>
                   {
                     this.state.tdys.map(tdy => {
-                      return <option value={tdy.id}>{tdy.name}</option>
+                      return <option key={tdy.id} value={tdy.id}>{tdy.name}</option>
                     })
                   }
                   </select>
@@ -223,7 +223,7 @@ class NewLesseeModal extends React.Component {
                   <label style={{width: '100%'}}>Any guests? </label> <br />
                   <select onChange={this.handleChange} name={'numberofguests'} style={{width: '70%'}}>
                     {this.state.guests.map(guest => {
-                      return <option value={guest.id}>{guest.name}</option>
+                      return <option key={guest.id} value={guest.id}>{guest.name}</option>
                     })}
                   </select>
                 </div>
@@ -233,7 +233,7 @@ class NewLesseeModal extends React.Component {
                   <label>Room</label><br />
                   <select name={'activeRoomId'} onChange={this.handleChange} value={this.state.activeRoomId}>
                     {this.state.rooms.map(room => {
-                      return <option value={room.id}>{room.name}</option>
+                      return <option key={room.id} value={room.id}>{room.name}</option>
                     })}
                   </select>
                 </div>

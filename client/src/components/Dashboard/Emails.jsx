@@ -33,7 +33,7 @@ const Emails = props => {
           Object.keys(props.data).map(key => {
             let { prettyName, done } = props.data[key]
             return (
-              <span style={{display: 'grid', gridTemplateColumns: '[left] 100px [center] 35px [right] auto', gridRowGap: '10px'}}>
+              <span style={{display: 'grid', gridTemplateColumns: '[left] 100px [center] 35px [right] auto', gridRowGap: '10px'}} key={key}>
                 <div style={{textAlign: 'left', gridArea: 'left', ...leftBorder}}>{prettyName}</div>
                   <span style={{gridArea: 'center', ...rightBorder}}>
                     <input type="checkbox" checked={done} style={{transform: 'scale(1.5)'}} readOnly={true} disabled={true}/>

@@ -7,7 +7,7 @@ const defaultStyle = {
 }
 
 const QuestionHelper = props => {
-    return <a className={'tip'} style={defaultStyle}><i class="fas fa-question-circle"><span>{ props.helpText }</span></i></a>
+    return <a className={'tip'} style={defaultStyle}><i className="fas fa-question-circle"><span>{ props.helpText }</span></i></a>
     
 }
 

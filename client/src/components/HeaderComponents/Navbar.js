@@ -71,7 +71,7 @@ class Navi extends React.Component {
         </div>
         <div className={'pull-right nav__link'} style={navStyle}>
           {links.map(link => {
-            return <a className={this.state.currentKey === link.key ? 'active' : ''} onClick={() => this.handleSelect(link.key)}>{link.name}</a>
+            return <a className={this.state.currentKey === link.key ? 'active' : ''} key={link.key} onClick={() => this.handleSelect(link.key)}>{link.name}</a>
           })}
           <span className={'username dropdown__toggle'} style={dropDownStyle} onClick={this.showDropdown}>
               <a className={this.state.currentKey === 3 ? 'active' : ''}>
@@ -94,9 +94,7 @@ class Navi extends React.Component {
 }
 
 Navi.propTypes = {
-  userName: PropTypes.string.isRequired,
-  loggedIn: PropTypes.bool.isRequired,
-  onLogout: PropTypes.func.isRequired
+  userStore: PropTypes.object,
 }
 
 export default withRouter(Navi);

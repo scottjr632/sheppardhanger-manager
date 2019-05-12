@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -12,6 +11,7 @@ import { stores } from './stores'
 
 import './index.scss';
 
+// const { createHistory } = require('history')
 require('dotenv').config()
 
 axios.defaults.baseURL = '/api/v1'

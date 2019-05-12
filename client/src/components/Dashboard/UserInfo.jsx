@@ -70,7 +70,7 @@ class UserInfo extends React.Component {
           <table className="table-responsive card-list-table">
             <thead>
               <tr>
-                { Object.keys(data).map(key => { return <th>{key}</th> }) }
+                { Object.keys(data).map(key => { return <th key={key}>{key}</th> }) }
               </tr>
             </thead>
             <tbody>
@@ -80,8 +80,8 @@ class UserInfo extends React.Component {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
                       return key === 'reservations' ?
-                      <td data-title={'RES STATUS'}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}</td>:
-                      <td data-title={name}>{data[key]}</td>
+                      <td data-title={'RES STATUS'} key={key}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}</td>:
+                      <td data-title={name} key={key}>{data[key]}</td>
                     }
                   })
                 }

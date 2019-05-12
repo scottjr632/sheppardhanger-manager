@@ -15,7 +15,7 @@ class Table extends React.Component {
             expanded: false,
             searchCode: 'name',
             initialArray: [],
-            data: [],
+            data: this.props.lesseeStore.formattedLessees,
             sort: {
               column: null,
               direction: "asc"
@@ -26,6 +26,8 @@ class Table extends React.Component {
     componentWillReceiveProps(nextProps) {
       if (nextProps.data !== this.state.data) {
         this.setState({ data: nextProps.data, initialArray: nextProps.data })
+      } else if (nextProps.lesseeStore.formattedLessees !== this.state.data) {
+        this.setState({ data : nextProps.lesseeStore.formattedLessees, initialArray: nextProps.lesseeStore.formattedLessees })
       }
     }
 
@@ -44,6 +46,7 @@ class Table extends React.Component {
     sort(event, sortKey) {
       const sortOrder = this.state.sort.direction === "asc" ? 1 : -1;
       let { data } = this.state
+      console.log(data, this.state)
       
       // sort the table
       data.sort((a, b) => {
@@ -120,8 +123,8 @@ class Table extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.lesseeStore.formattedLessees.map(value => {
-                    return <ExpandableRow data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }}/>
+                {this.state.data.map((value, index) => {
+                    return <ExpandableRow key={index} data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }}/>
                   })
                 }
               </tbody>
@@ -132,8 +135,7 @@ class Table extends React.Component {
 }
 
 Table.propTypes = {
-  data: PropTypes.array.isRequired,
-  moreInfo: PropTypes.func
+  lesseeStore: PropTypes.object
 }
 
 export default Table
