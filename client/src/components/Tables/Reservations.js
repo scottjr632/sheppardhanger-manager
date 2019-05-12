@@ -1,13 +1,36 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { observer, inject } from 'mobx-react'
-
-import * as backend from '../../backend'
 import ExpandableRow from './ExpandableRow'
+import * as backend from '../../backend'
 
-@inject ('lesseeStore')
-@observer
+const formatReservation = (reservation) => {
+  return {
+    house: reservation.house,
+    room: reservation.room,
+    lengthofstay: reservation.lengthofstay,
+    checkindate: reservation.checkindate,
+    checkoutdate: reservation.checkoutdate
+  }
+}
+
+const formatLessee = (lessee) => {
+  return  {
+     name: `${lessee.lname}, ${lessee.fname}`,
+       email: lessee.email,
+     phone: lessee.phone || '',
+     rank: lessee.rank || '',
+     reservations: lessee.reservations && lessee.reservations.length > 0
+     ? `${lessee.reservations[0].room} - ${lessee.reservations[0].checkindate}`
+     : '',
+     exandableInfo: `Address: ${lessee.address}
+               City: ${lessee.city}
+               State: ${lessee.state}
+               Notes: ${lessee.notes}`,
+     id: lessee.id,
+   }
+ }
+
 class Table extends React.Component {
 
     constructor(props) {
@@ -16,6 +39,7 @@ class Table extends React.Component {
             expanded: false,
             searchCode: 'name',
             initialArray: [],
+            lesseeId: 0,
             data: [],
             sort: {
               column: null,
@@ -24,16 +48,21 @@ class Table extends React.Component {
         }
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //   if (nextProps.data !== this.state.data) {
-    //     this.setState({ data: nextProps.data, initialArray: nextProps.data })
-    //   } else if (nextProps.lesseeStore.formattedLessees !== this.state.data) {
-    //     this.setState({ data : nextProps.lesseeStore.formattedLessees, initialArray: nextProps.lesseeStore.formattedLessees })
-    //   }
-    // }
-
-    componentDidMount() {
-        backend.getReservationsByLesseeId(this.props.lesseeId)
+    componentWillReceiveProps(nextProps) {
+      if (parseInt(nextProps.lesseeId) !== parseInt(this.state.lesseeId)) {
+        backend.getReservationsByLesseeId(nextProps.lesseeId, res => {
+          let { data } = res
+          if (data) {
+            data = data.length && data.length > 0 ? data : [data]
+            let formatted = []
+        
+            data.forEach(res => {
+              formatted.push(formatReservation(res))
+            })
+            this.setState({ data: formatted, lesseeId: parseInt(nextProps.lesseeId) })
+          }
+        })
+      }
     }
 
     handleClick = () => {
@@ -90,36 +119,41 @@ class Table extends React.Component {
               <thead>
                 <tr>
                   <th 
-                    onClick={e => {this.sort(e, 'name')}} 
-                    className={`${this.setArrow('name')} name sortable-header`}
+                    onClick={e => {this.sort(e, 'house')}} 
+                    className={`${this.setArrow('house')} house sortable-header`}
                   >
-                    Name
+                    House
                   </th>
                   <th 
-                    onClick={e => {this.sort(e, 'email')}} 
-                    className={`${this.setArrow('email')} email sortable-header`}>
-                  Email</th>
+                    onClick={e => {this.sort(e, 'room')}} 
+                    className={`${this.setArrow('room')} room sortable-header`}>
+                  Room</th>
                   <th 
-                    onClick={e => {this.sort(e, 'phone')}} 
-                      className={`${this.setArrow('phone')} phone sortable-header`}>
-                      Phone</th>
+                    onClick={e => {this.sort(e, 'lengthofstay')}} 
+                      className={`${this.setArrow('lengthofstay')} lengthofstay sortable-header`}>
+                      Nights</th>
                   <th 
-                    onClick={e => {this.sort(e, 'rank')}} 
-                    className={`${this.setArrow('rank')} rank sortable-header`}>
-                  Rank</th>
+                    onClick={e => {this.sort(e, 'checkindate')}} 
+                    className={`${this.setArrow('checkindate')} checkindate sortable-header`}>
+                  Check-in</th>
                   <th 
-                    onClick={e => {this.sort(e, 'reservation')}} 
-                    className={`${this.setArrow('reservation')} reservation sortable-header`}
+                    onClick={e => {this.sort(e, 'checkoutdate')}} 
+                    className={`${this.setArrow('checkoutdate')} checkoutdate sortable-header`}
                   >
-                  Reservation
+                  Check-out
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {this.props.lesseeStore.formattedLessees.map((value, index) => {
-                    return <ExpandableRow key={index} data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }}/>
-                  })
-                }
+                {this.state.data.map((value, index) => {
+                  return (
+                    <tr key={index}>
+                      {Object.keys(value).map(key => {
+                        return <td data-title={key}>{value[key]}</td>
+                      })}
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

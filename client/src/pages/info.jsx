@@ -4,6 +4,7 @@ import Navi from '../components/HeaderComponents/Navbar'
 import Emails from '../components/Dashboard/Emails.jsx'
 import UserInfo from '../components/Dashboard/UserInfo.jsx'
 import Table from '../components/Tables/Table'
+import ReservationTable from '../components/Tables/Reservations'
 import Question from '../components/Dashboard/Question.jsx'
 import * as backend from '../backend'
 
@@ -41,7 +42,7 @@ class Info extends React.Component {
       let id = search.match(/=(.*)/)
       if (id[1]) backend.getLesseeById(id[1], (res) => {
         let { data } = res
-        if (data) this.setState({userInfo: data})
+        if (data) this.setState({ userInfo: data, userId: id[1] })
       })
     }
   }
@@ -63,12 +64,12 @@ class Info extends React.Component {
             <UserInfo data={this.state.userInfo} history={this.props.history} />
           </section>
         </div>
-        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
-        <div className='table large-screen' style={{gridArea: 'tbl'}}>
+        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}} className={'container'}>
+          <div className='table large-screen' style={{gridArea: 'tbl'}}>
             <div>
-              <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} />
-              <label>Locate a lessee</label>
-              <Table moreInfo={this.moreInfo}/>
+              <Question helpText={`List of all the user's reservations. Search and filter to find a specific reservation.`} />
+              <label>Locate a reservation</label>
+              <ReservationTable lesseeId={this.state.userId} />
             </div>
           </div>
         </div>
