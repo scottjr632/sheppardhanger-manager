@@ -155,7 +155,7 @@ class NewLesseeModal extends React.Component {
         >
           <div className={''}>
             <div style={{...gridLayout}}>
-              <div style={{gridArea: 'left', gridRowStart: 2}} className={'input-group'}>
+              <div style={{gridArea: 'left', gridRowStart: 1}} className={'input-group'}>
                   <label style={{width: '1005'}}>Select a calendar type</label>
                   <select name={'bookingTypeId'} onChange={this.handleChange} style={{width: 'auto'}} value={this.state.bookingTypeId}>
                     <option value={0}>-- CALENDAR TYPE --</option>
@@ -164,7 +164,7 @@ class NewLesseeModal extends React.Component {
                     })}
                   </select>
               </div>
-              <div style={{gridArea: 'right', gridRowStart: 2}} className={'input-group'}>
+              <div style={{gridArea: 'right', gridRowStart: 1}} className={'input-group'}>
                   <label style={{width: '1005'}}>Select a lessee</label>
                   <select name={'lesseeid'} onChange={this.handleChange} style={{width: 'auto'}} value={this.state.lesseeid}>
                     <option value={0}>-- SELECT A LESSEE --</option>
