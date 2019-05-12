@@ -131,6 +131,11 @@ class NewLesseeModal extends React.Component {
       }
     })
     let event = this.state.bookingTypes.find(type => parseInt(type.id) === parseInt(this.state.bookingTypeId))
+    if (this.state.lesseeid) {
+      let roomObj = this.state.rooms.find(room => parseInt(room.id) === parseInt(this.state.activeRoomId))
+      this.props.lesseeStore.updateFormattedLesseeValue(this.state.lesseeid, 
+        'reservations', `${roomObj.name} - ${this.state.checkInDate}`)
+    }
     NotificationManager.info(`Created event ${event.name}`)
     this.props.closeModal()
   }
@@ -143,6 +148,15 @@ class NewLesseeModal extends React.Component {
 
   setDate = (name, value) => {
     this.setState({ [name]: value })
+  }
+
+  getBookingTypeName = (id) => {
+    let bookingType = this.state.bookingTypes.find(type => parseInt(type.id) === parseInt(id))
+    if (bookingType) {
+      return bookingType.name
+    }
+
+    return ''
   }
 
   render() {
@@ -164,6 +178,7 @@ class NewLesseeModal extends React.Component {
                     })}
                   </select>
               </div>
+              {this.getBookingTypeName(this.state.bookingTypeId) !== CALENDAR_CLEANING &&
               <div style={{gridArea: 'right', gridRowStart: 1}} className={'input-group'}>
                   <label style={{width: '1005'}}>Select a lessee</label>
                   <select name={'lesseeid'} onChange={this.handleChange} style={{width: 'auto'}} value={this.state.lesseeid}>
@@ -173,7 +188,26 @@ class NewLesseeModal extends React.Component {
                     })}
                   </select>
               </div>
-              {this.state.bookingTypeId !== 0 &&
+              }
+              {this.getBookingTypeName(this.state.bookingTypeId) === CALENDAR_CLEANING &&
+                <React.Fragment>
+                  <div className={'input-group'} style={{gridArea: 'left'}}>
+                    <label>Check-in</label> <DayPickerInput onDayChange={day => this.setDate('checkInDate', day)} selectedDays={this.props.eventStart} placeholder={`${formatDate(this.props.eventStart)}`} />
+                  </div>
+                  <div className={'input-group'} style={{gridArea: 'right'}}>
+                    <label>Check-out</label> <DayPickerInput onDayChange={day => this.setDate('checkOutDate', day)} selectedDays={this.state.checkOutDate} placeholder={`${formatDate(this.props.eventStop)}`} />
+                  </div>
+                  <div className={'input-group'}>
+                    <label>Room</label><br />
+                    <select name={'activeRoomId'} onChange={this.handleChange} value={this.state.activeRoomId}>
+                      {this.state.rooms.map(room => {
+                        return <option value={room.id}>{room.name}</option>
+                      })}
+                    </select>
+                  </div>
+                </React.Fragment>
+              }
+              {this.state.bookingTypeId !== 0 && this.getBookingTypeName(this.state.bookingTypeId) !== CALENDAR_CLEANING &&
                 <React.Fragment>
                   <div className={'input-group'} style={{gridArea: 'left'}}>
                     <label>Check-in</label> <DayPickerInput onDayChange={day => this.setDate('checkInDate', day)} selectedDays={this.props.eventStart} placeholder={`${formatDate(this.props.eventStart)}`} />

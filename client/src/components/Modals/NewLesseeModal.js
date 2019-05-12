@@ -53,8 +53,8 @@ class NewLesseeModal extends React.Component {
       zipcode: '',
       notes: '',
       pet: false,
-      numberofguests: 0,
-      purpose: '',
+      numberofguests: 1,
+      purpose: 1,
       createBooking: false,
       rooms: [],
       activeRoomId: 1

@@ -44,6 +44,27 @@ class LesseeStore {
     }
   }
 
+  @action updateFormattedLessee(lessee) {
+    let lesseeIndex = this.formattedLessees.indexOf(value => parseInt(value.id) === parseInt(lessee.id))
+    if (lesseeIndex !== -1) {
+      this.formattedLessees[lesseeIndex] = lessee
+    }
+  }
+
+  @action updateFormattedLesseeValue(lesseeId, key, value) {
+    let lesseeIndex = this.formattedLessees.indexOf(value => parseInt(value.id) === parseInt(lesseeId))
+    if (lesseeIndex !== -1) {
+      this.formattedLessees[lesseeIndex][key] = value
+    }
+  }
+
+  @action updateLessee(lessee) {
+    let lesseeIndex = this.lessees.indexOf(value => parseInt(value.id) === parseInt(lessee.id))
+    if (lesseeIndex !== -1) {
+      this.lessees[lesseeIndex] = lessee
+    }
+  }
+
   @action addNewLessee(lessee) {
 
     if (!this.lessees.find(elem => elem.id === lessee.id)) {
