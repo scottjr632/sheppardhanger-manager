@@ -22,7 +22,7 @@ RUN npm --prefix client install
 
 COPY . /shmanager
 
-RUN npm --prefix client run build
+# RUN npm --prefix client run build
 
 ENTRYPOINT ["/shmanager/docker-entrypoint.sh"]
 
