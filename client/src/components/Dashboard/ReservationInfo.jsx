@@ -13,6 +13,24 @@ const editStyle = {
   cursor: 'pointer',
 }
 
+const excludedTypes = [
+  'bookingtypeid',
+  'id',
+  'pet', 
+  'roomid',
+  'lesseeid'
+]
+
+const prettyNames = {
+  'bookingtype' : 'Booking type',
+  'checkindate' : 'Check-in-date',
+  'checkoutdate' : 'Check-out-date',
+  'lesseeemail' : 'Email', 
+  'lesseefname' : 'First name', 
+  'lesseelname' : 'Last name', 
+  'numberofguests' : 'Guests'
+}
+
 class Info extends React.Component {
 
   constructor(props) {
@@ -64,7 +82,10 @@ class Info extends React.Component {
               <tr>
                 {!this.state.edit &&
                   Object.keys(data).map(key => {
-                    return <td key={key} data-title={key}>{data[key]}</td>
+                    if (!excludedTypes.includes(key)) {
+                      let name = prettyNames[key] || key
+                      return <td key={key} data-title={name}>{data[key]}</td>
+                    }
                   })
                 }
                 {this.state.edit && <div></div>}

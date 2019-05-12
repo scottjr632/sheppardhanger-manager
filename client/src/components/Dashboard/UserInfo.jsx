@@ -12,6 +12,20 @@ const editStyle = {
   cursor: 'pointer',
 }
 
+const excludedTypes = [
+  'id'
+]
+
+const prettyNames = {
+  'bookingtype' : 'Booking type',
+  'checkindate' : 'Check-in-date',
+  'checkoutdate' : 'Check-out-date',
+  'lesseeemail' : 'Email', 
+  'fname' : 'First name', 
+  'lname' : 'Last name', 
+  'numberofguests' : 'Guests'
+}
+
 class UserInfo extends React.Component {
 
   constructor(props) {
@@ -45,8 +59,6 @@ class UserInfo extends React.Component {
   }
 
   toggleEdit = () => {
-    console.log(this.state, ' STATE')
-    console.log(this.props, 'PROPS')
     this.setState({ edit: !this.state.edit })
   }
 
@@ -65,23 +77,29 @@ class UserInfo extends React.Component {
               <tr>
                 {!this.state.edit &&
                   Object.keys(data).map(key => {
-                    return key === 'reservations' ?
-                     <td data-title={'RES STATUS'}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}</td>:
-                     <td data-title={key}>{data[key]}</td>
+                    if (!excludedTypes.includes(key)) {
+                      let name = prettyNames[key] || key
+                      return key === 'reservations' ?
+                      <td data-title={'RES STATUS'}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}</td>:
+                      <td data-title={name}>{data[key]}</td>
+                    }
                   })
                 }
                 {this.state.edit && 
                   Object.keys(data).map(key => {
-                    return key === 'reservations' ?
-                     <td data-title={'RES STATUS'}>
-                      <select value={ data[key].length > 0 ? data[key][0].bookingtypeid : 0} name={key}>
-                        <option value={0}>-- NONE --</option>
-                        {this.state.bookingTypes.map(btype => {
-                          return <option value={btype.id}>{btype.name}</option>
-                        })}
-                      </select>
-                    </td> :
-                     <td data-title={key}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
+                    if (!excludedTypes.includes(key)) {
+                      let name = prettyNames[key] || key
+                      return key === 'reservations' ?
+                      <td data-title={'RES STATUS'}>
+                        <select value={ data[key].length > 0 ? data[key][0].bookingtypeid : 0} name={key}>
+                          <option value={0}>-- NONE --</option>
+                          {this.state.bookingTypes.map(btype => {
+                            return <option value={btype.id}>{btype.name}</option>
+                          })}
+                        </select>
+                      </td> :
+                      <td data-title={name}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
+                    }
                   })
                 }
               </tr>

@@ -965,11 +965,11 @@ h4 {
  * {
    box-sizing: border-box;
  }
-//  button {
-//    outline: none;
-//    cursor: pointer;
-//    margin: 0;
-//  }
+ button {
+   outline: none;
+   cursor: pointer;
+   margin: 0;
+ }
  .pen-wrapper {
    display: flex;
    width: 100%;
@@ -1015,6 +1015,7 @@ h4 {
    text-align: center;
    background: none;
    transition: background .3s ease;
+   color: white !important;
  }
  .btn--primary {
    background-color: $btn-color;
@@ -1125,6 +1126,7 @@ h4 {
  .button-slide-out__above {
    @extend .btn;
    font-size: 14px;
+   color: black !important;
    .is_active & {
      transform: translateY(-100%)
    }
@@ -1157,4 +1159,8 @@ h4 {
    .is_active & {
      transform: translateY(-100%)
    }
+ }
+ 
+ .DayPickerInput-OverlayWrapper {
+   z-index: 9999;
  }

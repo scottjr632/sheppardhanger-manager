@@ -3,3 +3,7 @@ export const BOOKINGTYPECOLORS = {
     'CONFIRMED': '#e95d12',
     'CLEANING': '#ac12e9'
   }
+
+export const CALENDAR_CLEANING = 'CLEANING'
+export const CALENDAR_CONFIRMED = 'CONFIRMED'
+export const CALENDAR_TENTATVE = 'TENTATIVE'

@@ -94,7 +94,6 @@ export const getRoomsAsync = async () => {const data = await axios.get('/houses/
 export const getAllReservationsAsync = async () => {const data = await axios.get('/reservations/'); return data}
 
 export async function createNewLesseeAsync(data) {
-  console.log('stuff happening')
   let res =  await axios.post('/lessee/', data)
   return res.data
 }
