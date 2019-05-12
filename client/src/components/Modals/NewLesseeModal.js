@@ -5,7 +5,7 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { NotificationManager } from 'react-notifications'
 import { inject, observer } from 'mobx-react'
 
-
+import ConfirmButton from '../Buttons/confirm.jsx'
 import * as backend from '../../backend'
 import 'react-day-picker/lib/style.css';
 
@@ -133,9 +133,7 @@ class NewLesseeModal extends React.Component {
   handleChange = (event) => {
     let { target } = event
     let value = target.type === 'checkbox' ? target.checked : target.value
-    this.setState({
-      [target.name]: value
-    }, () => console.log(this.state))
+    this.setState({ [target.name]: value })
   }
 
   setDate = (name, value) => {
@@ -242,10 +240,10 @@ class NewLesseeModal extends React.Component {
               </div>
             </section>
             }
-            <div className={'input-group'} style={{display: 'flex'}}>
-              <button onClick={this.props.closeModal} className={'pull-left btn__new dangerous'}>Cancel</button>
-              <button onClick={this.createNewLessee} className={'pull-right btn__new'}>Create</button>
-            </div>
+          </div>
+          <div className={'input-group'} style={{width: '100%', display: 'flex', justifyContent: 'space-evenly', marginTop: '20px'}}>
+            <ConfirmButton removeMessage={'Cancel'} confirmAction={this.props.closeModal}/>
+            <ConfirmButton removeMessage={'Create'} confirmAction={this.createNewLessee} style={{backgroundColor: '#128de9'}} />
           </div>
         </Modal>
       </div>
