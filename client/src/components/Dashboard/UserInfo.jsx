@@ -62,6 +62,10 @@ class UserInfo extends React.Component {
     this.setState({ edit: !this.state.edit })
   }
 
+  goToReservationInfo = (reservtionId) => {
+    this.props.history.push(`/reservation?id=${reservtionId}`)
+  }
+
   render(){
     let { data } = this.props
     return (
@@ -80,7 +84,10 @@ class UserInfo extends React.Component {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
                       return key === 'reservations' ?
-                      <td data-title={'RES STATUS'} key={key}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}</td>:
+                      <React.Fragment>
+                        <td data-title={'RES STATUS'} key={key} onClick={() => {this.goToReservationInfo(data[key][0].id || 0)}}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}<i className="fas fa-external-link-alt" style={{margin: '0 0 0 10px'}}></i></td>  
+                        <td data-title={'ROOM'} key={key} onClick={() => {this.goToReservationInfo(data[key][0].id || 0)}}>{ data[key].length > 0 ? data[key][0].room : ''}</td>
+                      </React.Fragment> : 
                       <td data-title={name} key={key}>{data[key]}</td>
                     }
                   })

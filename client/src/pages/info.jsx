@@ -59,7 +59,7 @@ class Info extends React.Component {
             <Emails data={emailTestInfo} />
           </section>
           <section style={{gridArea: 'right'}}>
-            <UserInfo data={this.state.userInfo} />
+            <UserInfo data={this.state.userInfo} history={this.props.history} />
           </section>
         </div>
       </div>
