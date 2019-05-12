@@ -17,5 +17,5 @@ export default class AccessDenied extends React.Component {
 }
 
 AccessDenied.propTypes = {
-    history: PropTypes.isRequired
+    history: PropTypes.object.isRequired
 }

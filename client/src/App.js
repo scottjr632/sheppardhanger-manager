@@ -25,6 +25,14 @@ const Info = asyncComponent(() =>
   import('./pages/info.jsx').then(module => module.default)
 )
 
+const ReservationInfo = asyncComponent(() =>
+  import('./pages/reservationInfo.jsx').then(module => module.default)
+)
+
+// const ReservationInfoPage = asyncComponent(() => {
+//   import('./pages/info.jsx').then(module => module.default)
+// })
+
 const NotFound = asyncComponent(() =>
   import('./pages/notFound.jsx').then(module => module.default)
 )
@@ -49,7 +57,8 @@ class App extends Component {
               <Switch>
                 <Route exact path='/login' component={ Login } />
                 <Route exact path='/' component={ Login } />
-                <Route path='/info' component={ Info } />
+                <Route path='/reservation' component={ ReservationInfo } />
+                <PrivateRoute path='/info' component={ Info } />
                 <PrivateRoute path='/dashboard' component={ Dashboard } />
                 <Route name="not-found" path='*' component={ NotFound } />
               </Switch>

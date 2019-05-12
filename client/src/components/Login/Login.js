@@ -41,7 +41,6 @@ class Login extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
-    console.log(this.props)
     let { email, password } = this.state
     if (this.validateForm()) {
       this.props.userStore.loginUser({ email, password }, (auth) => {

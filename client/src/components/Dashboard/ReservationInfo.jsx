@@ -13,7 +13,11 @@ const editStyle = {
 }
 
 const excludedTypes = [
-  'id'
+  'bookingtypeid',
+  'id',
+  'pet', 
+  'roomid',
+  'lesseeid'
 ]
 
 const prettyNames = {
@@ -21,12 +25,12 @@ const prettyNames = {
   'checkindate' : 'Check-in-date',
   'checkoutdate' : 'Check-out-date',
   'lesseeemail' : 'Email', 
-  'fname' : 'First name', 
-  'lname' : 'Last name', 
+  'lesseefname' : 'First name', 
+  'lesseelname' : 'Last name', 
   'numberofguests' : 'Guests'
 }
 
-class UserInfo extends React.Component {
+class Info extends React.Component {
 
   constructor(props) {
     super(props)
@@ -62,10 +66,6 @@ class UserInfo extends React.Component {
     this.setState({ edit: !this.state.edit })
   }
 
-  goToReservationInfo = (reservtionId) => {
-    this.props.history.push(`/reservation?id=${reservtionId}`)
-  }
-
   render(){
     let { data } = this.props
     return (
@@ -74,7 +74,7 @@ class UserInfo extends React.Component {
           <table className="table-responsive card-list-table">
             <thead>
               <tr>
-                { Object.keys(data).map(key => { return <th key={key}>{key}</th> }) }
+                { Object.keys(data).map(key => { return <th>{key}</th> }) }
               </tr>
             </thead>
             <tbody>
@@ -83,32 +83,11 @@ class UserInfo extends React.Component {
                   Object.keys(data).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
-                      return key === 'reservations' ?
-                      <React.Fragment>
-                        <td data-title={'RES STATUS'} key={key} onClick={() => {this.goToReservationInfo(data[key][0].id || 0)}}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}<i className="fas fa-external-link-alt" style={{margin: '0 0 0 10px'}}></i></td>  
-                        <td data-title={'ROOM'} key={key} onClick={() => {this.goToReservationInfo(data[key][0].id || 0)}}>{ data[key].length > 0 ? data[key][0].room : ''}</td>
-                      </React.Fragment> : 
-                      <td data-title={name} key={key}>{data[key]}</td>
+                      return <td key={key} data-title={name}>{data[key]}</td>
                     }
                   })
                 }
-                {this.state.edit && 
-                  Object.keys(data).map(key => {
-                    if (!excludedTypes.includes(key)) {
-                      let name = prettyNames[key] || key
-                      return key === 'reservations' ?
-                      <td data-title={'RES STATUS'}>
-                        <select value={ data[key].length > 0 ? data[key][0].bookingtypeid : 0} name={key}>
-                          <option value={0}>-- NONE --</option>
-                          {this.state.bookingTypes.map(btype => {
-                            return <option value={btype.id}>{btype.name}</option>
-                          })}
-                        </select>
-                      </td> :
-                      <td data-title={name}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
-                    }
-                  })
-                }
+                {this.state.edit && <div></div>}
               </tr>
             </tbody>
           </table>
@@ -117,15 +96,16 @@ class UserInfo extends React.Component {
             {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
             {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.toggleEdit} style={editStyle} /> }
           </div>
+
         </div>
       </div>
     )
   }
 }
 
-UserInfo.propTypes = {
+Info.propTypes = {
     data: PropTypes.object.isRequired,
     editable: PropTypes.bool
 }
 
-export default UserInfo
+export default Info

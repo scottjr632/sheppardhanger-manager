@@ -66,6 +66,7 @@ export const getHouses = (callback) => BuildApi('/houses').get(callback)
 export const getRooms = (callback) => BuildApi('/houses/rooms').get(callback)
 
 export const getAllBookingTypes = (callback) => BuildApi('/reservations/bookingtypes').get(callback)
+export const getReservationById = (reservationId, callback) => BuildApi(`/reservations/${reservationId}`).get(callback)
 export const getReservationsByRoom = (roomId, callback) => BuildApi(`/reservations/room/${roomId}`).get(callback)
 export const getReservationsByHouse = (houseId, callback) => BuildApi(`/reservations/house/${houseId}`).get(callback)
 export const getReservationsByLesseeId = (lesseeId, callback) => BuildApi(`/reservations/${lesseeId}`).get(callback)
@@ -93,7 +94,6 @@ export const getRoomsAsync = async () => {const data = await axios.get('/houses/
 export const getAllReservationsAsync = async () => {const data = await axios.get('/reservations/'); return data}
 
 export async function createNewLesseeAsync(data) {
-  console.log('stuff happening')
   let res =  await axios.post('/lessee/', data)
   return res.data
 }

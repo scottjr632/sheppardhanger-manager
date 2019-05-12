@@ -20,7 +20,6 @@ class SaveDeleteModal extends React.Component {
         let t_data = this.props.data
         if (window.confirm("Are you sure you want to save changes?")){
             t_data.forEach(e => {
-                console.log(e)
                 this.props.handleSave(e)
             })
             this.props.handleClose()

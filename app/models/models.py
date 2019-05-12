@@ -142,6 +142,7 @@ class Reservation(db.Model):
     def serialize(self):
         return {
             'id': self.id,
+            'lesseeid': self.lessee.id if self.lessee else '',
             'lesseefname': self.lessee.fname if self.lessee else '',
             'lesseelname': self.lessee.lname if self.lessee else '',
             'lesseeemail': self.lessee.email if self.lessee else '',

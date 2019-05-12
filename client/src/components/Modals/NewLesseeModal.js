@@ -5,7 +5,7 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { NotificationManager } from 'react-notifications'
 import { inject, observer } from 'mobx-react'
 
-
+import ConfirmButton from '../Buttons/confirm.jsx'
 import * as backend from '../../backend'
 import 'react-day-picker/lib/style.css';
 
@@ -53,8 +53,8 @@ class NewLesseeModal extends React.Component {
       zipcode: '',
       notes: '',
       pet: false,
-      numberofguests: 0,
-      purpose: '',
+      numberofguests: 1,
+      purpose: 1,
       createBooking: false,
       rooms: [],
       activeRoomId: 1
@@ -133,9 +133,7 @@ class NewLesseeModal extends React.Component {
   handleChange = (event) => {
     let { target } = event
     let value = target.type === 'checkbox' ? target.checked : target.value
-    this.setState({
-      [target.name]: value
-    }, () => console.log(this.state))
+    this.setState({ [target.name]: value })
   }
 
   setDate = (name, value) => {
@@ -171,7 +169,7 @@ class NewLesseeModal extends React.Component {
               <label style={{width: '100%'}}>Rank</label>
               <select onChange={this.handleChange} name={'rank'} style={{width: '70%'}}>
                 {this.state.ranks.map(rank => {
-                    return <option value={rank.id}>{rank.name}</option>
+                    return <option key={rank.id} value={rank.id}>{rank.name}</option>
                   })
                 }
               </select>
@@ -216,7 +214,7 @@ class NewLesseeModal extends React.Component {
                   <select onChange={this.handleChange} name={'purpose'} style={{width: '70%'}}>
                   {
                     this.state.tdys.map(tdy => {
-                      return <option value={tdy.id}>{tdy.name}</option>
+                      return <option key={tdy.id} value={tdy.id}>{tdy.name}</option>
                     })
                   }
                   </select>
@@ -225,7 +223,7 @@ class NewLesseeModal extends React.Component {
                   <label style={{width: '100%'}}>Any guests? </label> <br />
                   <select onChange={this.handleChange} name={'numberofguests'} style={{width: '70%'}}>
                     {this.state.guests.map(guest => {
-                      return <option value={guest.id}>{guest.name}</option>
+                      return <option key={guest.id} value={guest.id}>{guest.name}</option>
                     })}
                   </select>
                 </div>
@@ -235,17 +233,17 @@ class NewLesseeModal extends React.Component {
                   <label>Room</label><br />
                   <select name={'activeRoomId'} onChange={this.handleChange} value={this.state.activeRoomId}>
                     {this.state.rooms.map(room => {
-                      return <option value={room.id}>{room.name}</option>
+                      return <option key={room.id} value={room.id}>{room.name}</option>
                     })}
                   </select>
                 </div>
               </div>
             </section>
             }
-            <div className={'input-group'} style={{display: 'flex'}}>
-              <button onClick={this.props.closeModal} className={'pull-left btn__new dangerous'}>Cancel</button>
-              <button onClick={this.createNewLessee} className={'pull-right btn__new'}>Create</button>
-            </div>
+          </div>
+          <div className={'input-group'} style={{width: '100%', display: 'flex', justifyContent: 'space-evenly', marginTop: '20px'}}>
+            <ConfirmButton removeMessage={'Cancel'} confirmAction={this.props.closeModal}/>
+            <ConfirmButton removeMessage={'Create'} confirmAction={this.createNewLessee} style={{backgroundColor: '#128de9'}} />
           </div>
         </Modal>
       </div>

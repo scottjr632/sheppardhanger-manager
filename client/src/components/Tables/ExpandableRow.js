@@ -37,8 +37,8 @@ class ExpandableRow extends React.Component {
           {Object.keys(data).map((key, index) => {
             if (key !== 'exandableInfo' && key !== 'id') {
               return index === 0
-              ? <td><i className={`fas fa-plus ${this.state.expanded ? 'rotated' : ''}`}></i>{data[key]}</td>
-              : <td>{data[key]}</td>
+              ? <td key={key}><i className={`fas fa-plus ${this.state.expanded ? 'rotated' : ''}`}></i>{data[key]}</td>
+              : <td key={key}>{data[key]}</td>
             }
           })}
           </tr>

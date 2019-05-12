@@ -15,7 +15,7 @@ class Table extends React.Component {
             expanded: false,
             searchCode: 'name',
             initialArray: [],
-            data: [],
+            data: this.props.lesseeStore.formattedLessees,
             sort: {
               column: null,
               direction: "asc"
@@ -23,43 +23,34 @@ class Table extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-      if (nextProps.data !== this.state.data) {
-        this.setState({ data: nextProps.data, initialArray: nextProps.data })
-      }
-    }
+    // componentWillReceiveProps(nextProps) {
+    //   if (nextProps.data !== this.state.data) {
+    //     this.setState({ data: nextProps.data, initialArray: nextProps.data })
+    //   } else if (nextProps.lesseeStore.formattedLessees !== this.state.data) {
+    //     this.setState({ data : nextProps.lesseeStore.formattedLessees, initialArray: nextProps.lesseeStore.formattedLessees })
+    //   }
+    // }
 
     handleClick = () => {
         this.setState({expanded: !this.state.expanded})
     }
 
     search = (event) => {
-      let { data, searchCode, initialArray } = this.state
+      let { searchCode } = this.state
       let { target } = event
       let filter = target.value.toUpperCase()
-      data = initialArray.filter(value => { return value[searchCode].toUpperCase().indexOf(filter) >= 0 })
-      this.setState({ data })
+
+      this.props.lesseeStore.searchformattedLessees(filter, searchCode)
     }
 
-    sort(event, sortKey) {
+    sort = (event, sortKey) => {
       const sortOrder = this.state.sort.direction === "asc" ? 1 : -1;
-      let { data } = this.state
       
-      // sort the table
-      data.sort((a, b) => {
-        const val1 = a[sortKey].toString().toUpperCase();
-        const val2 = b[sortKey].toString().toUpperCase();
-        if (isNaN(val1) && isNaN(val2)) {
-          return val1 < val2 ? -sortOrder : val1 > val2 ? sortOrder : 0;
-        } else {
-          return sortOrder === 1 ? val1 - val2 : val2 - val1;
-        }
-      });
-  
+      this.props.lesseeStore.sortFormattedLessees(sortKey, sortOrder)
       if (sortOrder === 1) {
-        this.setState({ sort: { column: sortKey, direction: "desc" }, data });
+        this.setState({ sort: { column: sortKey, direction: "desc" } });
       } else {
-        this.setState({ sort: { column: sortKey, direction: "asc" }, data });
+        this.setState({ sort: { column: sortKey, direction: "asc" } });
       }
     }
 
@@ -120,9 +111,8 @@ class Table extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.lesseeStore.formattedLessees.map(value => {
-                    console.log(this.props.lesseeStore.formattedLessees)
-                    return <ExpandableRow data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }}/>
+                {this.props.lesseeStore.formattedLessees.map((value, index) => {
+                    return <ExpandableRow key={index} data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }}/>
                   })
                 }
               </tbody>
@@ -133,8 +123,7 @@ class Table extends React.Component {
 }
 
 Table.propTypes = {
-  data: PropTypes.array.isRequired,
-  moreInfo: PropTypes.func
+  lesseeStore: PropTypes.object
 }
 
 export default Table

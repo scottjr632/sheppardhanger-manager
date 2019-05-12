@@ -117,44 +117,44 @@ class Schedule extends React.Component{
   }
 
   eventClicked = (schedulerData, event) => {
-    alert(`You just clicked an event: {id: ${event.id}, title: ${event.title}}`);
+    this.props.history.push(`/reservation?id=${event.id}`)
   };
 
   ops1 = (schedulerData, event) => {
-    alert(`You just executed ops1 to event: {id: ${event.id}, title: ${event.title}}`);
+    this.props.history.push(`/reservation?id=${event.id}`)
   };
 
   ops2 = (schedulerData, event) => {
-    alert(`You just executed ops2 to event: {id: ${event.id}, title: ${event.title}}`);
+    this.props.history.push(`/info?id=${event.lesseeId}`)
   };
 
-  ops3 = (schedulerData, event) => {
-    alert(`You just executed ops2 to event: {id: ${event.id}, title: ${event.title}}`);
-  };
 
   newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
-    if(confirm(`Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`)){
+    this.props.setNewEventStartAndStop(start, end)
+    this.props.showCreateEventModal()
 
-      let newFreshId = 0;
-      schedulerData.events.forEach((item) => {
-        if(item.id >= newFreshId)
-          newFreshId = item.id + 1;
-      });
+    // if(confirm(`Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`)){
+
+    //   let newFreshId = 0;
+    //   schedulerData.events.forEach((item) => {
+    //     if(item.id >= newFreshId)
+    //       newFreshId = item.id + 1;
+    //   });
 
 
-      let newEvent = {
-        id: newFreshId,
-        title: this.state.name,
-        start: start,
-        end: this.state.date2,
-        resourceId: slotId,
-        ...this.createEventFromType(this.state.color)
-      }
-      schedulerData.addEvent(newEvent);
-      this.setState({
-        viewModel: schedulerData
-      })
-    }
+    //   let newEvent = {
+    //     id: newFreshId,
+    //     title: this.state.name,
+    //     start: start,
+    //     end: this.state.date2,
+    //     resourceId: slotId,
+    //     ...this.createEventFromType(this.state.color)
+    //   }
+    //   schedulerData.addEvent(newEvent);
+    //   this.setState({
+    //     viewModel: schedulerData
+    //   })
+    // }
   }
 
   createEventFromType = (type) => {

@@ -22,7 +22,6 @@ class SaveDeleteModal extends React.Component {
     onSubmit = e => {
         e.preventDefault()
         let t_data = this.state.n_data
-        console.log(t_data)
         if (window.confirm("Are you sure you want to save new item?")){
             this.props.handleSave(t_data)
             this.props.handleClose()

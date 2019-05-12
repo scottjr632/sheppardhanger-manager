@@ -2,7 +2,7 @@ import React from 'react'
 
 import Navi from '../components/HeaderComponents/Navbar'
 import Emails from '../components/Dashboard/Emails.jsx'
-import UserInfo from '../components/Dashboard/UserInfo.jsx'
+import Info from '../components/Dashboard/ReservationInfo.jsx'
 import * as backend from '../backend'
 
 const emailTestInfo = {
@@ -28,13 +28,13 @@ const gridStyle = {
   gridTemplateColumns: '[left] 50% [right] 50%'
 }
 
-class Info extends React.Component {
+class ReservationInfoPage extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
       userId: 0,
-      userInfo: {},
+      reservationInfo: {},
     }
   }
 
@@ -42,25 +42,19 @@ class Info extends React.Component {
     let { search } = this.props.location
     if (search && search.length > 1) {
       let id = search.match(/=(.*)/)
-      if (id[1]) backend.getLesseeById(id[1], (res) => {
+      if (id[1]) backend.getReservationById(id[1], (res) => {
         let { data } = res
-        if (data) this.setState({userInfo: data}, () => console.log(this.state.userInfo, 'state info'))
+        if (data) this.setState({reservationInfo: data}, () => console.log(this.state.reservationInfo, 'state info'))
       })
     }
-    // this.setState({userInfo : testUserInfo})
   }
 
   render() {
     return (
       <div>
       <Navi />
-        <div className={'container'} style={{...gridStyle}}>
-          <section style={{gridArea: 'left'}}>
-            <Emails data={emailTestInfo} />
-          </section>
-          <section style={{gridArea: 'right'}}>
-            <UserInfo data={this.state.userInfo} history={this.props.history} />
-          </section>
+        <div className={'container'} >
+            <Info data={this.state.reservationInfo} />
         </div>
       </div>
     )
@@ -68,4 +62,4 @@ class Info extends React.Component {
 
 }
 
-export default Info
+export default ReservationInfoPage
