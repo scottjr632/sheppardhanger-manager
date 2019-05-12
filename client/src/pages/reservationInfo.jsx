@@ -53,13 +53,8 @@ class ReservationInfoPage extends React.Component {
     return (
       <div>
       <Navi />
-        <div className={'container'} style={{...gridStyle}}>
-          <section style={{gridArea: 'left'}}>
-            {/* <Emails data={emailTestInfo} /> */}
-          </section>
-          <section style={{gridArea: 'right'}}>
+        <div className={'container'} >
             <Info data={this.state.reservationInfo} />
-          </section>
         </div>
       </div>
     )

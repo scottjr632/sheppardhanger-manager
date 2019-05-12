@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes, { array } from 'prop-types'
 
+import ConfirmButton from '../Buttons/confirm.jsx'
 import * as backend from '../../backend'
 
 const inputStyle = {
@@ -8,8 +9,7 @@ const inputStyle = {
 }
 
 const editStyle = {
-  float: 'right',
-  cursor: 'pointer',
+  backgroundColor: '#128de9'
 }
 
 const excludedTypes = [
@@ -105,10 +105,11 @@ class UserInfo extends React.Component {
               </tr>
             </tbody>
           </table>
-          <button className={'btn__new dangerous'}><i className="fas fa-archive" style={{float: 'left'}}></i>Archive</button>
-
-          {!this.state.edit && <button className={'btn__new'} style={editStyle} onClick={this.toggleEdit}>Edit <i className="fas fa-edit" style={{float: 'left'}}></i></button>}
-          {this.state.edit && <button className={'btn__new save'} style={editStyle} onClick={this.toggleEdit}>Save! <i className="fas fa-save" style={{float: 'left'}}></i></button>}
+          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '10px 0 10px 0'}}>
+            <ConfirmButton removeMessage={'Archive'} confirmAction={()=>{}} />
+            {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
+            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.toggleEdit} style={editStyle} /> }
+          </div>
         </div>
       </div>
     )

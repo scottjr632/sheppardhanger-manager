@@ -9,8 +9,7 @@ const inputStyle = {
 }
 
 const editStyle = {
-  float: 'right',
-  cursor: 'pointer',
+  backgroundColor: '#128de9'
 }
 
 const excludedTypes = [
@@ -92,10 +91,12 @@ class Info extends React.Component {
               </tr>
             </tbody>
           </table>
-          <ConfirmButton removeMessage={'Archive'} confirmAction={()=>{}} style={{float: 'left'}}/>
+          <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '10px 0 10px 0'}}>
+            <ConfirmButton removeMessage={'Archive'} confirmAction={()=>{}} />
+            {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
+            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.toggleEdit} style={editStyle} /> }
+          </div>
 
-          {!this.state.edit && <button className={'btn__new'} style={editStyle} onClick={this.toggleEdit}>Edit <i className="fas fa-edit" style={{float: 'left'}}></i></button>}
-          {this.state.edit && <button className={'btn__new save'} style={editStyle} onClick={this.toggleEdit}>Save! <i className="fas fa-save" style={{float: 'left'}}></i></button>}
         </div>
       </div>
     )
