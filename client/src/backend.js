@@ -69,7 +69,7 @@ export const getAllBookingTypes = (callback) => BuildApi('/reservations/bookingt
 export const getReservationById = (reservationId, callback) => BuildApi(`/reservations/${reservationId}`).get(callback)
 export const getReservationsByRoom = (roomId, callback) => BuildApi(`/reservations/room/${roomId}`).get(callback)
 export const getReservationsByHouse = (houseId, callback) => BuildApi(`/reservations/house/${houseId}`).get(callback)
-export const getReservationsByLesseeId = (lesseeId, callback) => BuildApi(`/reservations/${lesseeId}`).get(callback)
+export const getReservationsByLesseeId = (lesseeId, callback) => BuildApi(`/reservations/lessee/${lesseeId}`).get(callback)
 export const getAllReservations = (callback) => BuildApi('/reservations/').get(callback)
 export const updateReservation = (data, callback) => BuildApi('/reservations/', data).put(callback)
 export const createNewReservation = (data, callback) => BuildApi('/reservations/', data).post(callback)

@@ -27,7 +27,8 @@ const prettyNames = {
   'lesseeemail' : 'Email', 
   'lesseefname' : 'First name', 
   'lesseelname' : 'Last name', 
-  'numberofguests' : 'Guests'
+  'numberofguests' : 'Guests',
+  'lengthofstay': 'Length of stay (days)'
 }
 
 class Info extends React.Component {

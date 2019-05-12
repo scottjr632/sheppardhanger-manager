@@ -27,19 +27,23 @@ const rightBorder = {
 const Emails = props => {
   return (
     <div style={{position: 'relative', fontStyle: '13pt'}}>
-      <span style={{fontSize: '15pt', textDecoration: 'underline'}}>EMAILS</span>
+      <span style={{fontSize: '15pt', textDecoration: 'underline'}}>{props.title}</span>
       <div style={gridStyle}>
         {
           Object.keys(props.data).map(key => {
-            let { prettyName, done } = props.data[key]
+            let { prettyName, done, btnText, btnAction } = props.data[key]
             return (
               <span style={{display: 'grid', gridTemplateColumns: '[left] 100px [center] 35px [right] auto', gridRowGap: '10px'}} key={key}>
                 <div style={{textAlign: 'left', gridArea: 'left', ...leftBorder}}>{prettyName}</div>
                   <span style={{gridArea: 'center', ...rightBorder}}>
-                    <input type="checkbox" checked={done} style={{transform: 'scale(1.5)'}} readOnly={true} disabled={true}/>
+                    { done && <input type="checkbox" checked={done} style={{transform: 'scale(1.5)'}} readOnly={true} disabled={true}/> }
                   </span>
                   <span style={{gridArea: 'right'}}>
-                    <button className={'btn__new'}>{`Send ${prettyName} email`}</button>
+                    {btnText ? 
+                    <button className={'btn__new'} onClick={btnAction}>{btnText}</button> :
+                    <button className={'btn__new'} onClick={btnAction}>{`Send ${prettyName} email`}</button>
+                  }
+                    
                   </span>
               </span>
             )
@@ -52,8 +56,14 @@ const Emails = props => {
 }
 
 Emails.propTypes = {
+  title: PropTypes.string.isRequired,
   data: PropTypes.shape({
-    name: PropTypes.shape({prettyName: PropTypes.string.isRequired, done: PropTypes.bool.isRequired})
+    name: PropTypes.shape({ 
+      prettyName: PropTypes.string.isRequired,
+      btnAction: PropTypes.func.isRequired,
+      done: PropTypes.bool, 
+      btnText: PropTypes.string
+    })
   }).isRequired
 }
 
