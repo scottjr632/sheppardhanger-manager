@@ -3,6 +3,8 @@ import React from 'react'
 import Navi from '../components/HeaderComponents/Navbar'
 import Emails from '../components/Dashboard/Emails.jsx'
 import UserInfo from '../components/Dashboard/UserInfo.jsx'
+import Table from '../components/Tables/Table'
+import Question from '../components/Dashboard/Question.jsx'
 import * as backend from '../backend'
 
 const emailInfo = {
@@ -60,6 +62,15 @@ class Info extends React.Component {
           <section style={{gridArea: 'right', gridRow: 1}}>
             <UserInfo data={this.state.userInfo} history={this.props.history} />
           </section>
+        </div>
+        <div style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly'}}>
+        <div className='table large-screen' style={{gridArea: 'tbl'}}>
+            <div>
+              <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} />
+              <label>Locate a lessee</label>
+              <Table moreInfo={this.moreInfo}/>
+            </div>
+          </div>
         </div>
       </div>
     )
