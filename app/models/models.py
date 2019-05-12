@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import text as sa_text
 
@@ -151,6 +153,7 @@ class Reservation(db.Model):
             'pet': self.pet,
             'checkindate': self.checkindate,
             'checkoutdate': self.checkoutdate,
+            'lengthofstay': (self.checkoutdate - self.checkindate).days,
             'roomid': self.roomid,
             'room': self.room.name if self.room else '',
             'house': self.room.house.name if self.room else '',

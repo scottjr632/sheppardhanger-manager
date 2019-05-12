@@ -5,27 +5,22 @@ import Emails from '../components/Dashboard/Emails.jsx'
 import UserInfo from '../components/Dashboard/UserInfo.jsx'
 import * as backend from '../backend'
 
-const emailTestInfo = {
+const emailInfo = {
   welcome: {prettyName: 'Welcome', done: false},
   contract: {prettyName: 'Contract', done: true},
   noRooms:  {prettyName: 'No Rooms', done: true},
   reciept:  {prettyName: 'Reciept', done: true}
 }
-const testUserInfo = {
-    name: 'TEST, User', 
-    reservation: 'Ressee',
-    checkInDate: '11-11-11',
-    checkOutDate: '11-11-11',
-    email: 'test@test.com',
-    address: '1111111 no str',
-    city: 'no name pl',
-    state: 'tx',
-    zipcode: '999999',
+
+const documentsInfo = {
+  masterContract: {prettyName: 'Master Contract', btnText: 'Download master contract', btnAction: () => {console.log('TETETESST')}},
+  invoiceGenerator: {prettyName: 'Invoice', btnText: 'Generate invoice', btnAction: () => {console.log('TETETESST')}}
 }
 
 const gridStyle = {
   display: 'grid',
-  gridTemplateColumns: '[left] 50% [right] 50%'
+  gridTemplateColumns: '[left] 50% [right] 50%',
+  gridTemplateRows: 'auto'
 }
 
 class Info extends React.Component {
@@ -44,10 +39,9 @@ class Info extends React.Component {
       let id = search.match(/=(.*)/)
       if (id[1]) backend.getLesseeById(id[1], (res) => {
         let { data } = res
-        if (data) this.setState({userInfo: data}, () => console.log(this.state.userInfo, 'state info'))
+        if (data) this.setState({userInfo: data})
       })
     }
-    // this.setState({userInfo : testUserInfo})
   }
 
   render() {
@@ -55,10 +49,15 @@ class Info extends React.Component {
       <div>
       <Navi />
         <div className={'container'} style={{...gridStyle}}>
-          <section style={{gridArea: 'left'}}>
-            <Emails data={emailTestInfo} />
-          </section>
-          <section style={{gridArea: 'right'}}>
+          <div style={{gridArea: 'left', gridRow: 1}}>
+            <section style={{marginBottom: '25px'}}>
+              <Emails data={emailInfo} title={'EMAILS'}/>
+            </section>
+            <section>
+              <Emails data={documentsInfo} title={'DOWNLOAD DOCUMENTS'}/>
+            </section>
+          </div>
+          <section style={{gridArea: 'right', gridRow: 1}}>
             <UserInfo data={this.state.userInfo} history={this.props.history} />
           </section>
         </div>
