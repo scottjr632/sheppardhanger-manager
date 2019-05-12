@@ -39,7 +39,7 @@ class Dashboard extends React.Component {
     return (
       <div style={{marginBottom: '100px'}}>
         <Navi />
-        <Schedule />
+        <Schedule history={this.props.history}/>
         {/* <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} /> */}
         <div className={'grid-container'}>
           <div className='table large-screen' style={{gridArea: 'tbl'}}>

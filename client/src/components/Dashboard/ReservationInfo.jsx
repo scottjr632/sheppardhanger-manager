@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes, { array } from 'prop-types'
 
+import ConfirmButton from '../Buttons/confirm.jsx'
 import * as backend from '../../backend'
 
 const inputStyle = {
@@ -12,7 +13,7 @@ const editStyle = {
   cursor: 'pointer',
 }
 
-class UserInfo extends React.Component {
+class Info extends React.Component {
 
   constructor(props) {
     super(props)
@@ -45,8 +46,6 @@ class UserInfo extends React.Component {
   }
 
   toggleEdit = () => {
-    console.log(this.state, ' STATE')
-    console.log(this.props, 'PROPS')
     this.setState({ edit: !this.state.edit })
   }
 
@@ -65,29 +64,14 @@ class UserInfo extends React.Component {
               <tr>
                 {!this.state.edit &&
                   Object.keys(data).map(key => {
-                    return key === 'reservations' ?
-                     <td data-title={'RES STATUS'}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}</td>:
-                     <td data-title={key}>{data[key]}</td>
+                    return <td key={key} data-title={key}>{data[key]}</td>
                   })
                 }
-                {this.state.edit && 
-                  Object.keys(data).map(key => {
-                    return key === 'reservations' ?
-                     <td data-title={'RES STATUS'}>
-                      <select value={ data[key].length > 0 ? data[key][0].bookingtypeid : 0} name={key}>
-                        <option value={0}>-- NONE --</option>
-                        {this.state.bookingTypes.map(btype => {
-                          return <option value={btype.id}>{btype.name}</option>
-                        })}
-                      </select>
-                    </td> :
-                     <td data-title={key}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
-                  })
-                }
+                {this.state.edit && <div></div>}
               </tr>
             </tbody>
           </table>
-          <button className={'btn__new dangerous'}><i className="fas fa-archive" style={{float: 'left'}}></i>Archive</button>
+          <ConfirmButton removeMessage={'Archive'} confirmAction={()=>{}} style={{float: 'left'}}/>
 
           {!this.state.edit && <button className={'btn__new'} style={editStyle} onClick={this.toggleEdit}>Edit <i className="fas fa-edit" style={{float: 'left'}}></i></button>}
           {this.state.edit && <button className={'btn__new save'} style={editStyle} onClick={this.toggleEdit}>Save! <i className="fas fa-save" style={{float: 'left'}}></i></button>}
@@ -97,9 +81,9 @@ class UserInfo extends React.Component {
   }
 }
 
-UserInfo.propTypes = {
+Info.propTypes = {
     data: PropTypes.object.isRequired,
     editable: PropTypes.bool
 }
 
-export default UserInfo
+export default Info

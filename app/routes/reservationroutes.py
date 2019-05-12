@@ -58,6 +58,13 @@ def get_all_reservations(user):
         return make_response('Something went wrong', 500)
 
 
+@mod.route('/<resid>', methods=['GET'])
+@utils.login_required
+def get_reservation_by_id(user, resid):
+    res = helpers.get_res_by_id(resid)
+    return jsonify(res.serialize())
+
+
 @mod.route('/', methods=['PUT'])
 @utils.login_required
 def update_reservation(user):

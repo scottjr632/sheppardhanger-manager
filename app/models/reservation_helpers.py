@@ -2,6 +2,10 @@ import app.models.models as models
 from app import utils, db
 
 
+def get_res_by_id(resid) -> models.Reservation:
+    return models.Reservation.query.get(resid)
+
+
 def get_res_by_room(roomid) -> list:
     """ get res by room returns a list of reservations by room id"""
     return models.Reservation.query.filter_by(roomid=roomid).all()

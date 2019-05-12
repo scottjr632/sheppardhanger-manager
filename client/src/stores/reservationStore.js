@@ -10,6 +10,7 @@ const formatReservation = (reservationObject) => {
         title: `${reservationObject.lesseelname}, ${reservationObject.lesseefname}  -  ${reservationObject.house}`,
         start: reservationObject.checkindate,
         end: reservationObject.checkoutdate,
+        lesseeId: reservationObject.lesseeid,
         bgColor: BOOKINGTYPECOLORS[reservationObject.bookingtype]
     }
 }

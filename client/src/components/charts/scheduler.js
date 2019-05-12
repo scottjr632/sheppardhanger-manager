@@ -117,20 +117,17 @@ class Schedule extends React.Component{
   }
 
   eventClicked = (schedulerData, event) => {
-    alert(`You just clicked an event: {id: ${event.id}, title: ${event.title}}`);
+    this.props.history.push(`/reservation?id=${event.id}`)
   };
 
   ops1 = (schedulerData, event) => {
-    alert(`You just executed ops1 to event: {id: ${event.id}, title: ${event.title}}`);
+    this.props.history.push(`/reservation?id=${event.id}`)
   };
 
   ops2 = (schedulerData, event) => {
-    alert(`You just executed ops2 to event: {id: ${event.id}, title: ${event.title}}`);
+    this.props.history.push(`/info?id=${event.lesseeId}`)
   };
 
-  ops3 = (schedulerData, event) => {
-    alert(`You just executed ops2 to event: {id: ${event.id}, title: ${event.title}}`);
-  };
 
   newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
     if(confirm(`Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`)){
