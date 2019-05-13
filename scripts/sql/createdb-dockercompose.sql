@@ -15,6 +15,8 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+
+DROP USER IF EXISTS shmanager;
 ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_roleid_fkey;
 ALTER TABLE IF EXISTS ONLY public.rooms DROP CONSTRAINT IF EXISTS rooms_houseid_fkey;
 ALTER TABLE IF EXISTS ONLY public.reservations DROP CONSTRAINT IF EXISTS reservations_roomid_fkey;
@@ -22,60 +24,61 @@ ALTER TABLE IF EXISTS ONLY public.reservations DROP CONSTRAINT IF EXISTS reserva
 ALTER TABLE IF EXISTS ONLY public.referrerlog DROP CONSTRAINT IF EXISTS referrerlog_userid_fkey;
 ALTER TABLE IF EXISTS ONLY public.referrerlog DROP CONSTRAINT IF EXISTS referrerlog_referrerid_fkey;
 ALTER TABLE IF EXISTS ONLY public.paylog DROP CONSTRAINT IF EXISTS paylog_reservationsid_fkey;
-ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_pkey;
+ALTER TABLE IF EXISTS ONLY public.lessee DROP CONSTRAINT IF EXISTS lessee_reservationid_fkey;
+ALTER TABLE IF EXISTS ONLY public.tdytype DROP CONSTRAINT IF EXISTS tdytype_pkey;
 ALTER TABLE IF EXISTS ONLY public.rooms DROP CONSTRAINT IF EXISTS rooms_pkey;
 ALTER TABLE IF EXISTS ONLY public.roles DROP CONSTRAINT IF EXISTS roles_pkey;
 ALTER TABLE IF EXISTS ONLY public.reservations DROP CONSTRAINT IF EXISTS reservations_pkey;
 ALTER TABLE IF EXISTS ONLY public.referrerlog DROP CONSTRAINT IF EXISTS referrerlog_pkey;
+ALTER TABLE IF EXISTS ONLY public.ranktype DROP CONSTRAINT IF EXISTS ranktype_pkey;
 ALTER TABLE IF EXISTS ONLY public.paylog DROP CONSTRAINT IF EXISTS paylog_pkey;
 ALTER TABLE IF EXISTS ONLY public.lessee DROP CONSTRAINT IF EXISTS lessee_pkey;
+ALTER TABLE IF EXISTS ONLY public.lessee DROP CONSTRAINT IF EXISTS lessee_email_key;
 ALTER TABLE IF EXISTS ONLY public.houses DROP CONSTRAINT IF EXISTS houses_pkey;
+ALTER TABLE IF EXISTS ONLY public.guesttype DROP CONSTRAINT IF EXISTS guesttype_pkey;
 ALTER TABLE IF EXISTS ONLY public.bookingtype DROP CONSTRAINT IF EXISTS bookingtype_pkey;
 ALTER TABLE IF EXISTS public.users ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS public.user_preferences ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS public.tdytype ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS public.rooms ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS public.roles ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS public.reservations ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS public.referrerlog ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS public.ranktype ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS public.paylog ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS public.lessee ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS public.houses ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS public.guesttype ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS public.bookingtype ALTER COLUMN id DROP DEFAULT;
 DROP SEQUENCE IF EXISTS public.users_id_seq;
-DROP TABLE IF EXISTS public.users cascade ;
+DROP TABLE IF EXISTS public.users;
+DROP SEQUENCE IF EXISTS public.user_preferences_id_seq;
+DROP TABLE IF EXISTS public.user_preferences;
+DROP SEQUENCE IF EXISTS public.tdytype_id_seq;
+DROP TABLE IF EXISTS public.tdytype;
 DROP SEQUENCE IF EXISTS public.rooms_id_seq;
-DROP TABLE IF EXISTS public.rooms cascade;
+DROP TABLE IF EXISTS public.rooms;
 DROP SEQUENCE IF EXISTS public.roles_id_seq;
-DROP TABLE IF EXISTS public.roles cascade;
+DROP TABLE IF EXISTS public.roles;
 DROP SEQUENCE IF EXISTS public.reservations_id_seq;
-DROP TABLE IF EXISTS public.reservations cascade;
+DROP TABLE IF EXISTS public.reservations;
 DROP SEQUENCE IF EXISTS public.referrerlog_id_seq;
-DROP TABLE IF EXISTS public.referrerlog cascade;
+DROP TABLE IF EXISTS public.referrerlog;
+DROP SEQUENCE IF EXISTS public.ranktype_id_seq;
+DROP TABLE IF EXISTS public.ranktype;
 DROP SEQUENCE IF EXISTS public.paylog_id_seq;
-DROP TABLE IF EXISTS public.paylog cascade;
+DROP TABLE IF EXISTS public.paylog;
 DROP SEQUENCE IF EXISTS public.lessee_id_seq;
-DROP TABLE IF EXISTS public.lessee cascade;
+DROP TABLE IF EXISTS public.lessee;
 DROP SEQUENCE IF EXISTS public.houses_id_seq;
-DROP TABLE IF EXISTS public.houses cascade;
+DROP TABLE IF EXISTS public.houses;
+DROP SEQUENCE IF EXISTS public.guesttype_id_seq;
+DROP TABLE IF EXISTS public.guesttype;
 DROP SEQUENCE IF EXISTS public.bookingtype_id_seq;
-DROP TABLE IF EXISTS public.bookingtype cascade;
+DROP TABLE IF EXISTS public.bookingtype;
 SET default_tablespace = '';
 
 SET default_with_oids = false;
-
-CREATE TABLE tydtype (
-    id serial primary key,
-    name text
-);
-
-CREATE TABLE guesttype (
-    id serial primary key,
-    name text
-);
-
-CREATE TABLE ranktype (
-    id serial primary key,
-    name varchar(3)
-);
 
 --
 -- Name: bookingtype; Type: TABLE; Schema: public; Owner: -
@@ -105,6 +108,36 @@ CREATE SEQUENCE public.bookingtype_id_seq
 --
 
 ALTER SEQUENCE public.bookingtype_id_seq OWNED BY public.bookingtype.id;
+
+
+--
+-- Name: guesttype; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.guesttype (
+    id integer NOT NULL,
+    name text
+);
+
+
+--
+-- Name: guesttype_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.guesttype_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: guesttype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.guesttype_id_seq OWNED BY public.guesttype.id;
 
 
 --
@@ -145,14 +178,16 @@ CREATE TABLE public.lessee (
     id integer NOT NULL,
     fname character varying(100),
     lname character varying(100),
-    email character varying(254) unique,
-    rank integer references ranktype(id),
+    email character varying(254),
     phone text,
     address text,
     city text,
     state text,
     zipcode text,
-    notes character varying(12)
+    notes text,
+    rank integer,
+    reservationid bigint,
+    archived boolean
 );
 
 
@@ -211,6 +246,36 @@ ALTER SEQUENCE public.paylog_id_seq OWNED BY public.paylog.id;
 
 
 --
+-- Name: ranktype; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ranktype (
+    id integer NOT NULL,
+    name character varying(3)
+);
+
+
+--
+-- Name: ranktype_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ranktype_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ranktype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ranktype_id_seq OWNED BY public.ranktype.id;
+
+
+--
 -- Name: referrerlog; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -242,6 +307,7 @@ CREATE SEQUENCE public.referrerlog_id_seq
 
 ALTER SEQUENCE public.referrerlog_id_seq OWNED BY public.referrerlog.id;
 
+
 --
 -- Name: reservations; Type: TABLE; Schema: public; Owner: -
 --
@@ -249,10 +315,9 @@ ALTER SEQUENCE public.referrerlog_id_seq OWNED BY public.referrerlog.id;
 CREATE TABLE public.reservations (
     id integer NOT NULL,
     lesseeid bigint,
-    purpose text,
+    purpose integer,
     numberofguests integer,
-    guesttype integer references guesttype(id),
-    tdytype integer references tdytype(id)
+    pet boolean,
     checkindate date,
     checkoutdate date,
     roomid bigint,
@@ -343,20 +408,79 @@ ALTER SEQUENCE public.rooms_id_seq OWNED BY public.rooms.id;
 
 
 --
+-- Name: tdytype; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.tdytype (
+    id integer NOT NULL,
+    name character varying(50)
+);
+
+
+--
+-- Name: tdytype_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.tdytype_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: tdytype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.tdytype_id_seq OWNED BY public.tdytype.id;
+
+
+--
+-- Name: user_preferences; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.user_preferences (
+    id integer NOT NULL,
+    userid bigint,
+    preferences text
+);
+
+
+--
+-- Name: user_preferences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.user_preferences_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: user_preferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.user_preferences_id_seq OWNED BY public.user_preferences.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.users (
-    id integer NOT NULL ,
+    id integer NOT NULL,
     fname character varying(100),
     lname character varying(100),
-    email character varying(254) ,
+    email character varying(254),
     password text,
     salt text,
     roleid bigint
 );
-
--- alter table users add constraint email_unq unique (email);
 
 
 --
@@ -372,12 +496,6 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
-CREATE TABLE user_preferences (
-    id serial primary key,
-    userid bigint references users(id),
-    preferences text
-);
-
 --
 -- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -390,6 +508,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 --
 
 ALTER TABLE ONLY public.bookingtype ALTER COLUMN id SET DEFAULT nextval('public.bookingtype_id_seq'::regclass);
+
+
+--
+-- Name: guesttype id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.guesttype ALTER COLUMN id SET DEFAULT nextval('public.guesttype_id_seq'::regclass);
 
 
 --
@@ -411,6 +536,13 @@ ALTER TABLE ONLY public.lessee ALTER COLUMN id SET DEFAULT nextval('public.lesse
 --
 
 ALTER TABLE ONLY public.paylog ALTER COLUMN id SET DEFAULT nextval('public.paylog_id_seq'::regclass);
+
+
+--
+-- Name: ranktype id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ranktype ALTER COLUMN id SET DEFAULT nextval('public.ranktype_id_seq'::regclass);
 
 
 --
@@ -442,164 +574,24 @@ ALTER TABLE ONLY public.rooms ALTER COLUMN id SET DEFAULT nextval('public.rooms_
 
 
 --
+-- Name: tdytype id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.tdytype ALTER COLUMN id SET DEFAULT nextval('public.tdytype_id_seq'::regclass);
+
+
+--
+-- Name: user_preferences id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.user_preferences ALTER COLUMN id SET DEFAULT nextval('public.user_preferences_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
-
-
---
--- Data for Name: bookingtype; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.bookingtype (id, name) FROM stdin;
-\.
-
-
---
--- Data for Name: houses; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.houses (id, name) FROM stdin;
-1	River Creek
-2	Phoenix
-3	Sparrow
-\.
-
-
---
--- Data for Name: lessee; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.lessee (id, fname, lname, email, phone, address, city, state, zipcode, notes) FROM stdin;
-\.
-
-
---
--- Data for Name: paylog; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.paylog (id, reservationsid, amountdue, amountpaid, duedate, datepaid) FROM stdin;
-\.
-
-
---
--- Data for Name: referrerlog; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.referrerlog (id, userid, referrerid, payed, datepaid) FROM stdin;
-\.
-
-
---
--- Data for Name: reservations; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.reservations (id, lesseeid, purpose, numberofguests, pet, checkindate, checkoutdate, roomid, notes, bookingtypeid) FROM stdin;
-\.
-
-
---
--- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.roles (id, name) FROM stdin;
-1	admin
-2	user
-\.
-
-
---
--- Data for Name: rooms; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.rooms (id, houseid, name) FROM stdin;
-1	1	RECEE
-2	1	WILLIE
-3	1	CASTLE
-4	1	MCCOY
-5	1	BRGSTRM
-6	1	HAHN
-7	1	UPR HFRD
-8	2	HOWARD
-9	2	LORING
-10	2	WALKER
-11	3	GRIFFISS
-12	3	MATHER
-13	3	HUNTER
-\.
-
-
---
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY public.users (id, fname, lname, email, password, salt, roleid) FROM stdin;
-1	administrator	account	admin@admin.sheppardhanger.com	5dff03a060dfc941f3432a1a2de113733ee5ea7703c211d5a235cd1fc578ed86c3edae8778d5a5063667831e42c91fd29d83779bfd6805a43bd10cd3f271d1bc	2f2c0a37a965469ca26e0ad00511b3bb	1
-\.
-
-
---
--- Name: bookingtype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.bookingtype_id_seq', 1, false);
-
-
---
--- Name: houses_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.houses_id_seq', 3, true);
-
-
---
--- Name: lessee_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.lessee_id_seq', 1, false);
-
-
---
--- Name: paylog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.paylog_id_seq', 1, false);
-
-
---
--- Name: referrerlog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.referrerlog_id_seq', 1, false);
-
-
---
--- Name: reservations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.reservations_id_seq', 1, false);
-
-
---
--- Name: roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.roles_id_seq', 2, true);
-
-
---
--- Name: rooms_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.rooms_id_seq', 13, true);
-
-
---
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('public.users_id_seq', 1, true);
 
 
 --
@@ -611,11 +603,27 @@ ALTER TABLE ONLY public.bookingtype
 
 
 --
+-- Name: guesttype guesttype_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.guesttype
+    ADD CONSTRAINT guesttype_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: houses houses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.houses
     ADD CONSTRAINT houses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lessee lessee_email_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessee
+    ADD CONSTRAINT lessee_email_key UNIQUE (email);
 
 
 --
@@ -632,6 +640,14 @@ ALTER TABLE ONLY public.lessee
 
 ALTER TABLE ONLY public.paylog
     ADD CONSTRAINT paylog_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ranktype ranktype_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ranktype
+    ADD CONSTRAINT ranktype_pkey PRIMARY KEY (id);
 
 
 --
@@ -667,11 +683,19 @@ ALTER TABLE ONLY public.rooms
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: tdytype tdytype_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
--- ALTER TABLE ONLY public.users
---     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.tdytype
+    ADD CONSTRAINT tdytype_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: lessee lessee_reservationid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.lessee
+    ADD CONSTRAINT lessee_reservationid_fkey FOREIGN KEY (reservationid) REFERENCES public.reservations(id);
 
 
 --
@@ -728,6 +752,18 @@ ALTER TABLE ONLY public.rooms
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_roleid_fkey FOREIGN KEY (roleid) REFERENCES public.roles(id);
+
+
+ALTER TABLE ONLY public.reservations
+    ADD CONSTRAINT  reservations_tdytype_fkey FOREIGN KEY (purpose) REFERENCES public.tdytype(id);
+
+
+ALTER TABLE ONLY public.reservations
+    ADD CONSTRAINT  reservations_guesttype_fkey FOREIGN KEY (numberofguests) REFERENCES public.guesttype(id);
+
+
+ALTER TABLE ONLY public.lessee
+    ADD CONSTRAINT  lessee_ranktype_fkey FOREIGN KEY (rank) REFERENCES public.ranktype(id);
 
 
 --
