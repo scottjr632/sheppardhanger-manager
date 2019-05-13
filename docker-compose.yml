@@ -15,11 +15,12 @@ services:
   web:
     image: scottjr632/shmanager:latest
     restart: unless-stopped
+    command: startprod
     links:
       - "db:database"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres
     ports:
-      - "5000:5000"
+      - "8080:8080"
     depends_on:
       - db

@@ -26,4 +26,4 @@ RUN npm --prefix client run build
 
 ENTRYPOINT ["/shmanager/docker-entrypoint.sh"]
 
-CMD [""]
+CMD ["startserver"]
