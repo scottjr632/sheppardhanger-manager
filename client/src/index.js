@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+// import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Router } from 'react-router-dom';
 import createHistory from 'history/createHashHistory';
@@ -8,6 +8,8 @@ import { Provider } from 'mobx-react'
 import axios from 'axios'
 
 import { stores } from './stores'
+
+const App = React.lazy(() => import('./App'))
 
 import './index.scss';
 
@@ -20,7 +22,9 @@ ReactDOM.render(
     <Provider {...stores} >
         <Router history={createHistory()}>
             <div>
-                <App />
+                <Suspense fallback={<div>Loading...</div>}>
+                    <App />
+                </Suspense>
             </div>
         </Router>
     </Provider>,

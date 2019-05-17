@@ -1,6 +1,7 @@
 import sys
+import datetime
 
-from flask import make_response, jsonify
+from flask import make_response, jsonify, current_app
 from flask import Blueprint
 from flask import request
 
@@ -16,12 +17,15 @@ def login():
 
     data = request.get_json(force=True)
     keep_login = request.args.get('stayloggedin')
+    config = current_app.config
 
     try:
         user = usermodel.authenticate_user(data['email'], data['password'])
         auth_token = None
+        expire_date = datetime.datetime.now() + datetime.timedelta(hours=4)
         if keep_login is not None and user is not None:
             auth_token = utils.encode_auth_token(user.id, expire_time={'days': 15, 'seconds': 5})
+            expire_date = expire_date + datetime.timedelta(days=15)
         elif user is not None:
             auth_token = utils.encode_auth_token(user.id)
 
@@ -30,7 +34,11 @@ def login():
                                           'fname': user.fname,
                                           'lname': user.lname,
                                           'email': user.email}), 200)
-            resp.set_cookie('access_token', auth_token, httponly=True)
+            resp.set_cookie('access_token', 
+                             auth_token, 
+                             httponly=config.get('COOKIE_HTTPONLY'),
+                             secure=config.get('COOKIE_SECURE'),
+                             expires=expire_date)
             return resp
         return make_response('User could not be authenticated', 401)
 
@@ -49,7 +57,7 @@ def authenticate(*args):
 @utils.login_required
 def logout(*args):
     resp = make_response('Successfully logged out', 200)
-    resp.set_cookie('access_token', '',  httponly=True)
+    resp.set_cookie('access_token', '',  httponly=True, expires=0)
     return resp
 
 

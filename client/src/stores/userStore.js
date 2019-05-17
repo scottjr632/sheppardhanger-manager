@@ -68,6 +68,7 @@ class UserStore {
     })
   }
 
+
   authenticateReaction = reaction(
     () => this.authenticated,
     auth => {

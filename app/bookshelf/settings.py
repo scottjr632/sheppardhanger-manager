@@ -8,9 +8,9 @@ class BaseConfig(object):
     ENV = "production"
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:@localhost:5432/shmanager')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    PERMANENT_SESSION_LIFETIME = 600
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Lax'
+    COOKIE_HTTPONLY = True
+    COOKIE_SAMESITE = 'Lax'
+    COOKIE_SECURE = True
 
 
 class DevelopmentConfig(BaseConfig):
@@ -18,6 +18,7 @@ class DevelopmentConfig(BaseConfig):
     TESTING = True
     ENV = "development"
     SECRET_KEY = 'not a secret key'
+    COOKIE_SECURE = False
 
 
 class TestingConfig(BaseConfig):
