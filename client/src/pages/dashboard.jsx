@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 
 import { inject, observer } from 'mobx-react'
 
 import Navi from '../components/HeaderComponents/Navbar'
-import Schedule from '../components/charts/scheduler'
-import NewLesseeModal from '../components/Modals/NewLesseeModal'
-import NewCalendarEvent from '../components/Modals/NewCalendarEvent'
+// import Schedule from '../components/charts/scheduler'
+import Schedule from '../loadables/LoadableSchedule.jsx'
+import NewLesseeModal from '../loadables/NewLesseeModal.jsx'
+import NewCalendarEvent from '../loadables/NewCalendarEvent.jsx'
 import AccessDenied from '../components/Errors/AccessDenied'
-import Table from '../components/Tables/Table'
+import Table from '../loadables/LoadableTable.jsx'
 import Question from '../components/Dashboard/Question.jsx'
-import * as backend from '../backend'
 
 @inject ('lesseeStore')
 @observer

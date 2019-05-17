@@ -44,6 +44,7 @@ def create_app(config_name="default", serve_client=True):
     app = Flask(__name__, static_folder='app.client')
 
     configure_app(app, status=config_name)
+    print(app.config)
 
     # SERVE CLIENT
     if serve_client:

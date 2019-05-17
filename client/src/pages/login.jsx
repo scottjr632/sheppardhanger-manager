@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react';
 
-import Login from '../components/Login/Login.1'
 import * as backend from '../backend'
+
+const Login = React.lazy(() => import('../components/Login/Login.1'))
 
 const style = {
   background: 'url(bg.jpg) center center / cover fixed',
@@ -20,7 +21,9 @@ const LoginPage = (props) => {
   return (
     <div style={style}>
       <div className={'background-image'} />
-        <Login onLoginSuccess={() => props.history.push('/dashboard')}/>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Login onLoginSuccess={() => props.history.push('/dashboard')}/>
+        </Suspense>
     </div>
   )
 }

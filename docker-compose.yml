@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./scripts/sql/createdb-dockercompose.sql:/docker-entrypoint-initdb.d/1.init.sql
+      - ./scripts/sql/insert-defaultdata.sql:/docker-entrypoint-initdb.d/2.defaultdata.sql
+      - $HOME/docker/volumes/postgres/shmanager:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+  web:
+    image: scottjr632/shmanager:latest
+    restart: unless-stopped
+    command: startprod
+    links:
+      - "db:database"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db

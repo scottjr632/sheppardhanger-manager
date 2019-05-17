@@ -184,6 +184,7 @@ def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         token = request.cookies.get('access_token')
+        print(request.cookies)
         try:
             user = decode_auth_token(token)
             if user == TOKEN_EXPIRED or user == INVALID_TOKEN:
