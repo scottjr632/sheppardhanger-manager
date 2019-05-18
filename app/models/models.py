@@ -6,6 +6,11 @@ import sqlalchemy.types as types
 
 from app import db
 
+STATUS_TYPES = {
+    'archived': 'archived',
+    'active': 'active'
+}
+
 
 class ChoiceType(types.TypeDecorator):
 
@@ -118,7 +123,7 @@ class Lessee(db.Model):
     state = db.Column(db.String)
     zipcode = db.Column(db.String)
     notes = db.Column(db.String)
-    status = db.Column(ChoiceType({"archived": "archived", "active": "active"}))
+    status = db.Column(ChoiceType(STATUS_TYPES))
     reservationid = db.Column(db.Integer)
     reservation = db.relationship('Reservation', backref=db.backref('reservations', lazy=True))
 
@@ -154,7 +159,7 @@ class Reservation(db.Model):
     checkoutdate = db.Column(db.Date)
     roomid = db.Column(db.Integer, db.ForeignKey('rooms.id'))
     room = db.relationship('Room', backref=db.backref('rooms', lazy=True))
-    status = db.Column(ChoiceType({"archived": "archived", "active": "active"}))
+    status = db.Column(ChoiceType(STATUS_TYPES))
     notes = db.Column(db.String)
     bookingtypeid = db.Column(db.Integer, db.ForeignKey('bookingtype.id'))
     bookingtype = db.relationship('BookingType', backref=db.backref('bookingtype', lazy=True))

@@ -16,6 +16,12 @@ def get_all_lessees() -> list:
     return models.Lessee.query.order_by(models.Lessee.id.desc()).all()
 
 
+def get_all_lessees_filtered() -> list:
+    return models.Lessee.query \
+        .filter(models.Lessee.status != models.STATUS_TYPES['archived']) \
+        .order_by(models.Lessee.id.desc())
+
+
 def get_lessee_info(lid: int) -> models.Lessee:
     return models.Lessee.query.get(lid)
 

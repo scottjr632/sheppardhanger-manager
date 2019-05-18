@@ -27,6 +27,11 @@ def get_all_res() -> list:
     return models.Reservation.query.all()
 
 
+def get_all_res_filtered() -> list:
+    return models.Reservation.query \
+        .filter(models.Reservation.status != models.STATUS_TYPES['archived'])
+
+
 def get_all_bookingtypes() -> list:
     return models.BookingType.query.all()
 
