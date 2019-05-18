@@ -8,15 +8,6 @@ pipeline {
 				}
 			}
 		}
-		stage('test') {
-			steps {
-				script {
-					dockerImage.inside {
-						sh 'echo "Tests passed"'
-					}
-				}	
-			}
-		}
 		stage('publish') {
 			steps {
 				script {
