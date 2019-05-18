@@ -4,7 +4,7 @@ pipeline {
 		stage('build') {
 			steps {
 				script {
-					dockerImage = docker.build 'scottjr632/shmanager:latest'	
+					dockerImage = docker.build 'scottjr632/shmanager:${env.BUILD_ID}'	
 				}
 			}
 		}
@@ -13,6 +13,7 @@ pipeline {
 				script {
 					docker.withRegistry( '', 'dockerhub' ) {
 						dockerImage.push()
+						dockerImage.push('latest')
 					}
 				}
 			}
