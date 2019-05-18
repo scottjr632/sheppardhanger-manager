@@ -2,8 +2,24 @@ from datetime import datetime
 
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import text as sa_text
+import sqlalchemy.types as types
 
 from app import db
+
+
+class ChoiceType(types.TypeDecorator):
+
+    impl = types.String
+
+    def __init__(self, choices, **kw):
+        self.choices = dict(choices)
+        super(ChoiceType, self).__init__(**kw)
+
+    def process_bind_param(self, value, dialect):
+        return [k for k, v in self.choices.items() if v == value][0]
+
+    def process_result_value(self, value, dialect):
+        return self.choices[value]
 
 
 class TDYType(db.Model):
@@ -102,6 +118,7 @@ class Lessee(db.Model):
     state = db.Column(db.String)
     zipcode = db.Column(db.String)
     notes = db.Column(db.String)
+    status = db.Column(ChoiceType({"archived": "archived", "active": "active"}))
     reservationid = db.Column(db.Integer)
     reservation = db.relationship('Reservation', backref=db.backref('reservations', lazy=True))
 
@@ -137,6 +154,7 @@ class Reservation(db.Model):
     checkoutdate = db.Column(db.Date)
     roomid = db.Column(db.Integer, db.ForeignKey('rooms.id'))
     room = db.relationship('Room', backref=db.backref('rooms', lazy=True))
+    status = db.Column(ChoiceType({"archived": "archived", "active": "active"}))
     notes = db.Column(db.String)
     bookingtypeid = db.Column(db.Integer, db.ForeignKey('bookingtype.id'))
     bookingtype = db.relationship('BookingType', backref=db.backref('bookingtype', lazy=True))
