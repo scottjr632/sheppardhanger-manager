@@ -4,7 +4,7 @@ pipeline {
 		stage('build') {
 			steps {
 				script {
-					dockerImage = docker.build 'scottjr632/shmanager:${env.BUILD_ID}'	
+					dockerImage = docker.build "scottjr632/shmanager:${env.BUILD_ID}"	
 				}
 			}
 		}
