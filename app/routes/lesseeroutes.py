@@ -26,7 +26,13 @@ def new_lessee(user):
 @mod.route('/', methods=['GET'])
 @utils.login_required
 def get_all_lessees(user):
-    lessees = helpers.get_all_lessees()
+    filtered = request.args.get('filtered')
+    lessee = None
+    if not filter and filter is not None:
+        lessees = helpers.get_all_lessees()
+    else:
+        lessees = helpers.get_all_lessees_filtered()
+
     return jsonify([lessee.serialize() for lessee in lessees])
 
 
