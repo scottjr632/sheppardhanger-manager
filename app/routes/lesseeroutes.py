@@ -26,7 +26,13 @@ def new_lessee(user):
 @mod.route('/', methods=['GET'])
 @utils.login_required
 def get_all_lessees(user):
-    lessees = helpers.get_all_lessees()
+    filtered = request.args.get('filter')
+    lessee = None
+    if filtered is not None and filtered == '0':
+        lessees = helpers.get_all_lessees()
+    else:
+        lessees = helpers.get_all_lessees_filtered()
+
     return jsonify([lessee.serialize() for lessee in lessees])
 
 
@@ -38,6 +44,16 @@ def get_lessee_by_id(user, lid):
         return jsonify(helpers.get_lessee_info(lid).serialize())
     else:
         return make_response('Cannot find lessee with id {}'.format(lid), 404)
+
+
+@mod.route('/status/<lesseeid>/<status>')
+@utils.login_required
+def update_lessee_status(user, lesseeid, status):
+    try:
+        helpers.set_lessee_archived_status(lesseeid, status)
+        return make_response('Updated lessee status to {}'.format(status), 200)
+    except Exception as e:
+        return make_response(str(e), 500)
 
 
 @mod.route('/filter', methods=['GET'])

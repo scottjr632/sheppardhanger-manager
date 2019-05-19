@@ -73,10 +73,12 @@ export const getReservationsByLesseeId = (lesseeId, callback) => BuildApi(`/rese
 export const getAllReservations = (callback) => BuildApi('/reservations/').get(callback)
 export const updateReservation = (data, callback) => BuildApi('/reservations/', data).put(callback)
 export const createNewReservation = (data, callback) => BuildApi('/reservations/', data).post(callback)
+export const updateReservationStatus = (id, status, callback) => BuildApi(`/reservations/status/${id}/${status}`).get(callback)
 
 export const createNewLessee = (data, callback) => BuildApi('/lessee/', data).post(callback)
 export const getAllLessees = (callback) => BuildApi('/lessee/').get(callback)
 export const getLesseeById = (id, callback) => BuildApi(`/lessee/${id}`).get(callback)
+export const updateLesseeStatus = (id, status, callback) => BuildApi(`/lessee/status/${id}/${status}`).get(callback)
 
 export const getAllRanks = (callback) => BuildApi('/lessee/ranks').get(callback)
 export const addNewRank = (data, callback) => BuildApi('/lessee/ranks', data).post(callback)

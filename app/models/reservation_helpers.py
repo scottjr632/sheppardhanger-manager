@@ -1,3 +1,5 @@
+from sqlalchemy import or_
+
 import app.models.models as models
 from app import utils, db
 
@@ -25,6 +27,25 @@ def get_res_by_lessee(lesseeid) -> list:
 
 def get_all_res() -> list:
     return models.Reservation.query.all()
+
+
+def get_all_res_filtered() -> list:
+    return models.Reservation.query \
+            .filter(or_(models.Reservation.status == None, 
+                        models.Reservation.status != models.StatusEnum.archived)) \
+            .order_by(models.Reservation.id.desc())
+
+
+@utils.rollback_on_error
+def set_res_archived_status(resid: int, status: str):
+    reservation = models.Reservation.query.get(resid)
+    if hasattr(models.StatusEnum, status):
+        reservation.status = status
+    else:
+        raise Exception ('status must be of type Enum')
+    
+    db.session.add(reservation)
+    db.session.commit()
 
 
 def get_all_bookingtypes() -> list:

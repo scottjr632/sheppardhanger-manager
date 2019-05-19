@@ -65,6 +65,17 @@ class LesseeStore {
     }
   }
 
+  @action removeLessee(lessee) {
+    let lessees = this.lessees
+    let formattedLessees = this.formattedLessees
+
+    let lesseeIdx = lessees.findIndex(elem => parseInt(elem.id) === parseInt(lessee.id))
+    let formatedLesseeIdx = formattedLessees.findIndex(elem => parseInt(elem.id) === parseInt(lessee.id))
+
+    this.lessees.splice(lesseeIdx, 1)
+    this.formattedLessees.splice(formatedLesseeIdx, 1)
+  }
+
   @action addNewLessee(lessee) {
 
     if (!this.lessees.find(elem => elem.id === lessee.id)) {

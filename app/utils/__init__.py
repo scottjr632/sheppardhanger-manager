@@ -1,3 +1,4 @@
+import sys
 import decimal
 from functools import wraps
 import json
@@ -184,14 +185,14 @@ def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         token = request.cookies.get('access_token')
-        print(request.cookies)
+        if token is None and 'Authorization' in request.headers:
+            data = request.headers['Authorization']
+            token = str.replace(str(data), 'Bearer ','')
         try:
             user = decode_auth_token(token)
             if user == TOKEN_EXPIRED or user == INVALID_TOKEN:
+                print(user, file=sys.stderr)
                 abort(401)
-            # check if blacklisted
-            # if int(authentited) == 0:
-            #     abort(401)
 
         except:
             abort(401)
