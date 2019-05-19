@@ -67,7 +67,7 @@ def start_prod():
 
     action = [
         'gunicorn', '--worker-connections=1000',
-        '--workers={}'.format(cpu_count), '--log-level=info', '--bind=0.0.0.0:888', 'wsgi'
+        '--workers={}'.format(cpu_count), '--log-level=info', '--bind=0.0.0.0:5000', 'wsgi'
     ]
 
     cmds.append(action)
