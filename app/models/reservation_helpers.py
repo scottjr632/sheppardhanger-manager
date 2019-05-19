@@ -36,6 +36,18 @@ def get_all_res_filtered() -> list:
             .order_by(models.Reservation.id.desc())
 
 
+@utils.rollback_on_error
+def set_res_archived_status(resid: int, status: str):
+    reservation = models.Reservation.query.get(resid)
+    if hasattr(models.StatusEnum, status):
+        reservation.status = status
+    else:
+        raise Exception ('status must be of type Enum')
+    
+    db.session.add(reservation)
+    db.session.commit()
+
+
 def get_all_bookingtypes() -> list:
     return models.BookingType.query.all()
 

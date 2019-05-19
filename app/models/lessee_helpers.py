@@ -14,6 +14,18 @@ def add_new_lessee(info) -> models.Lessee:
     return lessee
 
 
+@utils.rollback_on_error
+def set_lessee_archived_status(lesseeid: int, status: str):
+    lessee = models.Lessee.query.get(lesseeid)
+    if hasattr(models.StatusEnum, status):
+        lessee.status = status
+    else:
+        raise Exception ('status must be of type Enum')
+    
+    db.session.add(lessee)
+    db.session.commit()
+
+
 def get_all_lessees() -> list:
     return models.Lessee.query.order_by(models.Lessee.id.desc()).all()
 

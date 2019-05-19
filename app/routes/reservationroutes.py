@@ -65,6 +65,16 @@ def get_all_reservations(user):
         return make_response('Something went wrong', 500)
 
 
+@mod.route('/status/<resid>/<status>')
+@utils.login_required
+def update_res_status(user, resid, status):
+    try:
+        helpers.set_res_archived_status(resid, status)
+        return make_response('Updated reservation to {}'.format(status), 200)
+    except Exception as e:
+        return make_response(str(e), 500)
+
+
 @mod.route('/<resid>', methods=['GET'])
 @utils.login_required
 def get_reservation_by_id(user, resid):
