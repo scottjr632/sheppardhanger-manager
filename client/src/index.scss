@@ -1019,6 +1019,7 @@ h4 {
  }
  .btn--primary {
    background-color: $btn-color;
+   font-weight: bold;
    &:hover {
      background-color: lighten($btn-color, 5%);
    }
@@ -1136,8 +1137,6 @@ h4 {
      transform: translateY(100%)
    }
  }
-
-
 
  // -------------------
  // slide up

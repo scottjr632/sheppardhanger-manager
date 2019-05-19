@@ -50,12 +50,29 @@ def new_reservation(user):
 @mod.route('/', methods=['GET'])
 @utils.login_required
 def get_all_reservations(user):
+    filtered = request.args.get('filter')
     try:
-        reservations = helpers.get_all_res()
+        reservations = None
+        if filtered is not None and filtered == '0':
+            reservations = helpers.get_all_res()
+        else:
+            reservations = helpers.get_all_res_filtered()
+            
+        print(reservations)
         return jsonify([reservation.serialize() for reservation in reservations])
     except Exception as e:
         print(e, file=sys.stderr)
         return make_response('Something went wrong', 500)
+
+
+@mod.route('/status/<resid>/<status>')
+@utils.login_required
+def update_res_status(user, resid, status):
+    try:
+        helpers.set_res_archived_status(resid, status)
+        return make_response('Updated reservation to {}'.format(status), 200)
+    except Exception as e:
+        return make_response(str(e), 500)
 
 
 @mod.route('/<resid>', methods=['GET'])

@@ -1,8 +1,11 @@
 import React from 'react'
 import PropTypes, { array } from 'prop-types'
 
+import { NotificationManager } from 'react-notifications'
+
 import ConfirmButton from '../Buttons/confirm.jsx'
 import * as backend from '../../backend'
+import { inject, observer } from 'mobx-react';
 
 const inputStyle = {
   borderBottom: '1pt #d8d5d5 solid'
@@ -31,6 +34,8 @@ const prettyNames = {
   'lengthofstay': 'Length of stay (days)'
 }
 
+@inject('reservationStore')
+@observer
 class Info extends React.Component {
 
   constructor(props) {
@@ -54,6 +59,22 @@ class Info extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({...nextProps.data})
+  }
+
+  archiveReservation = () => {
+    backend.updateReservationStatus(this.props.data.id, 'archived', (res) => {
+      let { data } = res
+      if (data) {
+        if (res.status !== 200) {
+          NotificationManager.error(data)
+        } else {
+          this.props.reservationStore.removeReservation({id: this.props.data.id})
+          NotificationManager.info(data)
+        }
+      } else {
+        NotificationManager.error('Unable to update reservations status!')
+      }
+    })
   }
 
   handleChange = (event) => {
@@ -93,7 +114,7 @@ class Info extends React.Component {
             </tbody>
           </table>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '10px 0 10px 0'}}>
-            <ConfirmButton removeMessage={'Archive'} confirmAction={()=>{}} />
+            <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveReservation} />
             {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
             {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.toggleEdit} style={editStyle} /> }
           </div>

@@ -60,6 +60,13 @@ class ReservationStore {
         this.reservations[index] = reservation
     }
 
+    @action removeReservation(reservation) {
+        let reservations = this.reservations
+        
+        let index = reservations.findIndex(elem => parseInt(elem.id) === parseInt(reservation.id))
+        this.reservations.splice(index, 1)
+    }
+
 }
 
 export default new ReservationStore()

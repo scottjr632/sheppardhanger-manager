@@ -1,7 +1,9 @@
 import React from "react";
 import Table from "react-bootstrap/lib/Table";
 import PropTypes from "prop-types";
+import { observer } from "mobx-react";
 
+@observer
 class TableT extends React.Component {
   componentDidMount() {
     if (this.props.onLoadFunction) {
