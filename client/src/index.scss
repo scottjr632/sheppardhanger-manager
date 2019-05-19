@@ -1016,6 +1016,7 @@ h4 {
    background: none;
    transition: background .3s ease;
    color: white !important;
+   font-weight: bold;
  }
  .btn--primary {
    background-color: $btn-color;
@@ -1136,8 +1137,6 @@ h4 {
      transform: translateY(100%)
    }
  }
-
-
 
  // -------------------
  // slide up

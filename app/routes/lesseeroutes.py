@@ -26,9 +26,9 @@ def new_lessee(user):
 @mod.route('/', methods=['GET'])
 @utils.login_required
 def get_all_lessees(user):
-    filtered = request.args.get('filtered')
+    filtered = request.args.get('filter')
     lessee = None
-    if not filter and filter is not None:
+    if filtered is not None and filtered == '0':
         lessees = helpers.get_all_lessees()
     else:
         lessees = helpers.get_all_lessees_filtered()

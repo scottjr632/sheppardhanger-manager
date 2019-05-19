@@ -1,3 +1,5 @@
+from sqlalchemy import or_
+
 import app.models.models as models
 from app import utils, db
 
@@ -29,7 +31,9 @@ def get_all_res() -> list:
 
 def get_all_res_filtered() -> list:
     return models.Reservation.query \
-        .filter(models.Reservation.status != models.STATUS_TYPES['archived'])
+            .filter(or_(models.Reservation.status == None, 
+                        models.Reservation.status != models.StatusEnum.archived)) \
+            .order_by(models.Reservation.id.desc())
 
 
 def get_all_bookingtypes() -> list:

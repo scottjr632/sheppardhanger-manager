@@ -50,14 +50,15 @@ def new_reservation(user):
 @mod.route('/', methods=['GET'])
 @utils.login_required
 def get_all_reservations(user):
-    filtered = request.args.get('filtered')    
+    filtered = request.args.get('filter')
     try:
         reservations = None
-        if not filter and filter is not None:
+        if filtered is not None and filtered == '0':
             reservations = helpers.get_all_res()
         else:
             reservations = helpers.get_all_res_filtered()
             
+        print(reservations)
         return jsonify([reservation.serialize() for reservation in reservations])
     except Exception as e:
         print(e, file=sys.stderr)

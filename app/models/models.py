@@ -3,13 +3,20 @@ from datetime import datetime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import text as sa_text
 import sqlalchemy.types as types
+import enum
+from sqlalchemy import Enum
 
 from app import db
 
-STATUS_TYPES = {
-    'archived': 'archived',
-    'active': 'active'
-}
+class StatusEnum(enum.Enum):
+    archived = 'archived'
+    active = 'active'
+
+    def serialize(self):
+        return {
+            self.archived,
+            self.active
+        }
 
 
 class ChoiceType(types.TypeDecorator):
@@ -123,7 +130,7 @@ class Lessee(db.Model):
     state = db.Column(db.String)
     zipcode = db.Column(db.String)
     notes = db.Column(db.String)
-    status = db.Column(ChoiceType(STATUS_TYPES))
+    status = db.Column(Enum(StatusEnum, name='statusenum', create_type=False))
     reservationid = db.Column(db.Integer)
     reservation = db.relationship('Reservation', backref=db.backref('reservations', lazy=True))
 
@@ -159,7 +166,7 @@ class Reservation(db.Model):
     checkoutdate = db.Column(db.Date)
     roomid = db.Column(db.Integer, db.ForeignKey('rooms.id'))
     room = db.relationship('Room', backref=db.backref('rooms', lazy=True))
-    status = db.Column(ChoiceType(STATUS_TYPES))
+    status = db.Column(Enum(StatusEnum, name='statusenum', create_type=False))
     notes = db.Column(db.String)
     bookingtypeid = db.Column(db.Integer, db.ForeignKey('bookingtype.id'))
     bookingtype = db.relationship('BookingType', backref=db.backref('bookingtype', lazy=True))

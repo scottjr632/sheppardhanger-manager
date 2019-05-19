@@ -1,5 +1,7 @@
 import sys
 
+from sqlalchemy import or_
+
 import app.models.models as models
 from app import db, utils
 
@@ -18,7 +20,8 @@ def get_all_lessees() -> list:
 
 def get_all_lessees_filtered() -> list:
     return models.Lessee.query \
-        .filter(models.Lessee.status != models.STATUS_TYPES['archived']) \
+        .filter(or_(models.Lessee.status == None, 
+                    models.Lessee.status != models.StatusEnum.archived)) \
         .order_by(models.Lessee.id.desc())
 
 
