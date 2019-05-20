@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-
 class ConfirmButton extends React.Component {
 
 	constructor(props) {
