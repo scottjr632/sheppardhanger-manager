@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-
 class ConfirmButton extends React.Component {
 
 	constructor(props) {
@@ -18,6 +17,7 @@ class ConfirmButton extends React.Component {
 	}
 
 	componentWillUnmount() {
+		clearTimeout(this.timeout)
 		document.removeEventListener('mousedown', this.handleClick, false)
 	}
 

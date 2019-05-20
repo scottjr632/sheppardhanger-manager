@@ -150,6 +150,10 @@ class Lessee(db.Model):
             'reservations': [res.serialize() for res in self.reservation],
         }
 
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+            if hasattr(self, k): setattr(self, k, v)
+
 
 class Reservation(db.Model):
     __tablename__ = 'reservations'
@@ -191,6 +195,10 @@ class Reservation(db.Model):
             'bookingtypeid': self.bookingtypeid,
             'bookingtype': self.bookingtype.name
         }
+
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+             if hasattr(self, k): setattr(self, k, v)
 
 
 class ReferrerLog(db.Model):

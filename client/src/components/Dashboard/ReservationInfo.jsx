@@ -44,7 +44,9 @@ class Info extends React.Component {
       ...this.props.data,
       editable: this.props.editable || false,
       edit: false,
-      bookingTypes: []
+      bookingTypes: [],
+      rooms: [],
+      houses: []
     }
   }
 
@@ -55,6 +57,20 @@ class Info extends React.Component {
         if (data) this.setState({ bookingTypes: data }) 
       })
     }
+
+    backend.getRooms(res => {
+      let { data } = res
+      if (data) {
+        this.setState({ rooms: data })
+      }
+    })
+
+    backend.getHouses(res => {
+      let { data } = res
+      if (data) {
+        this.setState({ houses: data })
+      }
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -74,6 +90,12 @@ class Info extends React.Component {
       } else {
         NotificationManager.error('Unable to update reservations status!')
       }
+    })
+  }
+
+  updateReservation = () => {
+    backend.updateReservation({...this.props.data}, () => {
+
     })
   }
 
@@ -109,12 +131,66 @@ class Info extends React.Component {
                     }
                   })
                 }
-                {this.state.edit && <div></div>}
+              {this.state.edit && 
+                  Object.keys(data).map(key => {
+                    if (!excludedTypes.includes(key)) {
+                      let name = prettyNames[key] || key
+                      switch (key) {
+                      case 'lengthofstay':
+                      case 'lesseeemail':
+                      case 'checkindate':
+                      case 'checkoutdate':
+                        return (
+                          <td data-title={name}>
+                            <span className={'border-grow'}></span>
+                            <input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange} disabled/>
+                          </td>
+                        )
+                      case 'room':
+                        return (
+                          <td data-title={'rooms'}>
+                              <select>
+                                {this.state.rooms.map(room => {
+                                  return <option value={room.id}>{room.name}</option>
+                                })}
+                              </select>
+                          </td>
+                        )
+                      case 'house':
+                        return (
+                          <td data-title={'houses'} className="tooltip">
+                            <span className="tooltiptext">House names will change when room is updated</span>
+                            <select disabled>
+                              {this.state.houses.map(house => {
+                                return <option value={house.id}>{house.name}</option>
+                              })}
+                            </select>
+                          </td>
+                        )
+                      case 'bookingtype':
+                        return (
+                          <td data-title={'Booking Type'}>
+                            <select>
+                              {this.state.bookingTypes.map(btype => {
+                                return <option value={btype.id}>{btype.name}</option>
+                              })}
+                            </select>
+                          </td>
+                        )
+
+                      default:
+                        return <td data-title={name}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
+                      }
+                    }
+                  })
+                }
               </tr>
             </tbody>
           </table>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '10px 0 10px 0'}}>
-            <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveReservation} />
+            {!this.state.edit && <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveReservation} /> }
+            {this.state.edit && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
+
             {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
             {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.toggleEdit} style={editStyle} /> }
           </div>

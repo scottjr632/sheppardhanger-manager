@@ -15,6 +15,10 @@ const editStyle = {
   backgroundColor: '#128de9'
 }
 
+const saveStyle = {
+  backgroundColor: '#12e96f'
+}
+
 const excludedTypes = [
   'id'
 ]
@@ -39,7 +43,9 @@ class UserInfo extends React.Component {
       ...this.props.data,
       editable: this.props.editable || false,
       edit: false,
-      bookingTypes: []
+      bookingTypes: [],
+      ranks: [],
+      activeRankId: 1
     }
   }
 
@@ -50,6 +56,16 @@ class UserInfo extends React.Component {
         if (data) this.setState({ bookingTypes: data }) 
       })
     }
+  }
+
+  componentDidMount() {
+    backend.getAllRanks(res => {
+      let { data } = res
+      if (data) { 
+        let activeRank = data.find(elem => elem.name == this.props.data.rank)
+        this.setState({ranks: data, activeRankId: activeRank ? activeRank.id : 1})
+      }
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -69,6 +85,15 @@ class UserInfo extends React.Component {
       } else {
         NotificationManager.error('Unable to update user status!')
       }
+    })
+  }
+
+  updateUser = () => {
+    backend.updateLessee({...this.state, rank: this.state.activeRankId}, (res) => {
+      if (res.status !== 200) {
+        NotificationManager.error('Unable to update lessee')
+      }
+      NotificationManager.info('Updated lessee information')
     })
   }
 
@@ -109,7 +134,7 @@ class UserInfo extends React.Component {
                         <td data-title={'RES STATUS'} key={key} onClick={() => {this.goToReservationInfo(data[key][0].id || 0)}}>{ data[key].length > 0 ? data[key][0].bookingtype : ''}<i className="fas fa-external-link-alt" style={{margin: '0 0 0 10px'}}></i></td>  
                         <td data-title={'ROOM'} key={key} onClick={() => {this.goToReservationInfo(data[key][0].id || 0)}}>{ data[key].length > 0 ? data[key][0].room : ''}</td>
                       </React.Fragment> : 
-                      <td data-title={name} key={key}>{data[key]}</td>
+                      <td data-title={name} key={key}>{this.state[key]}</td>
                     }
                   })
                 }
@@ -117,16 +142,33 @@ class UserInfo extends React.Component {
                   Object.keys(data).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
-                      return key === 'reservations' ?
-                      <td data-title={'RES STATUS'}>
-                        <select value={ data[key].length > 0 ? data[key][0].bookingtypeid : 0} name={key}>
-                          <option value={0}>-- NONE --</option>
-                          {this.state.bookingTypes.map(btype => {
-                            return <option value={btype.id}>{btype.name}</option>
-                          })}
-                        </select>
-                      </td> :
-                      <td data-title={name}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
+                      switch (key) {
+                      case 'reservations':
+                        return (
+                            <td data-title={'RES STATUS'} className="tooltip" >
+                              <span className="tooltiptext">Click on the reservation to change status</span>
+                              <select value={ data[key].length > 0 ? data[key][0].bookingtypeid : 0} name={key} style={{cursor: 'not-allowed'}} disabled>
+                                <option value={0}>-- NONE --</option>
+                                {this.state.bookingTypes.map(btype => {
+                                  return <option value={btype.id}>{btype.name}</option>
+                                })}
+                              </select>
+                            </td>
+                        )
+                      case 'rank':
+                        return (
+                          <td data-title={'rank'}>
+                            <select name={'activeRankId'} onChange={this.handleChange} value={this.state.activeRankId}>
+                              <option value={0}>-- NONE --</option>
+                              {this.state.ranks.map(btype => {
+                                return <option value={btype.id}>{btype.name}</option>
+                              })}
+                            </select>
+                          </td>
+                        )
+                      default:
+                        return <td data-title={name}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
+                      }
                     }
                   })
                 }
@@ -134,9 +176,11 @@ class UserInfo extends React.Component {
             </tbody>
           </table>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '10px 0 10px 0'}}>
-            <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveUser} />
+            {!this.state.edit && <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveUser} /> }
+            {this.state.edit && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
+
             {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
-            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.toggleEdit} style={editStyle} /> }
+            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={() => { this.updateUser(); this.toggleEdit(); }} style={saveStyle} /> }
           </div>
         </div>
       </div>

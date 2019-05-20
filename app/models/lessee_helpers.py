@@ -26,6 +26,15 @@ def set_lessee_archived_status(lesseeid: int, status: str):
     db.session.commit()
 
 
+@utils.rollback_on_error
+def update_lessee(lessee: models.Lessee):
+    lessee_upd = models.Lessee.query.get(lessee['id'])
+    lessee_upd.update(**lessee)
+
+    db.session.add(lessee_upd)
+    db.session.commit()
+
+
 def get_all_lessees() -> list:
     return models.Lessee.query.order_by(models.Lessee.id.desc()).all()
 
