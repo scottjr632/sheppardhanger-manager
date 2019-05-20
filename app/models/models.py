@@ -150,6 +150,10 @@ class Lessee(db.Model):
             'reservations': [res.serialize() for res in self.reservation],
         }
 
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
 
 class Reservation(db.Model):
     __tablename__ = 'reservations'

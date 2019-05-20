@@ -36,6 +36,18 @@ def get_all_lessees(user):
     return jsonify([lessee.serialize() for lessee in lessees])
 
 
+@mod.route('/', methods=['PUT'])
+@utils.login_required
+def update_lessee(user):
+    try:
+        data = request.get_json(force=True)
+        helpers.update_lessee(data)
+        return make_response('Updated reservations {}'.format(data['id']), 200)
+    except Exception as e:
+        print(e, file=sys.stderr)
+        return make_response('Something went wrong', 500)
+
+
 @mod.route('/<lid>', methods=['GET'])
 @utils.login_required
 def get_lessee_by_id(user, lid):
