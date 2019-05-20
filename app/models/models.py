@@ -152,7 +152,7 @@ class Lessee(db.Model):
 
     def update(self, **kwargs):
         for k, v in kwargs.items():
-            setattr(self, k, v)
+            if hasattr(self, k): setattr(self, k, v)
 
 
 class Reservation(db.Model):
@@ -195,6 +195,10 @@ class Reservation(db.Model):
             'bookingtypeid': self.bookingtypeid,
             'bookingtype': self.bookingtype.name
         }
+
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+             if hasattr(self, k): setattr(self, k, v)
 
 
 class ReferrerLog(db.Model):

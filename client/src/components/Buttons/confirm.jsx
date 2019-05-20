@@ -18,6 +18,7 @@ class ConfirmButton extends React.Component {
 	}
 
 	componentWillUnmount() {
+		clearTimeout(this.timeout)
 		document.removeEventListener('mousedown', this.handleClick, false)
 	}
 
