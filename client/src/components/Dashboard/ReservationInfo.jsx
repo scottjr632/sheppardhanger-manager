@@ -158,12 +158,13 @@ class Info extends React.Component {
                         )
                       case 'house':
                         return (
-                          <td data-title={'houses'}>
-                              <select>
-                                {this.state.houses.map(house => {
-                                  return <option value={house.id}>{house.name}</option>
-                                })}
-                              </select>
+                          <td data-title={'houses'} className="tooltip">
+                            <span className="tooltiptext">House names will change when room is updated</span>
+                            <select disabled>
+                              {this.state.houses.map(house => {
+                                return <option value={house.id}>{house.name}</option>
+                              })}
+                            </select>
                           </td>
                         )
                       case 'bookingtype':

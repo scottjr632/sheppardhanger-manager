@@ -145,7 +145,7 @@ class UserInfo extends React.Component {
                       switch (key) {
                       case 'reservations':
                         return (
-                            <td data-title={'RES STATUS'}className="tooltip" >
+                            <td data-title={'RES STATUS'} className="tooltip" >
                               <span className="tooltiptext">Click on the reservation to change status</span>
                               <select value={ data[key].length > 0 ? data[key][0].bookingtypeid : 0} name={key} style={{cursor: 'not-allowed'}} disabled>
                                 <option value={0}>-- NONE --</option>
