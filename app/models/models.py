@@ -143,7 +143,7 @@ class Lessee(db.Model):
             'state': self.state,
             'zipcode': self.zipcode,
             'notes': self.notes,
-            'status': self.status.value,
+            'status': self.status.value if self.status else '',
             'reservations': [res.serialize() for res in self.reservation],
         }
 
