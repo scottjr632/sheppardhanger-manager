@@ -64,9 +64,7 @@ def new_reservation(data) -> models.Reservation:
 @utils.rollback_on_error
 def update_reservation(reservation):
     res = models.Reservation.query.get(reservation['id'])
-    res.checkindate = reservation['checkindate']
-    res.checkoutdate = reservation['checkoutdate']
-    res.roomid = reservation['roomid']
+    res.update(**reservation)
 
     db.session.add(res)
     db.session.commit()

@@ -1,4 +1,6 @@
+import sys
 from datetime import datetime
+import collections
 
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import text as sa_text
@@ -11,12 +13,6 @@ from app import db
 class StatusEnum(enum.Enum):
     archived = 'archived'
     active = 'active'
-
-    def serialize(self):
-        return {
-            self.archived,
-            self.active
-        }
 
 
 class ChoiceType(types.TypeDecorator):
@@ -147,8 +143,13 @@ class Lessee(db.Model):
             'state': self.state,
             'zipcode': self.zipcode,
             'notes': self.notes,
+            'status': self.status.value,
             'reservations': [res.serialize() for res in self.reservation],
         }
+
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+            if hasattr(self, k): setattr(self, k, v)
 
 
 class Reservation(db.Model):
@@ -191,6 +192,10 @@ class Reservation(db.Model):
             'bookingtypeid': self.bookingtypeid,
             'bookingtype': self.bookingtype.name
         }
+
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+             if hasattr(self, k): setattr(self, k, v)
 
 
 class ReferrerLog(db.Model):
