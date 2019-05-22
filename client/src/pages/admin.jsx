@@ -3,17 +3,15 @@ import React, { Suspense, lazy } from 'react'
 import { inject, observer } from 'mobx-react'
 
 import Navi from '../components/HeaderComponents/Navbar'
-// import Schedule from '../components/charts/scheduler'
-import Schedule from '../loadables/LoadableSchedule.jsx'
 import NewLesseeModal from '../loadables/NewLesseeModal.jsx'
 import NewCalendarEvent from '../loadables/NewCalendarEvent.jsx'
 import AccessDenied from '../components/Errors/AccessDenied'
-import Table from '../loadables/LoadableTable.jsx'
+import Unfiltered from '../components/Tables/Unfiltered'
 import Question from '../components/Dashboard/Question.jsx'
 
 @inject ('lesseeStore')
 @observer
-class Dashboard extends React.Component {
+class Admin extends React.Component {
 
   constructor(props) {
     super(props)
@@ -27,7 +25,7 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    this.props.lesseeStore.populateLessees()
+    // this.props.lesseeStore.populateLessees()
   }
 
   setNewEventStartAndStop = (newEventStart, newEventStop) => {
@@ -58,21 +56,20 @@ class Dashboard extends React.Component {
     return (
       <div style={{marginBottom: '100px'}}>
         <Navi />
-        <Schedule history={this.props.history} showCreateEventModal={this.toggleEventModal} setNewEventStartAndStop={this.setNewEventStartAndStop} />
-        {/* <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} /> */}
         <div className={'grid-container'}>
           <div className='table large-screen' style={{gridArea: 'tbl'}}>
             <div>
               <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} />
-              <label>Locate a lessee</label>
-              <Table moreInfo={this.moreInfo}/>
+              <label>Unfiltered Lessees</label>
+              <Unfiltered moreInfo={this.moreInfo} />
             </div>
           </div>
         </div>
+
         <AccessDenied history={this.props.history} />
       </div>
     )
   }
 }
 
-export default Dashboard
+export default Admin

@@ -17,6 +17,8 @@ var serviceWorkerOption = {
     "/11.bundle.js",
     "/12.bundle.js",
     "/13.bundle.js",
+    "/14.bundle.js",
+    "/15.bundle.js",
     "/main.css",
     "/bundle.js",
     "/index.html"

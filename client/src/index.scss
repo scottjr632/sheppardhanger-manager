@@ -344,6 +344,12 @@ tr{
   font-size: 12pt;
   margin: 10px;
 
+  &.small {
+    font-size: 9pt;
+    min-width: 100px;
+    width: 50% !important;
+  }
+
   &.lessee {
     margin-right: 10px;
   }

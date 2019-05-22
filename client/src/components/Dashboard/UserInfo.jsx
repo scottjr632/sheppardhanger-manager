@@ -19,6 +19,11 @@ const saveStyle = {
   backgroundColor: '#12e96f'
 }
 
+// const disabledBtn = {
+//   backgroundColor: '#b9b9b9',
+//   cursor: 'default'
+// }
+
 const excludedTypes = [
   'id'
 ]
@@ -176,7 +181,7 @@ class UserInfo extends React.Component {
             </tbody>
           </table>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '10px 0 10px 0'}}>
-            {!this.state.edit && <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveUser} /> }
+            {!this.state.edit && <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveUser} disabled={this.state.status === 'archived'} /> }
             {this.state.edit && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
 
             {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
