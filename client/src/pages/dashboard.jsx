@@ -69,6 +69,13 @@ class Dashboard extends React.Component {
             </div>
           </div>
         </div>
+        <div style={{gridArea: 'btns', display: 'flex', flexDirection: 'column', position: 'fixed', top: '75%', zIndex: 99}}>
+          <button className={'btn__new minimized'} style={{overflow: 'hidden'}} onClick={this.toggleModal}>+ Create new lessee</button>
+          <button className={'btn__new minimized'} style={{overflow: 'hidden'}} onClick={this.toggleEventModal}>+ Add to calendar</button>
+        </div>
+
+        <NewLesseeModal showModal={this.state.showModal} closeModal={this.toggleModal}/>
+        <NewCalendarEvent showModal={this.state.showEventModal} closeModal={this.toggleEventModal} eventStart={this.state.newEventStart} eventStop={this.newEventStop}/>
         <AccessDenied history={this.props.history} />
       </div>
     )
