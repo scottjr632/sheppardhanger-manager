@@ -31,13 +31,16 @@ const activateLessee = (lesseeId) => {
   })
 }
 
-const formatReservation = (reservation) => {
-  return {
-    house: reservation.house,
-    room: reservation.room,
-    lengthofstay: reservation.lengthofstay,
-    checkindate: reservation.checkindate,
-    checkoutdate: reservation.checkoutdate
+const deleteLessee = (lesseeId) => {
+  if (confirm('Are you sure you want to permantly delete the lessee?')) {
+    backend.deleteLessee(lesseeId, res => {
+      console.log(res)
+      if (res.statusText !== 'OK') {
+        NotificationManager.error(res.text)
+        return
+      }
+      NotificationManager.info('Deleted lessee')
+    })
   }
 }
 
@@ -46,10 +49,10 @@ const formatLessee = (lessee) => {
      name: `${lessee.lname}, ${lessee.fname}`,
      email: lessee.email,
      archived: lessee.status,
-     archive: lessee.status === 'archived' ? 
-             <button className={'btn__new small'}>Un-Archive</button> :
-             <button className={'btn__new small dangerous'}>Archive</button>,
-     delete: <button className={'btn__new dangerous small'}>Permantly Delete</button>,      
+     archive: lessee.status === 'archived' ?
+             <ConfirmButton removeMessage={'Un-Archive'} confirmAction={() => {activateLessee(lessee.id)}} style={{backgroundColor: '#55c5b7', width: '100%'}}/> :
+             <ConfirmButton removeMessage={'Archive'} confirmAction={() => {archiveLessee(lessee.id)}} style={{width: '100%'}}/>,
+     delete:  <ConfirmButton removeMessage={'DELETE PERMANTLY'} confirmAction={() => {deleteLessee(lessee.id)}} style={{width: '100%'}}/>,      
      exandableInfo: `Address: ${lessee.address}
                City: ${lessee.city}
                State: ${lessee.state}

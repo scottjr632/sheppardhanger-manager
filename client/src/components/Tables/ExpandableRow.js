@@ -33,11 +33,11 @@ class ExpandableRow extends React.Component {
     let { data } = this.props
     return (
       <React.Fragment>
-          <tr onClick={this.toggleExpanded}>
+          <tr>
           {Object.keys(data).map((key, index) => {
             if (key !== 'exandableInfo' && key !== 'id') {
               return index === 0
-              ? <td key={key}><i className={`fas fa-plus ${this.state.expanded ? 'rotated' : ''}`}></i>{data[key]}</td>
+              ? <td key={key} onClick={this.toggleExpanded} style={{cursor: 'pointer'}}><i className={`fas fa-plus ${this.state.expanded ? 'rotated' : ''}`}></i>{data[key]}</td>
               : <td key={key}>{data[key]}</td>
             }
           })}

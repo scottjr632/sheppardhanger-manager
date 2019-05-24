@@ -104,7 +104,7 @@ button.btn {
         border-bottom: 1px solid $gray-border;
         overflow-y: hidden !important; 
         overflow-x: auto !important;
-        cursor: pointer;
+        // cursor: pointer;
         display: table-cell;
         padding: 20px 24px;
         transition: background .2s ease-out;
@@ -160,7 +160,7 @@ button.btn {
     box-shadow: $shadow;
     background: #fff;
     border-bottom: 1px solid $gray-border;
-    cursor: pointer;
+    // cursor: pointer;
     display: block;
     padding: 15px 10px;
     margin: 0 0 10px 0;
@@ -348,6 +348,7 @@ tr{
     font-size: 9pt;
     min-width: 100px;
     width: 50% !important;
+    height: 50px;
   }
 
   &.lessee {
