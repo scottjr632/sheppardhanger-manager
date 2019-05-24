@@ -14,23 +14,6 @@ const formatReservation = (reservation) => {
   }
 }
 
-const formatLessee = (lessee) => {
-  return  {
-     name: `${lessee.lname}, ${lessee.fname}`,
-       email: lessee.email,
-     phone: lessee.phone || '',
-     rank: lessee.rank || '',
-     reservations: lessee.reservations && lessee.reservations.length > 0
-     ? `${lessee.reservations[0].room} - ${lessee.reservations[0].checkindate}`
-     : '',
-     exandableInfo: `Address: ${lessee.address}
-               City: ${lessee.city}
-               State: ${lessee.state}
-               Notes: ${lessee.notes}`,
-     id: lessee.id,
-   }
- }
-
 class Table extends React.Component {
 
     constructor(props) {

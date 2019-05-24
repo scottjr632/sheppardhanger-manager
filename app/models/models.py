@@ -189,6 +189,7 @@ class Reservation(db.Model):
             'room': self.room.name if self.room else '',
             'house': self.room.house.name if self.room else '',
             'notes': self.notes,
+            'status': self.status.value if self.status else '',
             'bookingtypeid': self.bookingtypeid,
             'bookingtype': self.bookingtype.name
         }
