@@ -1,8 +1,35 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { NotificationManager } from 'react-notifications'
+
 import ExpandableRow from './ExpandableRow'
 import * as backend from '../../backend'
+import ConfirmButton from '../Buttons/confirm.jsx'
+
+import { STATUS_ACTIVE, STATUS_ARCHIVED } from '../../constants'
+
+const archiveLessee = (lesseeId) => {
+  backend.updateLesseeStatus(lesseeId, STATUS_ARCHIVED, res => {
+    if (res.statusText !== 'OK') {
+        NotificationManager.error('Unable to archive lessee')
+        return
+      }
+      
+      NotificationManager.info('Archived lessee')
+  })
+}
+
+const activateLessee = (lesseeId) => {
+  backend.updateLesseeStatus(lesseeId, STATUS_ACTIVE, res => {
+    if (res.statusText !== 'OK') {
+      NotificationManager.error('Unable to activate lessee')
+      return
+    }
+    
+    NotificationManager.info('Activated lessee')
+  })
+}
 
 const formatReservation = (reservation) => {
   return {
