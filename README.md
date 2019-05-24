@@ -1,4 +1,4 @@
-### sheppardhanger-manager
+## The Sheppard Hanger MANAGER
 
 To install and run
 
