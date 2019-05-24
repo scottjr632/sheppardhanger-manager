@@ -48,6 +48,17 @@ def update_lessee(user):
         return make_response('Something went wrong', 500)
 
 
+@mod.route('/<lid>', methods=['DELETE'])
+@utils.login_required
+def delete_lessee(user, lid):
+    try:
+        helpers.delete_lessee(lid)
+        return make_response('Deleted lessee {}'.format(lid), 200)
+    except Exception as e:
+        print(e, file=sys.stderr)
+        return make_response('Something went wrong', 500)
+
+
 @mod.route('/<lid>', methods=['GET'])
 @utils.login_required
 def get_lessee_by_id(user, lid):

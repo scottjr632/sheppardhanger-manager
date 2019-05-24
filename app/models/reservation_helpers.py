@@ -68,3 +68,11 @@ def update_reservation(reservation):
 
     db.session.add(res)
     db.session.commit()
+
+
+@utils.rollback_on_error
+def delete_reservation(res_id):
+    res = models.Reservation.query.get(res_id)
+
+    db.session.delete(res)
+    db.session.commit()

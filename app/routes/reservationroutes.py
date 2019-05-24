@@ -92,3 +92,14 @@ def update_reservation(user):
     except Exception as e:
         print(e, file=sys.stderr)
         return make_response('Something went wrong', 500)
+
+
+@mod.route('/<rid>', methods=['DELETE'])
+@utils.login_required
+def delete_reservations(user, rid):
+    try:
+        helpers.delete_reservation(rid)
+        return make_response('Deleted reservation {}'.format(rid), 200)
+    except Exception as e:
+        print(e, file=sys.stderr)
+        return make_response('Unable to delete reservarion', 500)

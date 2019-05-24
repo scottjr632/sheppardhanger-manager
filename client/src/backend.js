@@ -35,6 +35,14 @@ const BuildApi = (url, data, errmsg) => {
       }).catch(err => {
         return callback(err)
     })
+    },
+    delete: (callback) => {
+      axios.delete(url, data)
+        .then(res => {
+          return callback(res)
+        }).catch(err => {
+          return callback(err)
+        })
     }
   }
 }
@@ -75,6 +83,7 @@ export const getAllReservationsUnfiltered = (callback) => BuildApi('/reservation
 export const updateReservation = (data, callback) => BuildApi('/reservations/', data).put(callback)
 export const createNewReservation = (data, callback) => BuildApi('/reservations/', data).post(callback)
 export const updateReservationStatus = (id, status, callback) => BuildApi(`/reservations/status/${id}/${status}`).get(callback)
+export const deleteReservation = (id, callback) => BuildApi(`/reservations/${id}`).delete(callback)
 
 export const createNewLessee = (data, callback) => BuildApi('/lessee/', data).post(callback)
 export const getAllLessees = (callback) => BuildApi('/lessee/').get(callback)
@@ -82,6 +91,7 @@ export const getAllLesseesUnfiltered = (callback) => BuildApi('/lessee?filter=0'
 export const getLesseeById = (id, callback) => BuildApi(`/lessee/${id}`).get(callback)
 export const updateLessee = (data, callback) => BuildApi(`/lessee/`, data).put(callback)
 export const updateLesseeStatus = (id, status, callback) => BuildApi(`/lessee/status/${id}/${status}`).get(callback)
+export const deleteLessee = (lesseeId, callback) => BuildApi(`/lessee/${lesseeId}`).delete(callback)
 
 export const getAllRanks = (callback) => BuildApi('/lessee/ranks').get(callback)
 export const addNewRank = (data, callback) => BuildApi('/lessee/ranks', data).post(callback)

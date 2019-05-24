@@ -35,6 +35,14 @@ def update_lessee(lessee: models.Lessee):
     db.session.commit()
 
 
+@utils.rollback_on_error
+def delete_lessee(lid: int):
+    lessee_del = models.Lessee.query.get(lid)
+
+    db.session.delete(lessee_del)
+    db.session.commit()
+
+
 def get_all_lessees() -> list:
     return models.Lessee.query.order_by(models.Lessee.id.desc()).all()
 
