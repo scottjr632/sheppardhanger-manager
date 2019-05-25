@@ -143,6 +143,10 @@ button.btn {
     background: white;
     box-shadow: $shadow;
   }
+
+  &.full {
+    max-height: 100vh !important;
+  }
 }
 
 .card-list-table {

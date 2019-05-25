@@ -143,7 +143,7 @@ class Info extends React.Component {
     let { data } = this.props
     return (
       <div className={'table'} style={{gridArea: 'right'}}>
-        <div className={'table-wrapper'}>
+        <div className={'table-wrapper full'}>
           <table className="table-responsive card-list-table">
             <thead>
               <tr>

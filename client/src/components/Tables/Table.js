@@ -69,7 +69,7 @@ class Table extends React.Component {
 
     render(){
         return (
-        <div className="table-wrapper">
+        <div className="table-wrapper full">
             <div className='input-search'>
                 <i className="fas fa-search search-icon" />
                 <input type="text" placeholder={'Search'} onKeyUp={this.search}/>
