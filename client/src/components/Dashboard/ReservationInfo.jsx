@@ -5,6 +5,7 @@ import { NotificationManager } from 'react-notifications'
 
 import ConfirmButton from '../Buttons/confirm.jsx'
 import * as backend from '../../backend'
+import { STATUS_ACTIVE, STATUS_ARCHIVED } from '../../constants'
 import { inject, observer } from 'mobx-react';
 
 const inputStyle = {
@@ -41,12 +42,13 @@ class Info extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      ...this.props.data,
       editable: this.props.editable || false,
       edit: false,
       bookingTypes: [],
       rooms: [],
-      houses: []
+      houses: [],
+      purposeTypes: [],
+      reservation: {...this.props.data}
     }
   }
 
@@ -71,14 +73,29 @@ class Info extends React.Component {
         this.setState({ houses: data })
       }
     })
+
+    backend.getAllTDYTypes(res => {
+      let { data } = res
+      if(data) { this.setState({ tdys: data })}
+    })
+
+    backend.getAllGuestTypes(res => {
+      let { data } = res
+      if(data) { this.setState({ guests: data })}
+    })
+
+    backend.getAllTDYTypes(res => {
+      let { data } = res
+      if (data) { this.setState({ purposeTypes: data }) }
+    })
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({...nextProps.data})
+    this.setState({reservation: {...nextProps.data}})
   }
 
   archiveReservation = () => {
-    backend.updateReservationStatus(this.props.data.id, 'archived', (res) => {
+    backend.updateReservationStatus(this.props.data.id, STATUS_ARCHIVED, (res) => {
       let { data } = res
       if (data) {
         if (res.status !== 200) {
@@ -94,16 +111,28 @@ class Info extends React.Component {
   }
 
   updateReservation = () => {
-    backend.updateReservation({...this.props.data}, () => {
+    let upd_data = {...this.state.reservation, purpose: this.state.reservation.purposeid, numberofguests: this.state.numberofguestsid }
+    backend.updateReservation(upd_data, res => {
+      if (res.statusText !== 'OK') {
+        NotificationManager.error('Unable to update reservation!')
+        this.toggleEdit()
+        return
+      }
 
+      NotificationManager.info('Updated reservation!')
     })
   }
 
   handleChange = (event) => {
+    event.persist()
+    console.log(event)
     let { target } = event
     this.setState({
-      [target.name]: target.value
-    })
+      reservation: {
+        ...this.state.reservation,
+        [target.name]: target.value
+      }
+    }, () => console.log(this.state))
   }
 
   toggleEdit = () => {
@@ -143,13 +172,13 @@ class Info extends React.Component {
                         return (
                           <td data-title={name}>
                             <span className={'border-grow'}></span>
-                            <input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange} disabled/>
+                            <input name={key} value={this.state.reservation[key]} style={inputStyle} onChange={this.handleChange} disabled/>
                           </td>
                         )
                       case 'room':
                         return (
                           <td data-title={'rooms'}>
-                              <select>
+                              <select name={'roomid'} onChange={this.handleChange} value={this.state.reservation.roomid}>
                                 {this.state.rooms.map(room => {
                                   return <option value={room.id}>{room.name}</option>
                                 })}
@@ -170,16 +199,49 @@ class Info extends React.Component {
                       case 'bookingtype':
                         return (
                           <td data-title={'Booking Type'}>
-                            <select>
+                            <select name={'bookingtypeid'} onChange={this.handleChange} value={this.state.reservation.bookingtypeid}>
                               {this.state.bookingTypes.map(btype => {
                                 return <option value={btype.id}>{btype.name}</option>
                               })}
                             </select>
                           </td>
                         )
-
+                      case 'numberofguests':
+                          return (
+                            <td data-title={'GUESTS'}>
+                              <select name={'numberofguestsid'} onChange={this.handleChange} value={this.state.reservation.numberofguestsid}>
+                                {this.state.guests.map(btype => {
+                                  return <option value={btype.id}>{btype.name}</option>
+                                })}
+                              </select>
+                            </td>
+                          )
+                      case 'status':
+                        return (
+                          <td data-title={'STATUS'}>
+                            <select name={'status'} onChange={this.handleChange} value={this.state.reservation.status}>
+                              <option value={STATUS_ARCHIVED}>{STATUS_ARCHIVED}</option>
+                              <option value={STATUS_ACTIVE}>{STATUS_ACTIVE}</option>
+                            </select>
+                          </td>
+                        )
+                      case 'purpose':
+                        return (
+                          <td data-title={'PURPOSE'}>
+                            <select name={'purposeid'} onChange={this.handleChange} value={this.state.reservation.purposeid}>
+                              {this.state.purposeTypes.map(btype => {
+                                return <option value={btype.id}>{btype.name}</option>
+                              })}
+                            </select>
+                          </td>
+                        )
                       default:
-                        return <td data-title={name}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
+                        return (
+                          <td data-title={name}>
+                            <span className={'border-grow'}></span>
+                            <input name={key} value={this.state.reservation[key]} style={inputStyle} onChange={this.handleChange}/>
+                          </td>
+                        )
                       }
                     }
                   })
@@ -192,7 +254,7 @@ class Info extends React.Component {
             {this.state.edit && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
 
             {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
-            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.toggleEdit} style={editStyle} /> }
+            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.updateReservation} style={editStyle} /> }
           </div>
 
         </div>

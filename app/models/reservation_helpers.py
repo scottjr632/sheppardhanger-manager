@@ -62,9 +62,12 @@ def new_reservation(data) -> models.Reservation:
 
 
 @utils.rollback_on_error
-def update_reservation(reservation):
+def update_reservation(reservation: models.Reservation):
+    print('getting {} from db'.format(reservation['id']))
     res = models.Reservation.query.get(reservation['id'])
+    print(res, 'got res')
     res.update(**reservation)
+    print('updated!')
 
     db.session.add(res)
     db.session.commit()

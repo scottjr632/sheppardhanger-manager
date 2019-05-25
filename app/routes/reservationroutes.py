@@ -86,8 +86,11 @@ def get_reservation_by_id(user, resid):
 @utils.login_required
 def update_reservation(user):
     try:
+        print('getting data')
         data = request.get_json(force=True)
+        print(data)
         helpers.update_reservation(data)
+        print('updated!!')
         return make_response('Updated reservation {}'.format(data['id']), 200)
     except Exception as e:
         print(e, file=sys.stderr)

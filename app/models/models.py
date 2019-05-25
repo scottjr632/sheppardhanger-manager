@@ -196,7 +196,13 @@ class Reservation(db.Model):
 
     def update(self, **kwargs):
         for k, v in kwargs.items():
-             if hasattr(self, k): setattr(self, k, v)
+            if k == 'bookingtype': continue
+            if k == 'room': continue
+            if k == 'bookingtype': continue
+            if k == 'checkindate': continue
+            if k == 'checkoutdate': continue
+            if v == None or v == '': continue
+            if hasattr(self, k): setattr(self, k, v)
 
 
 class ReferrerLog(db.Model):
