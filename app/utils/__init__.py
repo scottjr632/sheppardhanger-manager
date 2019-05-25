@@ -208,6 +208,9 @@ def login_required(f):
                              secure=config.get('COOKIE_SECURE'),
                              expires=expire_date)
                     return resp
+                else:
+                    abort(401)
+
             if user == INVALID_TOKEN:
                 abort(401)
 
