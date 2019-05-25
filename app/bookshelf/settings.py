@@ -11,6 +11,9 @@ class BaseConfig(object):
     COOKIE_HTTPONLY = True
     COOKIE_SAMESITE = 'Lax'
     COOKIE_SECURE = True
+    TOKEN_TTL = {
+        'hours' : 1
+    }
 
 
 class DevelopmentConfig(BaseConfig):
@@ -19,6 +22,9 @@ class DevelopmentConfig(BaseConfig):
     ENV = "development"
     SECRET_KEY = 'not a secret key'
     COOKIE_SECURE = False
+    TOKEN_TTL = {
+        'minutes': 1
+    }
 
 
 class TestingConfig(BaseConfig):

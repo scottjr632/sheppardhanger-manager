@@ -255,3 +255,23 @@ class Roles(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+
+
+class RefreshToken(db.Model):
+    __tablename__ = 'refreshtokens'
+    __table_args__ = (
+        db.PrimaryKeyConstraint('userid'),
+    )
+
+    userid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    tokenname = db.Column(db.String)
+    token = db.Column(db.String)
+    expireat = db.Column(db.Date)
+
+    def serialize(self):
+        return {
+            userid: self.userid,
+            tokenname: self.tokenname,
+            token: self.token,
+            expireat: self.expireat
+        }

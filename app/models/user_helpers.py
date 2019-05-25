@@ -1,12 +1,14 @@
 import hashlib
 import json
 import uuid
+import datetime
 from functools import wraps
 
 from werkzeug.exceptions import abort
 
 import app.utils as utils
 from app import db
+import app.models.models as models
 from app.models.models import User
 
 ROLES = ('admin', 'user')
@@ -57,6 +59,58 @@ def get_user_roles(userid: User.id) -> str:
         return user.role.name
 
     return ''
+
+
+@utils.rollback_on_error
+def create_refresh_token(userid: User.id, expire={'days': 30}) -> (str, str):
+    """ Generates and insert refresh token into database.
+    Parameters
+    ----------
+    userid : string\n
+        The id of the user which is creating the refresh token.\n
+    expire : {'days', 'months', 'minutes'}, optional\n
+        The expire time of the refresh token. 
+    Returns
+    -------
+    string, string\n
+        The first value returned is the name of the token.\n
+        The second value returned is the actual token.
+    """
+    name, token = utils.generate_refresh_token()
+    expire_time = datetime.datetime.now() + datetime.timedelta(**expire)
+    refresh_token = models.RefreshToken(userid=userid, 
+        tokenname=name, token=token, expireat=expire_time)
+
+    db.session.merge(refresh_token)
+    db.session.commit()
+    return name, token
+
+
+@utils.rollback_on_error
+def delete_refresh_token(userid: User.id) -> str:
+    """ Deletes the refresh token for a user from the database.
+    Returns
+    -------
+    string \n
+        The token name to delete from cookies
+    """
+    refresh_token = models.RefreshToken.query.get(userid)
+
+    db.session.delete(refresh_token)
+    db.session.commit()
+
+    return refresh_token.tokenname
+
+
+def get_refresh_token(userid: int) -> models.RefreshToken:
+    """ Gets the refresh token of a user.
+    Returns None if refresh token is expired or none is there """
+    token = models.RefreshToken.query.filter_by(userid=userid)
+
+    if token is not None and token[0].expireat > datetime.date.today():
+        return token[0]
+
+    return None
 
 
 def require_admin(f):

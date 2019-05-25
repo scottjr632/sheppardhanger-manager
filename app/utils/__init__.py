@@ -4,7 +4,7 @@ from functools import wraps
 import json
 import requests
 
-from flask import abort, request, Response
+from flask import abort, request, Response, current_app, make_response
 
 from app import db
 from .auth import *
@@ -190,11 +190,30 @@ def login_required(f):
             token = str.replace(str(data), 'Bearer ','')
         try:
             user = decode_auth_token(token)
-            if user == TOKEN_EXPIRED or user == INVALID_TOKEN:
-                print(user, file=sys.stderr)
+            # if the token is expired check refresh token
+            if len(user) == 2 and user[0] == TOKEN_EXPIRED:
+                from app.models.user_helpers import get_refresh_token
+                token = get_refresh_token(user[1])
+                refresh_token = request.cookies.get(token.tokenname)
+                expire_date = datetime.datetime.now() + datetime.timedelta(days=30)
+                if refresh_token is not None:
+                    config = current_app.config
+                    token_ttl = config.get('TOKEN_TTL')
+                    new_token = encode_auth_token(user[1], expire_time=token_ttl)
+                    res = f(user[1], *args, **kwargs)
+                    resp = make_response(res, 200)
+                    resp.set_cookie('access_token', 
+                             new_token, 
+                             httponly=config.get('COOKIE_HTTPONLY'),
+                             secure=config.get('COOKIE_SECURE'),
+                             expires=expire_date)
+                    return resp
+            if user == INVALID_TOKEN:
                 abort(401)
 
-        except:
+        except Exception as e:
+            print(e, file=sys.stderr)
+            print('error token')
             abort(401)
 
         return f(user, *args, **kwargs)

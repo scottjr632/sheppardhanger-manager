@@ -1,8 +1,14 @@
+import uuid
+
 import jwt
 import datetime
 
 TOKEN_EXPIRED = 'Signature expired. Please log in again.'
 INVALID_TOKEN = 'Invalid token. Please log in again.'
+
+
+def generate_refresh_token() -> (str, str):
+    return uuid.uuid4().hex, uuid.uuid4().hex
 
 
 def encode_auth_token(user_id: str, expire_time: dict = {'hours': 3, 'seconds': 5}, secret_key: str = "notasecret") -> str:
@@ -29,6 +35,7 @@ def decode_auth_token(auth_token: str, secret_key: str = "notasecret") -> str:
         payload = jwt.decode(auth_token, secret_key)
         return payload['sub']
     except jwt.ExpiredSignatureError:
-        return TOKEN_EXPIRED
+        payload = jwt.decode(auth_token, secret_key, verify=False)
+        return TOKEN_EXPIRED, payload['sub']
     except jwt.InvalidTokenError:
         return INVALID_TOKEN
