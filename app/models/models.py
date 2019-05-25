@@ -199,8 +199,8 @@ class Reservation(db.Model):
             if k == 'bookingtype': continue
             if k == 'room': continue
             if k == 'bookingtype': continue
-            if k == 'checkindate': continue
-            if k == 'checkoutdate': continue
+            # if k == 'checkindate': continue
+            # if k == 'checkoutdate': continue
             if v == None or v == '': continue
             if hasattr(self, k): setattr(self, k, v)
 
