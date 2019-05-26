@@ -109,7 +109,7 @@ class Login extends React.Component {
                 </div>
                 <span><span>Not sure of your password?<a href="#" className={'authpage_link'} onClick={this.toggleLeft}>Set a new one</a></span></span>
                 <input type="submit" className="authpage_submit" value="Sign in" onClick={this.onSubmit}/>
-                <span><span className={'authpage_checkbox'}>Stay logged in<input type="checkbox" name="stayLoggedIn" onChange={this.handleChange} /></span></span>
+                <span><span className={'authpage_checkbox'}>Stay logged in<input type="checkbox" name="stayLoggedIn" onChange={this.handleChange} checked={true}/></span></span>
               </form>
             </div>
           </div>

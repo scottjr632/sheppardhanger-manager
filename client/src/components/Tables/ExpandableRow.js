@@ -65,6 +65,7 @@ ExpandableRow.popTypes = {
     expandableInfo: PropTypes.string
   }),
   moreInfo: PropTypes.bool,
+  moreInfoText: PropTypes.string,
   moreInfoClick: PropTypes.func,
   emailUserClick: PropTypes.func,
 
