@@ -8,6 +8,25 @@ import ReservationTable from '../components/Tables/Reservations'
 import Question from '../components/Dashboard/Question.jsx'
 import * as backend from '../backend'
 
+
+const getTestFile = () => {
+  backend.getMasterContract(16, 26, request => {
+    console.log(request)
+
+    var blob = new Blob([request.response], { type: 'application/pdf' });
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+  })
+}
+
+
 const emailInfo = {
   welcome: {prettyName: 'Welcome', done: false},
   contract: {prettyName: 'Contract', done: true},
@@ -16,7 +35,7 @@ const emailInfo = {
 }
 
 const documentsInfo = {
-  masterContract: {prettyName: 'Master Contract', btnText: 'Download master contract', btnAction: () => {console.log('TETETESST')}},
+  masterContract: {prettyName: 'Master Contract', btnText: 'Download master contract', btnAction: getTestFile},
   invoiceGenerator: {prettyName: 'Invoice', btnText: 'Generate invoice', btnAction: () => {console.log('TETETESST')}}
 }
 

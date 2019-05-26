@@ -1,12 +1,17 @@
 import sys
+import io
+import base64
 
 from flask import Blueprint
 from flask import request
 from flask import make_response
+from flask import send_file
 from flask.json import jsonify
 
 from app import utils
 import app.models.lessee_helpers as helpers
+import app.models.reservation_helpers as reshelpers
+from app.definitions import ROOT_DIR
 
 mod = Blueprint('lesseeroutes', __name__)
 
@@ -99,3 +104,25 @@ def get_all_tdytypes():
 @mod.route('/guests', methods=['GET'])
 def get_all_guesttypes():
     return jsonify([guest.serialize() for guest in helpers.get_all_guesttype()])
+
+
+@mod.route('/master-contract/<lid>/<rid>', methods=['GET'])
+@utils.login_required
+def get_master_contract(user, lid, rid):
+    from app.business import build_user_info
+    from app.business import search_and_replace_master_contract
+
+    lessee = helpers.get_lessee_info(lid)
+    reservation = reshelpers.get_res_by_id(rid)
+    lessee_info = build_user_info(lessee, reservation)
+
+    filename = '/Master Contract2 - {}, {}.docx'.format(lessee.lname, lessee.fname)
+    document = search_and_replace_master_contract(lessee_info)
+    bytesio = io.BytesIO()
+    document.save(filename)
+    # bytesio.seek(0)
+
+
+    # base64.b64encode(bytestr)
+
+    return send_file(filename, as_attachment=True ,attachment_filename=filename)

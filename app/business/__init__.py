@@ -3,9 +3,10 @@ from datetime import datetime
 from docx import Document
 
 import app.models.models as models
+from app.definitions import ROOT_DIR
 
 
-MASTER_CONTRACT = 'templates/Master Contract.docx'
+MASTER_CONTRACT = '{}/business/templates/master-contract.docx'.format(ROOT_DIR)
 
 MONTH_STRS_ABRV = {
     1: 'JAN',
@@ -37,14 +38,14 @@ def build_user_info(lessee: models.Lessee, reservation: models.Reservation) -> d
         '**LESSEEZIP**' : lessee.zipcode,
         '**LESSEEPHONE**': lessee.phone,
         '**LESSEEEMAIL**': lessee.email,
-        '**STARTDAY**': reservation.checkindate,
+        '**STARTDAY**': str(reservation.checkindate),
         '**STARTMONTH**': '',
-        '**ENDDAY**': reservation.checkoutdate,
+        '**ENDDAY**': str(reservation.checkoutdate),
         '**ENDMONTH**': ''
     }
 
 
-def search_and_replace_master_contract(lessee_info: dict, file_save_location: str = '') -> bool:
+def search_and_replace_master_contract(lessee_info: dict) -> Document:
     """ searches and replaces from key value dict. then saves new file """
 
     doc = Document(MASTER_CONTRACT)
@@ -53,7 +54,7 @@ def search_and_replace_master_contract(lessee_info: dict, file_save_location: st
             if key in para.text:
                 para.text = str(para.text).replace(key, value)
 
-    doc.save(file_save_location)
+    return doc
 
 
 def save_file(doc: Document, file_name: str):

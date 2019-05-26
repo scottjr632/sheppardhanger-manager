@@ -84,6 +84,7 @@ export const updateReservation = (data, callback) => BuildApi('/reservations/', 
 export const createNewReservation = (data, callback) => BuildApi('/reservations/', data).post(callback)
 export const updateReservationStatus = (id, status, callback) => BuildApi(`/reservations/status/${id}/${status}`).get(callback)
 export const deleteReservation = (id, callback) => BuildApi(`/reservations/${id}`).delete(callback)
+export const getMasterContract = (lesseeId, reservationId, callback) => BuildApi(`/lessee/master-contract/${lesseeId}/${reservationId}`).get(callback)
 
 export const createNewLessee = (data, callback) => BuildApi('/lessee/', data).post(callback)
 export const getAllLessees = (callback) => BuildApi('/lessee/').get(callback)
