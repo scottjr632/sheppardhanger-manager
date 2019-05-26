@@ -399,7 +399,10 @@ tr{
   &.more-info {
     height: 30% !important;
     position: relative;
-    transform: translateY(150%);
+
+    &.transform {
+      transform: translateY(150%);
+    }
   }
 
 }
