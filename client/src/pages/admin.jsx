@@ -52,8 +52,12 @@ class Admin extends React.Component {
     this.setState({ showEventModal: !this.state.showEventModal })
   }
 
-  moreInfo = (id) => {
-    this.props.history.push(`/info?id=${id}`)
+  moreInfo = (lesseeId) => {
+    this.props.history.push(`/info?id=${lesseeId}`)
+  }
+
+  moreInfoReservation = (reservationId) => {
+    this.props.history.push(`/reservation?id=${reservationId}`)
   }
 
   render(){
@@ -72,7 +76,7 @@ class Admin extends React.Component {
             <div>
               <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} />
               <label>Unfiltered Reservations</label>
-              <UnfilteredReservations moreInfo={this.moreInfo} />
+              <UnfilteredReservations moreInfo={this.moreInfoReservation} />
             </div>
           </div>
         </div>
