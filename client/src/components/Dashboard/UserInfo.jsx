@@ -19,11 +19,6 @@ const saveStyle = {
   backgroundColor: '#12e96f'
 }
 
-// const disabledBtn = {
-//   backgroundColor: '#b9b9b9',
-//   cursor: 'default'
-// }
-
 const excludedTypes = [
   'id',
   'bookingtype',
