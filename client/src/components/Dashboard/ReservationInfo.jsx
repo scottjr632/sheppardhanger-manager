@@ -16,6 +16,10 @@ const editStyle = {
   backgroundColor: '#128de9'
 }
 
+const saveStyle = {
+  backgroundColor: '#12e96f'
+}
+
 const excludedTypes = [
   'bookingtypeid',
   'id',
@@ -111,7 +115,7 @@ class Info extends React.Component {
   }
 
   updateReservation = () => {
-    let upd_data = {...this.state.reservation, purpose: this.state.reservation.purposeid, numberofguests: this.state.numberofguestsid }
+    let upd_data = {...this.state.reservation, purpose: this.state.reservation.purposeid, numberofguests: this.state.reservation.numberofguestsid }
     backend.updateReservation(upd_data, res => {
       if (res.statusText !== 'OK') {
         NotificationManager.error('Unable to update reservation!')
@@ -254,7 +258,7 @@ class Info extends React.Component {
             {this.state.edit && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
 
             {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
-            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.updateReservation} style={editStyle} /> }
+            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={() => { this.updateReservation(); this.toggleEdit() }} style={saveStyle} /> }
           </div>
 
         </div>

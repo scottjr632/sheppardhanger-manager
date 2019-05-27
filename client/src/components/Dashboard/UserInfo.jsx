@@ -19,13 +19,12 @@ const saveStyle = {
   backgroundColor: '#12e96f'
 }
 
-// const disabledBtn = {
-//   backgroundColor: '#b9b9b9',
-//   cursor: 'default'
-// }
-
 const excludedTypes = [
-  'id'
+  'id',
+  'bookingtype',
+  'checkindate',
+  'numberofguests',
+  'room'
 ]
 
 const prettyNames = {
@@ -36,6 +35,21 @@ const prettyNames = {
   'fname' : 'First name', 
   'lname' : 'Last name', 
   'numberofguests' : 'Guests'
+}
+
+const formatLessee = (lessee) => {
+  return {
+    fname: lessee.fname,
+    lname: lessee.lname,
+    rank: lessee.rank,
+    email: lessee.email,
+    phone: lessee.phone,
+    address: lessee.address,
+    city: lessee.city,
+    state: lessee.state,
+    status: lessee.status,
+    notes: lessee.notes
+  }
 }
 
 @inject('lesseeStore')
@@ -131,7 +145,7 @@ class UserInfo extends React.Component {
             <tbody>
               <tr>
                 {!this.state.edit &&
-                  Object.keys(data).map(key => {
+                  Object.keys(formatLessee(data)).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
                       return key === 'reservations' ?
@@ -144,7 +158,7 @@ class UserInfo extends React.Component {
                   })
                 }
                 {this.state.edit && 
-                  Object.keys(data).map(key => {
+                  Object.keys(formatLessee(data)).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
                       switch (key) {
