@@ -6,11 +6,16 @@ import * as backend from '../../backend'
 
 const formatReservation = (reservation) => {
   return {
-    house: reservation.house,
+    house: 
+    <React.Fragment>
+      <i className="fas fa-external-link-alt" style={{marginRight: '10px', cursor: 'pointer'}}></i>
+      {reservation.house}
+    </React.Fragment>,
     room: reservation.room,
     lengthofstay: reservation.lengthofstay,
     checkindate: reservation.checkindate,
-    checkoutdate: reservation.checkoutdate
+    checkoutdate: reservation.checkoutdate,
+    id: reservation.id
   }
 }
 
@@ -50,6 +55,10 @@ class Table extends React.Component {
 
     handleClick = () => {
         this.setState({expanded: !this.state.expanded})
+    }
+
+    goToRes = (reservationId) => {
+      this.props.history.push(`/reservation?id=${reservationId}`)
     }
 
     search = (event) => {
@@ -131,8 +140,15 @@ class Table extends React.Component {
                 {this.state.data.map((value, index) => {
                   return (
                     <tr key={index}>
-                      {Object.keys(value).map(key => {
-                        return <td data-title={key}>{value[key]}</td>
+                      {Object.keys(value).map((key, idx) => {
+                        switch(true) {
+                        case (key === 'id'):
+                          break
+                        case (idx === 0):
+                          return <td data-title={key} style={{cursor: 'pointer'}} onClick={() => { this.goToRes(value['id']) }}>{value[key]}</td>
+                        default:
+                          return <td data-title={key}>{value[key]}</td>
+                        }
                       })}
                     </tr>
                   )
