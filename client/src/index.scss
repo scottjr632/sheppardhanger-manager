@@ -260,8 +260,9 @@ header {
     grid-template-columns: [pad] 5% [tbl] 45% [tbl2] 45% [pad2] 5%;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1700px) {
   .grid-container__dual {
+    grid-template-columns: 5% 90% 5%;
     grid-template-areas:
       'pad tbl pad2'
       'pad tbl2 pad2';

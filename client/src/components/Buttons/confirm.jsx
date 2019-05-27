@@ -43,7 +43,7 @@ class ConfirmButton extends React.Component {
 
 	render(){
 		return (
-			<div className={`buton-cover button-slide-out ${this.state.active ? 'is_active' : ''}`} >
+			<div className={`buton-cover button-slide-out ${this.state.active ? 'is_active' : ''}`} style={{zIndex: 1}}>
 				{!this.props.disabled && <span className="button-slide-out__above">{this.props.confirmMessage || 'Are you sure?'}</span> }
 				<div className="button-slide-out__middle" ref={node => (!this.props.disabled ? this.node = node: '')}>
 					<button className="btn btn--primary" style={this.props.style} disabled={this.props.disabled}>
