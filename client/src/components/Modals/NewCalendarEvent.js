@@ -109,10 +109,16 @@ class NewLesseeModal extends React.Component {
   }
 
   createNewEvent = async () => {
+    let newCheckInDate = new Date(this.state.checkInDate)
+    let newCheckOutDate = new Date(this.state.checkOutDate)
+    newCheckInDate.setHours(0,0,0,0)
+    newCheckInDate.setDate(newCheckInDate.getDate() + 1)
+    newCheckOutDate.setHours(23, 30, 0, 0)
+
     let resData = {
       lesseeid: this.state.lesseeid,
-      checkindate: this.state.checkInDate,
-      checkoutdate: this.state.checkOutDate,
+      checkindate: newCheckInDate,
+      checkoutdate: newCheckOutDate,
       bookingtypeid: this.state.bookingTypeId,
       roomid: this.state.activeRoomId,
       pet: this.state.pet,
