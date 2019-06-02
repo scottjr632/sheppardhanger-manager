@@ -1,3 +1,6 @@
+@import 'buttons.scss';
+
+
 $primary-color: #1c1c1c;
 $secondary-color: #727373;
 $background-color: #ffffff;
@@ -898,6 +901,7 @@ h4 {
   box-sizing: border-box;
   font-size: 12pt;
   color: #61708b;
+  z-index: 2;
 
   &.left {
     transform: translateX(-67%);

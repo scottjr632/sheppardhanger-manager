@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { inject, observer } from 'mobx-react'
 import { NotificationManager } from 'react-notifications'
 
+import ResetPassword from './resetPassword.jsx'
+
 
 @inject('userStore')
 @observer
@@ -113,6 +115,7 @@ class Login extends React.Component {
               </form>
             </div>
           </div>
+        <ResetPassword />
         </div>
       </div>
     );
