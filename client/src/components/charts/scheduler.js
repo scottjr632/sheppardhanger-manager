@@ -116,7 +116,7 @@ class Schedule extends React.Component{
   };
 
   ops1 = (schedulerData, event) => {
-    this.props.history.push(`/reservation?id=${event.id}`)
+    this.props.history.push(`/reservation?id=${event.id}?edit=1`)
   };
 
   ops2 = (schedulerData, event) => {

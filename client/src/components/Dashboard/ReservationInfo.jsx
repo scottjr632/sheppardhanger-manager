@@ -129,18 +129,18 @@ class Info extends React.Component {
 
   handleChange = (event) => {
     event.persist()
-    console.log(event)
     let { target } = event
     this.setState({
       reservation: {
         ...this.state.reservation,
         [target.name]: target.value
       }
-    }, () => console.log(this.state))
+    })
   }
 
   toggleEdit = () => {
-    this.setState({ edit: !this.state.edit })
+    this.props.toggleEdit()
+    // this.setState({ edit: !this.state.edit })
   }
 
   render(){
@@ -156,7 +156,7 @@ class Info extends React.Component {
             </thead>
             <tbody>
               <tr>
-                {!this.state.edit &&
+                {!this.props.editing &&
                   Object.keys(data).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
@@ -164,7 +164,7 @@ class Info extends React.Component {
                     }
                   })
                 }
-              {this.state.edit && 
+              {this.props.editing && 
                   Object.keys(data).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
@@ -259,11 +259,11 @@ class Info extends React.Component {
             </tbody>
           </table>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '10px 0 10px 0'}}>
-            {!this.state.edit && <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveReservation} /> }
-            {this.state.edit && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
+            {!this.props.editing  && <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveReservation} /> }
+            {this.props.editing && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
 
-            {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
-            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={() => { this.updateReservation(); this.toggleEdit() }} style={saveStyle} /> }
+            {!this.props.editing  && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
+            {this.props.editing && <ConfirmButton removeMessage={'Save'} confirmAction={() => { this.updateReservation(); this.toggleEdit() }} style={saveStyle} /> }
           </div>
 
         </div>
