@@ -63,7 +63,7 @@ class ReservationInfoPage extends React.Component {
       <div>
       <Navi />
         <div className={'container'} >
-            <Info data={this.state.reservationInfo} editing={this.state.editing} toggleEdit={this.toggleEdit}/>
+            <Info data={this.state.reservationInfo} editing={this.state.editing} toggleEdit={this.toggleEdit} history={this.props.history}/>
         </div>
       </div>
     )
