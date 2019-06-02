@@ -86,9 +86,8 @@ class NewLesseeModal extends React.Component {
   }
 
   createNewLessee = async () => {
-    let { checkInDate, checkOutDate, createBooking } = this.state
     let {
-      fname, lname, email, rank, phone, address, city, state, zipcode, notes
+      fname, lname, email, rank, phone, address, city, state, zipcode, notes, createBooking
     } = this.state
     let lesseeData = {
       fname, lname, email, rank, phone, address, city, state, zipcode, notes
@@ -103,10 +102,16 @@ class NewLesseeModal extends React.Component {
       return   
     }
     if (createBooking) {
+      let newCheckInDate = new Date(this.state.checkInDate)
+      let newCheckOutDate = new Date(this.state.checkOutDate)
+      newCheckInDate.setHours(0,0,0,0)
+      newCheckInDate.setDate(newCheckInDate.getDate() + 1)
+      newCheckOutDate.setHours(23, 30, 0, 0)
+
       let resData = {
         lesseeid: lessee.id,
-        checkindate: checkInDate,
-        checkoutdate: checkOutDate,
+        checkindate: newCheckInDate,
+        checkoutdate: newCheckOutDate,
         bookingtypeid: 1,
         roomid: this.state.activeRoomId,
         pet: this.state.pet,
