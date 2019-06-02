@@ -23,14 +23,6 @@ class Table extends React.Component {
         }
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //   if (nextProps.data !== this.state.data) {
-    //     this.setState({ data: nextProps.data, initialArray: nextProps.data })
-    //   } else if (nextProps.lesseeStore.formattedLessees !== this.state.data) {
-    //     this.setState({ data : nextProps.lesseeStore.formattedLessees, initialArray: nextProps.lesseeStore.formattedLessees })
-    //   }
-    // }
-
     handleClick = () => {
         this.setState({expanded: !this.state.expanded})
     }

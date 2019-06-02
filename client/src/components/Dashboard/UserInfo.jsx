@@ -68,22 +68,15 @@ class UserInfo extends React.Component {
     }
   }
 
-  componentWillMount(){
-    if (this.state.bookingTypes.length === 0) {
-      backend.getAllBookingTypes((res) => {
-        let { data } = res
-        if (data) this.setState({ bookingTypes: data }) 
-      })
-    }
-  }
-
   componentDidMount() {
-    backend.getAllRanks(res => {
-      let { data } = res
-      if (data) { 
-        let activeRank = data.find(elem => elem.name == this.props.data.rank)
-        this.setState({ranks: data, activeRankId: activeRank ? activeRank.id : 1})
-      }
+    Promise.all([
+      backend.getAllBookingTypesAsync(),
+      backend.getAllRanksAsync()
+    ]).then(res => {
+      let ranks = res[1].data
+      let activeRank = ranks.find(elem => elem.name == this.props.data.rank)
+      
+      this.setState({ ranks, activeRankId: activeRank ? activeRank.id : 1, bookingTypes: res[0].data })
     })
   }
 

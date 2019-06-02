@@ -57,40 +57,20 @@ class Info extends React.Component {
   }
 
   componentWillMount(){
-    if (this.state.bookingTypes.length === 0) {
-      backend.getAllBookingTypes((res) => {
-        let { data } = res
-        if (data) this.setState({ bookingTypes: data }) 
+    Promise.all([
+      backend.getAllBookingTypesAsync(), 
+      backend.getRoomsAsync(), 
+      backend.getHousesAsync(),
+      backend.getGuestTypesAsync(),
+      backend.getTdyTypesAsync()
+    ]).then(res => {
+      this.setState({
+        bookingTypes: res[0].data,
+        rooms: res[1].data,
+        houses: res[2].data,
+        guests: res[3].data,
+        purposeTypes: res[4].data,
       })
-    }
-
-    backend.getRooms(res => {
-      let { data } = res
-      if (data) {
-        this.setState({ rooms: data })
-      }
-    })
-
-    backend.getHouses(res => {
-      let { data } = res
-      if (data) {
-        this.setState({ houses: data })
-      }
-    })
-
-    backend.getAllTDYTypes(res => {
-      let { data } = res
-      if(data) { this.setState({ tdys: data })}
-    })
-
-    backend.getAllGuestTypes(res => {
-      let { data } = res
-      if(data) { this.setState({ guests: data })}
-    })
-
-    backend.getAllTDYTypes(res => {
-      let { data } = res
-      if (data) { this.setState({ purposeTypes: data }) }
     })
   }
 

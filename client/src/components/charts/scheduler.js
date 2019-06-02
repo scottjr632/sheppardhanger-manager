@@ -127,29 +127,6 @@ class Schedule extends React.Component{
   newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
     this.props.setNewEventStartAndStop(start, end)
     this.props.showCreateEventModal()
-
-    // if(confirm(`Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`)){
-
-    //   let newFreshId = 0;
-    //   schedulerData.events.forEach((item) => {
-    //     if(item.id >= newFreshId)
-    //       newFreshId = item.id + 1;
-    //   });
-
-
-    //   let newEvent = {
-    //     id: newFreshId,
-    //     title: this.state.name,
-    //     start: start,
-    //     end: this.state.date2,
-    //     resourceId: slotId,
-    //     ...this.createEventFromType(this.state.color)
-    //   }
-    //   schedulerData.addEvent(newEvent);
-    //   this.setState({
-    //     viewModel: schedulerData
-    //   })
-    // }
   }
 
   createEventFromType = (type) => {
