@@ -127,6 +127,19 @@ button.btn {
   }
 }
 
+.error-span {
+  display: inline-block;
+  font-weight: bold;
+  align-self: center;
+  color: white;
+  font-size: 7pt;
+  width: 85%;
+  background-color: rgb(214, 89, 86);
+  padding: 5px 10px;
+  border-radius: 3px;
+  margin: 5px 20px;
+}
+
 .buttons {
   margin: 10px 0 50px;
 }

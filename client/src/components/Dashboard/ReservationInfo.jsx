@@ -205,6 +205,11 @@ class Info extends React.Component {
                           <td data-title={'Booking Type'}>
                             <select name={'bookingtypeid'} onChange={this.handleChange} value={this.state.reservation.bookingtypeid}>
                               {this.state.bookingTypes.map(btype => {
+                                if (this.state.reservation.bookingtype !== 'CLEANING' && btype.name === 'CLEANING') {
+                                  return <option value={btype.id} disabled={true}>{btype.name}</option>
+                                } else if (this.state.reservation.bookingtype === 'CLEANING' && btype.name !== 'CLEANING'){
+                                    return <option value={btype.id} disabled={true}>{btype.name}</option>
+                                }
                                 return <option value={btype.id}>{btype.name}</option>
                               })}
                             </select>
@@ -234,7 +239,7 @@ class Info extends React.Component {
                           <td data-title={'PURPOSE'}>
                             <select name={'purposeid'} onChange={this.handleChange} value={this.state.reservation.purposeid}>
                               {this.state.purposeTypes.map(btype => {
-                                return <option value={btype.id}>{btype.name}</option>
+                                  return <option value={btype.id}>{btype.name}</option>
                               })}
                             </select>
                           </td>
