@@ -13,14 +13,7 @@ import 'react-day-picker/lib/style.css';
 Modal.setAppElement('#root')
 
 const customStyles = {
-  content : {
-    // top                   : '50%',
-    // left                  : '50%',
-    // right                 : 'auto',
-    // bottom                : 'auto',
-    // marginRight           : '-50%',
-    // transform             : 'translate(-50%, -50%)'
-  },
+  content : {},
   overlay : {
     zIndex: 99
   }
@@ -57,7 +50,8 @@ class NewLesseeModal extends React.Component {
       purpose: 1,
       createBooking: false,
       rooms: [],
-      activeRoomId: 1
+      activeRoomId: 1,
+      dateError: false
     }
   }
 
@@ -85,13 +79,25 @@ class NewLesseeModal extends React.Component {
     })
   }
 
+  validateDates = () => {
+    let newCheckInDate = new Date(this.state.checkInDate)
+    let newCheckOutDate = new Date(this.state.checkOutDate)
+    let dateError = newCheckInDate <= newCheckOutDate
+    
+    this.setState({ dateError })
+    return dateError
+  }
+
   createNewLessee = async () => {
-    let { checkInDate, checkOutDate, createBooking } = this.state
     let {
-      fname, lname, email, rank, phone, address, city, state, zipcode, notes
+      fname, lname, email, rank, phone, address, city, state, zipcode, notes, createBooking
     } = this.state
     let lesseeData = {
       fname, lname, email, rank, phone, address, city, state, zipcode, notes
+    }
+    if (createBooking && !this.validateDates()) {
+      NotificationManager.error('Check dates')
+      return
     }
     let lessee
     try {
@@ -103,10 +109,16 @@ class NewLesseeModal extends React.Component {
       return   
     }
     if (createBooking) {
+      let newCheckInDate = new Date(this.state.checkInDate)
+      let newCheckOutDate = new Date(this.state.checkOutDate)
+      newCheckInDate.setHours(0,0,0,0)
+      newCheckInDate.setDate(newCheckInDate.getDate() + 1)
+      newCheckOutDate.setHours(23, 30, 0, 0)
+
       let resData = {
         lesseeid: lessee.id,
-        checkindate: checkInDate,
-        checkoutdate: checkOutDate,
+        checkindate: newCheckInDate,
+        checkoutdate: newCheckOutDate,
         bookingtypeid: 1,
         roomid: this.state.activeRoomId,
         pet: this.state.pet,
@@ -137,7 +149,7 @@ class NewLesseeModal extends React.Component {
   }
 
   setDate = (name, value) => {
-    this.setState( {[name]: value} )
+    this.setState( {[name]: value}, this.validateDates )
   }
 
   render() {
@@ -206,6 +218,7 @@ class NewLesseeModal extends React.Component {
                 </div>
                 <div className={'input-group'}>
                   <label>check-out</label> <DayPickerInput onDayChange={day => this.setDate('checkOutDate', day)} />
+                  {!this.state.dateError && <span className={'error-span'}>CHECKOUT DATE CANNOT BE BEFORE CHECKINDATE</span>}                
                 </div>
               </div>
               <div style={{display: 'flex'}}>
