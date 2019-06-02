@@ -106,7 +106,11 @@ class NewLesseeModal extends React.Component {
   }
 
   validateReservation = () => {
-    return this.state.lesseeid &&
+
+    let shouldBeLessee = this.state.bookingTypeId !== 0 && 
+                         (this.getBookingTypeName(this.state.bookingTypeId) !== CALENDAR_CLEANING)
+
+    return (!shouldBeLessee || this.state.lesseeid) &&
            this.validateDates()
   }
 
