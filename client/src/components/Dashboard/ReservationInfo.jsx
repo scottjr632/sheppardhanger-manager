@@ -8,6 +8,27 @@ import * as backend from '../../backend'
 import { STATUS_ACTIVE, STATUS_ARCHIVED } from '../../constants'
 import { inject, observer } from 'mobx-react';
 
+const formatReservation = (reservation, callback) => {
+  return {
+    'bookingtype': reservation.bookingtype,
+    'checkindate': reservation.checkindate,
+    'checkoutdate': reservation.checkoutdate,
+    'room': reservation.room,
+    'house': reservation.house,
+    'lengthofstay': reservation.lengthofstay,
+    'lesseeemail' : reservation.lesseeemail ? 
+     <React.Fragment onClick={callback}>
+       <div onClick={callback} style={{cursor: 'pointer'}}>
+        <i className="fas fa-external-link-alt" style={{marginRight: '10px', cursor: 'pointer'}} ></i>
+        {reservation.lesseeemail}
+       </div>
+     </React.Fragment> : '',
+    'lesseefname': reservation.lesseefname,
+    'lesseelname': reservation.lesseelname,
+    'numberofguests': reservation.numberofguests,
+  }
+}
+
 const inputStyle = {
   borderBottom: '1pt #d8d5d5 solid'
 }
@@ -32,7 +53,7 @@ const prettyNames = {
   'bookingtype' : 'Booking type',
   'checkindate' : 'Check-in-date',
   'checkoutdate' : 'Check-out-date',
-  'lesseeemail' : 'Email', 
+  'lesseeemail' : 'Lessee email', 
   'lesseefname' : 'First name', 
   'lesseelname' : 'Last name', 
   'numberofguests' : 'Guests',
@@ -118,13 +139,18 @@ class Info extends React.Component {
     })
   }
 
+  goToLesseePage = (lesseeId) => {
+    this.props.history.push(`/info?id=${lesseeId}`)
+  }
+
   toggleEdit = () => {
     this.props.toggleEdit()
     // this.setState({ edit: !this.state.edit })
   }
 
   render(){
-    let { data } = this.props
+    console.log(this.props.data)
+    let data = formatReservation(this.props.data, () => this.goToLesseePage(this.props.data.lesseeid))
     return (
       <div className={'table'} style={{gridArea: 'right'}}>
         <div className={'table-wrapper full'}>
@@ -254,6 +280,9 @@ class Info extends React.Component {
 
 Info.propTypes = {
     data: PropTypes.object.isRequired,
+    toggleEdit: PropTypes.func.isRequired,
+    editing: PropTypes.bool.isRequired,
+    history: PropTypes.object.isRequired,
     editable: PropTypes.bool
 }
 
