@@ -20,9 +20,17 @@ def get_res_by_house(houseid) -> list:
     return models.Reservation.query.filter(models.Reservation.roomid.in_(roomids)).all()
 
 
-def get_res_by_lessee(lesseeid) -> list:
+def get_res_by_lessee_unfiltered(lesseeid) -> list:
     """ get res by userid returns a list of reservations by lessee id"""
     return models.Reservation.query.filter_by(lesseeid=lesseeid).all()
+
+
+def get_res_by_lessee_filtered(lesseeid) -> list:
+    """ gets reservatiosn by lessee that are not archived """
+    return models.Reservation.query \
+            .filter(or_(models.Reservation.status == None,
+                        models.Reservation.status != models.StatusEnum.archived), 
+                    models.Reservation.lesseeid == lesseeid)
 
 
 def get_all_res() -> list:
@@ -63,11 +71,8 @@ def new_reservation(data) -> models.Reservation:
 
 @utils.rollback_on_error
 def update_reservation(reservation: models.Reservation):
-    print('getting {} from db'.format(reservation['id']))
     res = models.Reservation.query.get(reservation['id'])
-    print(res, 'got res')
     res.update(**reservation)
-    print('updated!')
 
     db.session.add(res)
     db.session.commit()

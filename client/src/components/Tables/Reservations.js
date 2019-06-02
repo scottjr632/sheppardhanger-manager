@@ -41,12 +41,8 @@ class Table extends React.Component {
         backend.getReservationsByLesseeId(nextProps.lesseeId, res => {
           let { data } = res
           if (data) {
-            data = data.length && data.length > 0 ? data : [data]
-            let formatted = []
-        
-            data.forEach(res => {
-              formatted.push(formatReservation(res))
-            })
+            let formatted = data.map(res => formatReservation(res))
+
             this.setState({ data: formatted, lesseeId: parseInt(nextProps.lesseeId) })
           }
         })
