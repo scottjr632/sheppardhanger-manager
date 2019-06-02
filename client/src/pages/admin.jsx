@@ -73,10 +73,6 @@ class Admin extends React.Component {
     }
   }
 
-  componentDidMount() {
-    // this.props.lesseeStore.populateLessees()
-  }
-
   setNewEventStartAndStop = (newEventStart, newEventStop) => {
     this.setState({ newEventStart, newEventStop })
   }

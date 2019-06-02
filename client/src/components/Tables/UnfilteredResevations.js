@@ -79,11 +79,10 @@ class Table extends React.Component {
 
     componentWillMount(){
         backend.getAllReservationsUnfiltered(res => {
-            console.log('getting reservations', res)
             let { data } = res
             if (data) {
                 let arr = data.map(reservation => formatReservation(reservation))
-                this.setState({ data: arr, initialArray: arr }, () => console.log(this.state))
+                this.setState({ data: arr, initialArray: arr })
             }
         })
     }

@@ -56,26 +56,18 @@ class NewLesseeModal extends React.Component {
   }
 
   componentDidMount() {
-    backend.getRooms(res => {
-      let { data } = res
-      if (data) {
-        this.setState({ rooms: data })
-      }
-    })
-
-    backend.getAllTDYTypes(res => {
-      let { data } = res
-      if(data) { this.setState({tdys: data})}
-    })
-
-    backend.getAllGuestTypes(res => {
-      let { data } = res
-      if(data) { this.setState({guests: data})}
-    })
-
-    backend.getAllRanks(res => {
-      let { data } = res
-      if(data) { this.setState({ranks: data})}
+    Promise.all([
+      backend.getRoomsAsync(),
+      backend.getTdyTypesAsync(),
+      backend.getGuestTypesAsync(),
+      backend.getAllRanksAsync(),
+    ]).then(res => {
+      this.setState({
+        rooms: res[0].data,
+        tdys: res[1].data,
+        guests: res[2].data,
+        ranks: res[3].data,
+      })
     })
   }
 
