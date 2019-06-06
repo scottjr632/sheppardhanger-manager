@@ -106,6 +106,12 @@ export async function coolAuthenticate() {
   return res
 }
 
+export const getAllLesseeAsync = async () => {const data = await axios.get('/lessee/'); return data}
+export const getAllRanksAsync = async () => {const data = await axios.get('/lessee/ranks'); return data}
+export const getAllBookingTypesAsync = async () => {const data = await axios.get('reservations/bookingtypes'); return data}
+export const getHousesAsync = async () => {const data = await axios.get('/houses/'); return data}
+export const getTdyTypesAsync = async () => {const data = await axios.get('/lessee/tdys'); return data}
+export const getGuestTypesAsync = async () => {const data = await axios.get('/lessee/guests'); return data}
 export const getRoomsAsync = async () => {const data = await axios.get('/houses/rooms'); return data }
 export const getAllReservationsAsync = async () => {const data = await axios.get('/reservations/'); return data}
 

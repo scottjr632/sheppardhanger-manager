@@ -19,13 +19,12 @@ const saveStyle = {
   backgroundColor: '#12e96f'
 }
 
-// const disabledBtn = {
-//   backgroundColor: '#b9b9b9',
-//   cursor: 'default'
-// }
-
 const excludedTypes = [
-  'id'
+  'id',
+  'bookingtype',
+  'checkindate',
+  'numberofguests',
+  'room'
 ]
 
 const prettyNames = {
@@ -36,6 +35,21 @@ const prettyNames = {
   'fname' : 'First name', 
   'lname' : 'Last name', 
   'numberofguests' : 'Guests'
+}
+
+const formatLessee = (lessee) => {
+  return {
+    fname: lessee.fname,
+    lname: lessee.lname,
+    rank: lessee.rank,
+    email: lessee.email,
+    phone: lessee.phone,
+    address: lessee.address,
+    city: lessee.city,
+    state: lessee.state,
+    status: lessee.status,
+    notes: lessee.notes
+  }
 }
 
 @inject('lesseeStore')
@@ -54,22 +68,15 @@ class UserInfo extends React.Component {
     }
   }
 
-  componentWillMount(){
-    if (this.state.bookingTypes.length === 0) {
-      backend.getAllBookingTypes((res) => {
-        let { data } = res
-        if (data) this.setState({ bookingTypes: data }) 
-      })
-    }
-  }
-
   componentDidMount() {
-    backend.getAllRanks(res => {
-      let { data } = res
-      if (data) { 
-        let activeRank = data.find(elem => elem.name == this.props.data.rank)
-        this.setState({ranks: data, activeRankId: activeRank ? activeRank.id : 1})
-      }
+    Promise.all([
+      backend.getAllBookingTypesAsync(),
+      backend.getAllRanksAsync()
+    ]).then(res => {
+      let ranks = res[1].data
+      let activeRank = ranks.find(elem => elem.name == this.props.data.rank)
+      
+      this.setState({ ranks, activeRankId: activeRank ? activeRank.id : 1, bookingTypes: res[0].data })
     })
   }
 
@@ -131,7 +138,7 @@ class UserInfo extends React.Component {
             <tbody>
               <tr>
                 {!this.state.edit &&
-                  Object.keys(data).map(key => {
+                  Object.keys(formatLessee(data)).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
                       return key === 'reservations' ?
@@ -144,7 +151,7 @@ class UserInfo extends React.Component {
                   })
                 }
                 {this.state.edit && 
-                  Object.keys(data).map(key => {
+                  Object.keys(formatLessee(data)).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
                       switch (key) {

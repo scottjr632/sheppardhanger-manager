@@ -88,7 +88,7 @@ class Info extends React.Component {
             <div>
               <Question helpText={`List of all the user's reservations. Search and filter to find a specific reservation.`} />
               <label>Locate a reservation</label>
-              <ReservationTable lesseeId={this.state.userId} />
+              <ReservationTable lesseeId={this.state.userId} history={this.props.history}/>
             </div>
           </div>
         </div>

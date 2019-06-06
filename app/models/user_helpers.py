@@ -96,10 +96,11 @@ def delete_refresh_token(userid: User.id) -> str:
     """
     refresh_token = models.RefreshToken.query.get(userid)
 
-    db.session.delete(refresh_token)
-    db.session.commit()
+    if refresh_token is not None:
+        db.session.delete(refresh_token)
+        db.session.commit()
 
-    return refresh_token.tokenname
+    return refresh_token.tokenname if refresh_token else None
 
 
 def get_refresh_token(userid: int) -> models.RefreshToken:

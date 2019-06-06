@@ -35,18 +35,27 @@ class ReservationInfoPage extends React.Component {
     this.state = {
       userId: 0,
       reservationInfo: {},
+      editing: false,
     }
   }
 
   componentDidMount() {
     let { search } = this.props.location
     if (search && search.length > 1) {
-      let id = search.match(/=(.*)/)
-      if (id[1]) backend.getReservationById(id[1], (res) => {
-        let { data } = res
-        if (data) this.setState({reservationInfo: data}, () => console.log(this.state.reservationInfo, 'state info'))
-      })
+      let id = search.match(/=(.[0-9])/)
+      let edit = search.match(/edit=(.)?/)
+      let shouldEdit = (edit && edit[1] && (edit[1] == 1))
+      if (id[1]) {
+        backend.getReservationById(id[1], (res) => {
+          let { data } = res
+          if (data) this.setState({reservationInfo: data, editing: shouldEdit})
+        })
+      }
     }
+  }
+
+  toggleEdit = () => {
+    this.setState({editing: !this.state.editing})
   }
 
   render() {
@@ -54,7 +63,7 @@ class ReservationInfoPage extends React.Component {
       <div>
       <Navi />
         <div className={'container'} >
-            <Info data={this.state.reservationInfo} />
+            <Info data={this.state.reservationInfo} editing={this.state.editing} toggleEdit={this.toggleEdit} history={this.props.history}/>
         </div>
       </div>
     )

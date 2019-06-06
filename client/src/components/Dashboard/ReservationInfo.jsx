@@ -8,12 +8,37 @@ import * as backend from '../../backend'
 import { STATUS_ACTIVE, STATUS_ARCHIVED } from '../../constants'
 import { inject, observer } from 'mobx-react';
 
+const formatReservation = (reservation, callback) => {
+  return {
+    'bookingtype': reservation.bookingtype,
+    'checkindate': reservation.checkindate,
+    'checkoutdate': reservation.checkoutdate,
+    'room': reservation.room,
+    'house': reservation.house,
+    'lengthofstay': reservation.lengthofstay,
+    'lesseeemail' : reservation.lesseeemail ? 
+     <React.Fragment onClick={callback}>
+       <div onClick={callback} style={{cursor: 'pointer'}}>
+        <i className="fas fa-external-link-alt" style={{marginRight: '10px', cursor: 'pointer'}} ></i>
+        {reservation.lesseeemail}
+       </div>
+     </React.Fragment> : '',
+    'lesseefname': reservation.lesseefname,
+    'lesseelname': reservation.lesseelname,
+    'numberofguests': reservation.numberofguests,
+  }
+}
+
 const inputStyle = {
   borderBottom: '1pt #d8d5d5 solid'
 }
 
 const editStyle = {
   backgroundColor: '#128de9'
+}
+
+const saveStyle = {
+  backgroundColor: '#12e96f'
 }
 
 const excludedTypes = [
@@ -28,7 +53,7 @@ const prettyNames = {
   'bookingtype' : 'Booking type',
   'checkindate' : 'Check-in-date',
   'checkoutdate' : 'Check-out-date',
-  'lesseeemail' : 'Email', 
+  'lesseeemail' : 'Lessee email', 
   'lesseefname' : 'First name', 
   'lesseelname' : 'Last name', 
   'numberofguests' : 'Guests',
@@ -53,40 +78,20 @@ class Info extends React.Component {
   }
 
   componentWillMount(){
-    if (this.state.bookingTypes.length === 0) {
-      backend.getAllBookingTypes((res) => {
-        let { data } = res
-        if (data) this.setState({ bookingTypes: data }) 
+    Promise.all([
+      backend.getAllBookingTypesAsync(), 
+      backend.getRoomsAsync(), 
+      backend.getHousesAsync(),
+      backend.getGuestTypesAsync(),
+      backend.getTdyTypesAsync()
+    ]).then(res => {
+      this.setState({
+        bookingTypes: res[0].data,
+        rooms: res[1].data,
+        houses: res[2].data,
+        guests: res[3].data,
+        purposeTypes: res[4].data,
       })
-    }
-
-    backend.getRooms(res => {
-      let { data } = res
-      if (data) {
-        this.setState({ rooms: data })
-      }
-    })
-
-    backend.getHouses(res => {
-      let { data } = res
-      if (data) {
-        this.setState({ houses: data })
-      }
-    })
-
-    backend.getAllTDYTypes(res => {
-      let { data } = res
-      if(data) { this.setState({ tdys: data })}
-    })
-
-    backend.getAllGuestTypes(res => {
-      let { data } = res
-      if(data) { this.setState({ guests: data })}
-    })
-
-    backend.getAllTDYTypes(res => {
-      let { data } = res
-      if (data) { this.setState({ purposeTypes: data }) }
     })
   }
 
@@ -111,7 +116,7 @@ class Info extends React.Component {
   }
 
   updateReservation = () => {
-    let upd_data = {...this.state.reservation, purpose: this.state.reservation.purposeid, numberofguests: this.state.numberofguestsid }
+    let upd_data = {...this.state.reservation, purpose: this.state.reservation.purposeid, numberofguests: this.state.reservation.numberofguestsid }
     backend.updateReservation(upd_data, res => {
       if (res.statusText !== 'OK') {
         NotificationManager.error('Unable to update reservation!')
@@ -125,22 +130,27 @@ class Info extends React.Component {
 
   handleChange = (event) => {
     event.persist()
-    console.log(event)
     let { target } = event
     this.setState({
       reservation: {
         ...this.state.reservation,
         [target.name]: target.value
       }
-    }, () => console.log(this.state))
+    })
+  }
+
+  goToLesseePage = (lesseeId) => {
+    this.props.history.push(`/info?id=${lesseeId}`)
   }
 
   toggleEdit = () => {
-    this.setState({ edit: !this.state.edit })
+    this.props.toggleEdit()
+    // this.setState({ edit: !this.state.edit })
   }
 
   render(){
-    let { data } = this.props
+    console.log(this.props.data)
+    let data = formatReservation(this.props.data, () => this.goToLesseePage(this.props.data.lesseeid))
     return (
       <div className={'table'} style={{gridArea: 'right'}}>
         <div className={'table-wrapper full'}>
@@ -152,7 +162,7 @@ class Info extends React.Component {
             </thead>
             <tbody>
               <tr>
-                {!this.state.edit &&
+                {!this.props.editing &&
                   Object.keys(data).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
@@ -160,7 +170,7 @@ class Info extends React.Component {
                     }
                   })
                 }
-              {this.state.edit && 
+              {this.props.editing && 
                   Object.keys(data).map(key => {
                     if (!excludedTypes.includes(key)) {
                       let name = prettyNames[key] || key
@@ -201,6 +211,11 @@ class Info extends React.Component {
                           <td data-title={'Booking Type'}>
                             <select name={'bookingtypeid'} onChange={this.handleChange} value={this.state.reservation.bookingtypeid}>
                               {this.state.bookingTypes.map(btype => {
+                                if (this.state.reservation.bookingtype !== 'CLEANING' && btype.name === 'CLEANING') {
+                                  return <option value={btype.id} disabled={true}>{btype.name}</option>
+                                } else if (this.state.reservation.bookingtype === 'CLEANING' && btype.name !== 'CLEANING'){
+                                    return <option value={btype.id} disabled={true}>{btype.name}</option>
+                                }
                                 return <option value={btype.id}>{btype.name}</option>
                               })}
                             </select>
@@ -230,7 +245,7 @@ class Info extends React.Component {
                           <td data-title={'PURPOSE'}>
                             <select name={'purposeid'} onChange={this.handleChange} value={this.state.reservation.purposeid}>
                               {this.state.purposeTypes.map(btype => {
-                                return <option value={btype.id}>{btype.name}</option>
+                                  return <option value={btype.id}>{btype.name}</option>
                               })}
                             </select>
                           </td>
@@ -250,11 +265,11 @@ class Info extends React.Component {
             </tbody>
           </table>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '10px 0 10px 0'}}>
-            {!this.state.edit && <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveReservation} /> }
-            {this.state.edit && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
+            {!this.props.editing  && <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveReservation} /> }
+            {this.props.editing && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
 
-            {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
-            {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={this.updateReservation} style={editStyle} /> }
+            {!this.props.editing  && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
+            {this.props.editing && <ConfirmButton removeMessage={'Save'} confirmAction={() => { this.updateReservation(); this.toggleEdit() }} style={saveStyle} /> }
           </div>
 
         </div>
@@ -265,6 +280,9 @@ class Info extends React.Component {
 
 Info.propTypes = {
     data: PropTypes.object.isRequired,
+    toggleEdit: PropTypes.func.isRequired,
+    editing: PropTypes.bool.isRequired,
+    history: PropTypes.object.isRequired,
     editable: PropTypes.bool
 }
 

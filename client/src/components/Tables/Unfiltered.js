@@ -157,11 +157,11 @@ class Table extends React.Component {
                   <th 
                     onClick={e => {this.sort(e, 'rank')}} 
                     className={`${this.setArrow('rank')} rank sortable-header`}>
-                  Delete</th>
+                  Archive</th>
                   <th 
                     onClick={e => {this.sort(e, 'rank')}} 
                     className={`${this.setArrow('rank')} rank sortable-header`}>
-                  Archive</th>
+                  Delete</th>
                 </tr>
               </thead>
               <tbody>

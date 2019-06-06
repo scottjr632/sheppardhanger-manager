@@ -46,7 +46,11 @@ class ExpandableRow extends React.Component {
             <td style={{padding: '0'}} colSpan={Object.keys(data).length-1}>
               <div style={this.state.expanded ? expandedStyle : minimizedStyle}>
                 {data['exandableInfo']}
-                {this.state.moreInfo && <button style={{display: this.state.expanded ? '' : 'none'}} className={'btn__new more-info'} onClick={this.props.moreInfoClick}>More info / Email</button>}
+                {this.state.moreInfo && 
+                  <button style={{display: this.state.expanded ? '' : 'none'}} className={'btn__new more-info'} onClick={this.props.moreInfoClick}>
+                    {this.props.moreInfoText ||  'More info / Email'}
+                  </button>
+                }
               </div>
             </td>
           </tr>
@@ -61,6 +65,7 @@ ExpandableRow.popTypes = {
     expandableInfo: PropTypes.string
   }),
   moreInfo: PropTypes.bool,
+  moreInfoText: PropTypes.string,
   moreInfoClick: PropTypes.func,
   emailUserClick: PropTypes.func,
 

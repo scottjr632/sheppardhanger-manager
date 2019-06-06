@@ -43,6 +43,27 @@ class ScheduleStore {
     this.resources = this.schedulerData.resources
   }
 
+  @action setDate(schedulerData, date) {
+    schedulerData.setDate(date);
+    this.schedulerData = schedulerData
+    this.setEvents(this.events)
+    this.viewModel = schedulerData
+  }
+
+  @action prev(schedulerData){
+    this.schedulerData.prev()
+    this.schedulerData = schedulerData
+    this.setEvents(this.events)
+    this.viewModel = schedulerData
+  }
+
+  @action next(schedulerData){
+    schedulerData.next()
+    this.schedulerData = schedulerData
+    this.setEvents(this.events)
+    this.viewModel = schedulerData
+  }
+
 }
 
 export default new ScheduleStore()

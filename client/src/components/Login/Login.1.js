@@ -16,7 +16,7 @@ class Login extends React.Component {
       left: false,
       emailIsFocused: false,
       passwordIsFocused: false,
-      stayLoggedIn: false,
+      stayLoggedIn: true,
       loginError: this.props.userStore.loginError,
       passwordLengthReq: this.props.passwordLengthReq || 6,
       emailLengthReq: this.props.emailLengthReq || 5,
@@ -109,7 +109,7 @@ class Login extends React.Component {
                 </div>
                 <span><span>Not sure of your password?<a href="#" className={'authpage_link'} onClick={this.toggleLeft}>Set a new one</a></span></span>
                 <input type="submit" className="authpage_submit" value="Sign in" onClick={this.onSubmit}/>
-                <span><span className={'authpage_checkbox'}>Stay logged in<input type="checkbox" name="stayLoggedIn" onChange={this.handleChange} /></span></span>
+                <span><span className={'authpage_checkbox'}>Stay logged in<input type="checkbox" name="stayLoggedIn" onChange={this.handleChange} checked={this.state.stayLoggedIn} /></span></span>
               </form>
             </div>
           </div>

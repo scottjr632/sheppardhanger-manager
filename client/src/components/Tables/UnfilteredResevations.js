@@ -46,15 +46,17 @@ const deleteReservation = (reservationId) => {
 
 const formatReservation = (reservation) => {
   return {
-    house: reservation.house,
     room: reservation.room,
-    lengthofstay: reservation.lengthofstay,
+    bookingtype: reservation.bookingtype,
+    status: reservation.status,
     archive: reservation.status === 'archived' ?
              <ConfirmButton removeMessage={'Un-Archive'} confirmAction={() => {activateReservation(reservation.id)}} style={{backgroundColor: '#55c5b7', width: '100%'}}/> :
              <ConfirmButton removeMessage={'Archive'} confirmAction={() => {archiveReservation(reservation.id)}} style={{width: '100%'}}/>,
     delete:  <ConfirmButton removeMessage={'DELETE PERMANTLY'} confirmAction={() => {deleteReservation(reservation.id)}} style={{width: '100%'}}/>,      
     exandableInfo: `Check-in-date: ${reservation.checkindate}
-                    Check-out-date: ${reservation.checkoutdate}`,
+                    Check-out-date: ${reservation.checkoutdate}
+                    Lessee name: ${reservation.lesseelname}, ${reservation.lesseefname}
+                    Lessee email: ${reservation.lesseeemail}`,
     id: reservation.id      
   }
 }
@@ -77,11 +79,10 @@ class Table extends React.Component {
 
     componentWillMount(){
         backend.getAllReservationsUnfiltered(res => {
-            console.log('getting reservations', res)
             let { data } = res
             if (data) {
                 let arr = data.map(reservation => formatReservation(reservation))
-                this.setState({ data: arr, initialArray: arr }, () => console.log(this.state))
+                this.setState({ data: arr, initialArray: arr })
             }
         })
     }
@@ -143,12 +144,12 @@ class Table extends React.Component {
                     onClick={e => {this.sort(e, 'name')}} 
                     className={`${this.setArrow('name')} name sortable-header`}
                   >
-                    Name
+                    Room
                   </th>
                   <th 
                     onClick={e => {this.sort(e, 'email')}} 
                     className={`${this.setArrow('email')} email sortable-header`}>
-                  Email</th>
+                  Booking type</th>
                   <th 
                     onClick={e => {this.sort(e, 'phone')}} 
                       className={`${this.setArrow('phone')} phone sortable-header`}>
@@ -156,16 +157,16 @@ class Table extends React.Component {
                   <th 
                     onClick={e => {this.sort(e, 'rank')}} 
                     className={`${this.setArrow('rank')} rank sortable-header`}>
-                  Delete</th>
+                  Archive</th>
                   <th 
                     onClick={e => {this.sort(e, 'rank')}} 
                     className={`${this.setArrow('rank')} rank sortable-header`}>
-                  Archive</th>
+                  Delete</th>
                 </tr>
               </thead>
               <tbody>
                 {this.state.data.map((value, index) => {
-                    return <ExpandableRow key={index} data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }}/>
+                    return <ExpandableRow key={index} data={value} moreInfo={true} moreInfoClick={() => { this.props.moreInfo(value.id) }} moreInfoText={'More info'}/>
                   })
                 }
               </tbody>

@@ -26,7 +26,7 @@ def get_houses(user, houseid):
 @mod.route('/lessee/<lesseeid>', methods=['GET'])
 @utils.login_required
 def get_res_by_lessee(user, lesseeid):
-    return jsonify([res.serialize() for res in helpers.get_res_by_lessee(lesseeid)])
+    return jsonify([res.serialize() for res in helpers.get_res_by_lessee_filtered(lesseeid)])
 
 
 @mod.route('/bookingtypes', methods=['GET'])

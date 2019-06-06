@@ -22,7 +22,7 @@ class Schedule extends React.Component{
 
     this.state = {
       forceRerender: false,
-      viewModel: schedulerData,
+      viewModel: this.props.scheduleStore.viewModel,
       schedulerData: schedulerData,
       resources: [],
       events: []
@@ -85,17 +85,16 @@ class Schedule extends React.Component{
   }
 
   prevClick = (schedulerData)=> {
-    schedulerData.prev();
-    schedulerData.setEvents(this.state.events);
-    this.props.scheduleStore.setViewModel(schedulerData)
-    // this.setState({
-    //   viewModel: schedulerData
-    // })
+    schedulerData.prev()
+    schedulerData.setEvents(this.props.scheduleStore.events)
+    this.setState({
+      viewModel: schedulerData
+    })
   }
 
   nextClick = (schedulerData)=> {
-    schedulerData.next();
-    schedulerData.setEvents(this.state.events);
+    schedulerData.next()
+    schedulerData.setEvents(this.props.scheduleStore.events)
     this.setState({
       viewModel: schedulerData
     })
@@ -109,11 +108,7 @@ class Schedule extends React.Component{
   }
 
   onSelectDate = (schedulerData, date) => {
-    schedulerData.setDate(date);
-    schedulerData.setEvents(this.state.events);
-    this.setState({
-      viewModel: schedulerData
-    })
+    this.props.scheduleStore.setDate(schedulerData, date)
   }
 
   eventClicked = (schedulerData, event) => {
@@ -121,7 +116,7 @@ class Schedule extends React.Component{
   };
 
   ops1 = (schedulerData, event) => {
-    this.props.history.push(`/reservation?id=${event.id}`)
+    this.props.history.push(`/reservation?id=${event.id}?edit=1`)
   };
 
   ops2 = (schedulerData, event) => {
@@ -132,29 +127,6 @@ class Schedule extends React.Component{
   newEvent = (schedulerData, slotId, slotName, start, end, type, item) => {
     this.props.setNewEventStartAndStop(start, end)
     this.props.showCreateEventModal()
-
-    // if(confirm(`Do you want to create a new event? {slotId: ${slotId}, slotName: ${slotName}, start: ${start}, end: ${end}, type: ${type}, item: ${item}}`)){
-
-    //   let newFreshId = 0;
-    //   schedulerData.events.forEach((item) => {
-    //     if(item.id >= newFreshId)
-    //       newFreshId = item.id + 1;
-    //   });
-
-
-    //   let newEvent = {
-    //     id: newFreshId,
-    //     title: this.state.name,
-    //     start: start,
-    //     end: this.state.date2,
-    //     resourceId: slotId,
-    //     ...this.createEventFromType(this.state.color)
-    //   }
-    //   schedulerData.addEvent(newEvent);
-    //   this.setState({
-    //     viewModel: schedulerData
-    //   })
-    // }
   }
 
   createEventFromType = (type) => {
@@ -181,9 +153,10 @@ class Schedule extends React.Component{
   }
 
   updateEventStart = (schedulerData, event, newStart) => {
-    // if(confirm(`Do you want to adjust the start of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newStart: ${newStart}}`)) {
-    // }
-    let newEvent = { id: event.id, checkindate: newStart, checkoutdate: event.end, roomid: event.resourceId}
+    let newDate = new Date(newStart)
+    newDate.setHours(0,0,0,0)
+    newDate.setDate(newDate.getDate() + 1)
+    let newEvent = { id: event.id, checkindate: newDate.toUTCString(), checkoutdate: event.end, roomid: event.resourceId}
     schedulerData.updateEventStart(event, newStart);
     this.props.reservationStore.updateReservation(newEvent)
     backend.updateReservation(newEvent, res=>{
@@ -197,11 +170,11 @@ class Schedule extends React.Component{
   }
 
   updateEventEnd = (schedulerData, event, newEnd) => {
-    // if(confirm(`Do you want to adjust the end of the event? {eventId: ${event.id}, eventTitle: ${event.title}, newEnd: ${newEnd}}`)) {
-    // }
-    let newEvent = { id: event.id, checkindate: event.start, checkoutdate: newEnd, roomid: event.resourceId}
+    let newDate = new Date(newEnd)
+    newDate.setHours(23,30,0,0)
+    let newEvent = { id: event.id, checkindate: event.start, checkoutdate: newDate.toUTCString(), roomid: event.resourceId}
     schedulerData.updateEventEnd(event, newEnd);
-    this.props.reservationStore.updateReservation(newEvent)
+    this.props.reservationStore.updateReservation(newDate.toUTCString())
 
     backend.updateReservation(newEvent, res=>{
       if (res.status !== 200) {
@@ -214,9 +187,12 @@ class Schedule extends React.Component{
   }
 
   moveEvent = (schedulerData, event, slotId, slotName, start, end) => {
-    // if(confirm(`Do you want to move the event? {eventId: ${event.id}, eventTitle: ${event.title}, newSlotId: ${slotId}, newSlotName: ${slotName}, newStart: ${start}, newEnd: ${end}`)) {
-    // }
-    let newEvent = { id: event.id, checkindate: start, checkoutdate: end, roomid: slotId }
+    let newStart = new Date(start)
+    let newEnd = new Date(end)
+    newStart.setHours(0,0,0,0)
+    newStart.setDate(newStart.getDate() + 1)
+    newEnd.setHours(23, 30, 0, 0)
+    let newEvent = { id: event.id, checkindate: newStart.toUTCString(), checkoutdate: newEnd.toUTCString(), roomid: slotId }
     schedulerData.moveEvent(event, slotId, slotName, start, end);
     this.props.reservationStore.updateReservation(newEvent)
 
