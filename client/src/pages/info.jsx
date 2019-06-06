@@ -6,8 +6,19 @@ import UserInfo from '../components/Dashboard/UserInfo.jsx'
 import Table from '../components/Tables/Table'
 import ReservationTable from '../components/Tables/Reservations'
 import Question from '../components/Dashboard/Question.jsx'
+import NewEmailModal from '../components/Modals/NewEmailModal'
+import { MONTHNAMES } from '../constants'
 import * as backend from '../backend'
 
+const testAttach = [
+  {'name': 'Master Contract - Richardson.docx'}
+]
+
+const EMAILTYPES = {
+  WELCOME: 'WELCOME',
+  NOROOMS: 'NOROOMS',
+  CONTRACT: 'CONTRACT'
+}
 
 const getTestFile = () => {
   backend.getMasterContract(16, 26, request => {
@@ -26,19 +37,6 @@ const getTestFile = () => {
   })
 }
 
-
-const emailInfo = {
-  welcome: {prettyName: 'Welcome', done: false},
-  contract: {prettyName: 'Contract', done: true},
-  noRooms:  {prettyName: 'No Rooms', done: true},
-  reciept:  {prettyName: 'Reciept', done: true}
-}
-
-const documentsInfo = {
-  masterContract: {prettyName: 'Master Contract', btnText: 'Download master contract', btnAction: getTestFile},
-  invoiceGenerator: {prettyName: 'Invoice', btnText: 'Generate invoice', btnAction: () => {console.log('TETETESST')}}
-}
-
 const gridStyle = {
   display: 'grid',
   gridTemplateColumns: '[left] 50% [right] 50%',
@@ -52,6 +50,9 @@ class Info extends React.Component {
     this.state = {
       userId: 0,
       userInfo: {},
+      showModal: false,
+      emailSubject: '',
+      emailText: '',
     }
   }
 
@@ -66,6 +67,52 @@ class Info extends React.Component {
     }
   }
 
+  emailInfo = {
+    welcome: {prettyName: 'Welcome', done: false, btnText: 'Welcome Email', btnAction: () => {this.toggleEmailModal('Welcome!'); this.generateEmail(EMAILTYPES.WELCOME) }},
+    contract: {prettyName: 'Contract', done: false, btnText: 'Contract', btnAction: () => {this.toggleEmailModal('Contract'); this.generateEmail(EMAILTYPES.CONTRACT) }},
+    noRooms:  {prettyName: 'No Rooms', done: false, btnText: 'No Rooms', btnAction: () => {this.toggleEmailModal('No Rooms Available'); this.generateEmail(EMAILTYPES.NOROOMS) }}
+  }
+  
+  documentsInfo = {
+    masterContract: {prettyName: 'Master Contract', btnText: 'Download master contract', btnAction: () => {this.toggleEmailModal('Master Contract') }},
+    invoiceGenerator: {prettyName: 'Invoice', btnText: 'Generate invoice', btnAction: () => { this.toggleEmailModal('Invoice'); }}
+  }
+
+  toggleEmailModal = (emailSubject) => {
+    this.setState({ showModal: !this.state.showModal, emailSubject })
+  }
+
+  generateEmail = async (emailType) => {
+    let response
+    let { lname, fname } = this.state.userInfo
+
+    switch (emailType) {
+    case EMAILTYPES.WELCOME:
+      response = await backend.generateWelcomeEmail(fname)
+      break
+    case EMAILTYPES.CONTRACT:
+      response = await backend.generateContractEmail(fname)
+      break
+    case EMAILTYPES.NOROOMS:
+      let month
+      let { reservations } = this.state.userInfo
+      if (reservations.length > 0) {
+        let firstRes = reservations[0]
+        month = new Date(firstRes.checkindate).getMonth()
+      } else {
+        month = prompt('Enter month')
+      }
+
+      response = await backend.generateNoRoomsEmail(fname, MONTHNAMES[month] || month)
+      break
+    }
+    
+    if (response.status === 200) {
+      let { data } = response
+      this.setState({ emailText: data.message })
+    }
+  }
+
   render() {
     return (
       <div>
@@ -73,10 +120,10 @@ class Info extends React.Component {
         <div className={'container'} style={{...gridStyle}}>
           <div style={{gridArea: 'left', gridRow: 1}}>
             <section style={{marginBottom: '25px'}}>
-              <Emails data={emailInfo} title={'EMAILS'}/>
+              <Emails data={this.emailInfo} title={'EMAILS'}/>
             </section>
             <section>
-              <Emails data={documentsInfo} title={'DOWNLOAD DOCUMENTS'}/>
+              <Emails data={this.documentsInfo} title={'DOWNLOAD DOCUMENTS'}/>
             </section>
           </div>
           <section style={{gridArea: 'right', gridRow: 1}}>
@@ -92,6 +139,14 @@ class Info extends React.Component {
             </div>
           </div>
         </div>
+        <NewEmailModal 
+          showModal={this.state.showModal} 
+          toggleModal={this.toggleEmailModal} 
+          email={this.state.userInfo.email || ''} 
+          subject={this.state.emailSubject} 
+          attachements={testAttach}
+          emailText={this.state.emailText}
+        />
       </div>
     )
   }

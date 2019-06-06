@@ -11,3 +11,8 @@ export const STATUS_ACTIVE = 'active'
 export const CALENDAR_CLEANING = 'CLEANING'
 export const CALENDAR_CONFIRMED = 'CONFIRMED'
 export const CALENDAR_TENTATVE = 'TENTATIVE'
+
+export const MONTHNAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+]

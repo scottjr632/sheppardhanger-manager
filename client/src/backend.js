@@ -114,6 +114,10 @@ export const getTdyTypesAsync = async () => {const data = await axios.get('/less
 export const getGuestTypesAsync = async () => {const data = await axios.get('/lessee/guests'); return data}
 export const getRoomsAsync = async () => {const data = await axios.get('/houses/rooms'); return data }
 export const getAllReservationsAsync = async () => {const data = await axios.get('/reservations/'); return data}
+export const generateWelcomeEmail = async (lesseeName) => {const data = await axios.get(`/email/welcome/${lesseeName}`); return data}
+export const generateNoRoomsEmail = async (lesseeName, month) => {const data = await axios.get(`/email/no-rooms/${lesseeName}/${month}`); return data}
+export const generateContractEmail = async (lesseeName) => {const data = await axios.get(`/email/contract/${lesseeName}`); return data}
+export const sendEmail = async (emailData) => {const data = await axios.post('/email/', emailData); return data}
 
 export async function createNewLesseeAsync(data) {
   let res =  await axios.post('/lessee/', data)

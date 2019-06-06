@@ -4,6 +4,7 @@ import PropTypes, { array } from 'prop-types'
 import { NotificationManager } from 'react-notifications'
 
 import ConfirmButton from '../Buttons/confirm.jsx'
+import NewEmailModal from '../Modals/NewEmailModal'
 import * as backend from '../../backend'
 import { inject, observer } from 'mobx-react';
 
@@ -64,7 +65,7 @@ class UserInfo extends React.Component {
       edit: false,
       bookingTypes: [],
       ranks: [],
-      activeRankId: 1
+      activeRankId: 1,
     }
   }
 

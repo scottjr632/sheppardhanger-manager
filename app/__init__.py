@@ -32,12 +32,14 @@ def _add_blueprints(app):
     from app.routes import houseroutes
     from app.routes import reservationroutes
     from app.routes import lesseeroutes
+    from app.routes import emailroutes
 
     # Blueprints
     app.register_blueprint(authroutes.mod, url_prefix=APIV + '/auth')
     app.register_blueprint(houseroutes.mod, url_prefix=APIV + '/houses')
     app.register_blueprint(reservationroutes.mod, url_prefix=APIV + '/reservations')
     app.register_blueprint(lesseeroutes.mod, url_prefix=APIV + '/lessee')
+    app.register_blueprint(emailroutes.mod, url_prefix=APIV + '/email')
 
 
 def create_app(config_name="default", serve_client=True):

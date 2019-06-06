@@ -1,5 +1,4 @@
-RESERVATION_REPLY = """
-Hi **LESSEENAME**, thanks so much for the inquiry.  We would love to have you stay at The Sheppard Hangar while you go through training!  
+RESERVATION_REPLY = """Hi **LESSEENAME**, thanks so much for the inquiry.  We would love to have you stay at The Sheppard Hangar while you go through training!  
 
 We will be sending a separate email to you with the rental agreement attached for your review via a DocuSign email.  If you do not receive it please let us know, we have had problems with the email going to spam folders.   As of now we have a room available for you, however we cannot guarantee a room reservation until we receive the rental agreement document back from you, so if you have any questions with the agreement please contact us as soon as possible.
 
@@ -20,9 +19,10 @@ SheppardHangar@Gmail.com
 954-471-6872
 """
 
-DISCUSSION = """
-Hi **LESSEENAME** hope all is well.  Please take a moment to review the agreement, if you have any questions please feel free to call us at any time, 954-471-6872.  If there are any blocks that need to be filled in that you do not have the information readily available just put a "0" in the box and then you can provide us with the information once you do have it.  Once we receive the agreement back we will block off a room for you.  We look forward to having you stay at The Sheppard Hangar!
+DISCUSSION = """Hi **LESSEENAME** hope all is well.  Please take a moment to review the agreement, if you have any questions please feel free to call us at any time, 954-471-6872.  If there are any blocks that need to be filled in that you do not have the information readily available just put a "0" in the box and then you can provide us with the information once you do have it.  Once we receive the agreement back we will block off a room for you.  We look forward to having you stay at The Sheppard Hangar!
+
 Thanks again, all the best,
+
 Nicolette and Craig McColaugh
 THE SHEPPARD HANGAR® Crashpads
 The River Creek House
@@ -33,8 +33,7 @@ SheppardHangar@Gmail.com
 954-471-6872
 """
 
-RECEIVED_DOCUSIGN_BACK = """
-The Sheppard Hangar DocuSign Receipt
+RECEIVED_DOCUSIGN_BACK = """The Sheppard Hangar DocuSign Receipt
 
 Hi **LESSEENAME**, hope all is well.  We received the DocuSign agreement back, thank you very much.  
 
@@ -60,8 +59,7 @@ SheppardHangar@Gmail.com
 954-471-6872
 """
 
-NO_ROOM_RESERVATION_REQUEST = """
-Hi **LESSEENAME**, hope all is well.  Thanks so much for the inquiry, unfortunately it looks like our first opening at The Sheppard Hangar will not be until mid **MONTH** barring any unforeseen changes to our current bookings.  
+NO_ROOM_RESERVATION_REQUEST = """Hi **LESSEENAME**, hope all is well.  Thanks so much for the inquiry, unfortunately it looks like our first opening at The Sheppard Hangar will not be until mid **MONTH** barring any unforeseen changes to our current bookings.  
 We suggest  contacting:
 
 Troy at: 
@@ -79,8 +77,7 @@ The River Creek House
 The Phoenix House
 """
 
-NO_ROOM_FORWARD_TO_TROY_AND_COLE = """
-Hi **LESSEENAME**, hope all is well.  Thanks so much for the inquiry, unfortunately it looks like our first opening at The Sheppard Hangar will not be until mid **MONTH** barring any unforeseen changes to our current bookings.  
+NO_ROOM_FORWARD_TO_TROY_AND_COLE = """Hi **LESSEENAME**, hope all is well.  Thanks so much for the inquiry, unfortunately it looks like our first opening at The Sheppard Hangar will not be until mid **MONTH** barring any unforeseen changes to our current bookings.  
 We suggest  contacting either:
 
 Troy at: 
