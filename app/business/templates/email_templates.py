@@ -1,4 +1,4 @@
-RESERVATION_REPLY = """Hi **LESSEENAME**, thanks so much for the inquiry.  We would love to have you stay at The Sheppard Hangar while you go through training!  
+RESERVATION_REPLY = r"""Hi **LESSEENAME**, thanks so much for the inquiry.  We would love to have you stay at The Sheppard Hangar while you go through training!  
 
 We will be sending a separate email to you with the rental agreement attached for your review via a DocuSign email.  If you do not receive it please let us know, we have had problems with the email going to spam folders.   As of now we have a room available for you, however we cannot guarantee a room reservation until we receive the rental agreement document back from you, so if you have any questions with the agreement please contact us as soon as possible.
 

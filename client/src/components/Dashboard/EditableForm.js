@@ -25,6 +25,7 @@ class EditableForm extends React.Component {
     });
     if (this.props.handleSave && this.state.editText === "Save") {
       this.props.handleSave(JSON.stringify(this.state.n_data));
+      
     }
   };
 

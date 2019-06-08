@@ -4,7 +4,7 @@ import PropTypes, { array } from 'prop-types'
 import { NotificationManager } from 'react-notifications'
 
 import ConfirmButton from '../Buttons/confirm.jsx'
-import NewEmailModal from '../Modals/NewEmailModal'
+import NewEmailModal from '../Modals/NewEmailModal.jsx'
 import * as backend from '../../backend'
 import { inject, observer } from 'mobx-react';
 

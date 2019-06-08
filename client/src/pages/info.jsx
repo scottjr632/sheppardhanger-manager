@@ -3,10 +3,9 @@ import React from 'react'
 import Navi from '../components/HeaderComponents/Navbar'
 import Emails from '../components/Dashboard/Emails.jsx'
 import UserInfo from '../components/Dashboard/UserInfo.jsx'
-import Table from '../components/Tables/Table'
 import ReservationTable from '../components/Tables/Reservations'
 import Question from '../components/Dashboard/Question.jsx'
-import NewEmailModal from '../components/Modals/NewEmailModal'
+import NewEmailModal from '../components/Modals/NewEmailModal.jsx'
 import { MONTHNAMES } from '../constants'
 import * as backend from '../backend'
 
@@ -52,7 +51,7 @@ class Info extends React.Component {
       userInfo: {},
       showModal: false,
       emailSubject: '',
-      emailText: '',
+      email_text: '',
     }
   }
 
@@ -109,7 +108,7 @@ class Info extends React.Component {
     
     if (response.status === 200) {
       let { data } = response
-      this.setState({ emailText: data.message })
+      this.setState({ email_text: data.message })
     }
   }
 
@@ -144,8 +143,8 @@ class Info extends React.Component {
           toggleModal={this.toggleEmailModal} 
           email={this.state.userInfo.email || ''} 
           subject={this.state.emailSubject} 
-          attachements={testAttach}
-          emailText={this.state.emailText}
+          attachements={[]}
+          email_text={this.state.email_text}
         />
       </div>
     )

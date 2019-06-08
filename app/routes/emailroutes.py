@@ -1,10 +1,12 @@
 import os
+import sys
 
 from flask import make_response, jsonify, current_app
 from flask import Blueprint
 from flask import request
 
 import app.utils as utils
+import app.models.email_helpers as helpers
 import app.business.templates.email_templates as templates
 
 mod = Blueprint('emailroutes', __name__)
@@ -42,4 +44,14 @@ def generate_contract_email_text(user, lesseename):
 @utils.login_required
 def send_email(user):
     data = request.get_json(force=True)
-    pass
+    email = current_app.config.get('EMAIL')
+    apitoken = current_app.config.get('SENDGRID_API_TOKEN')
+    res = helpers.send_email(
+        email, 
+        data.get('email'),
+        data.get('subject'),
+        data.get('email_text'),
+        data.get('attachements'),
+        apikey=apitoken)
+
+    return make_response('Sent email', res)

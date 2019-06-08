@@ -11,6 +11,8 @@ class BaseConfig(object):
     COOKIE_HTTPONLY = True
     COOKIE_SAMESITE = 'Lax'
     COOKIE_SECURE = True
+    EMAIL = os.environ.get('SENGRID_EMAIL', 'scottjr632@gmail.com')
+    SENDGRID_API_TOKEN = os.environ.get('SENDGRID_API_TOKEN', None)
     TOKEN_TTL = {
         'hours' : 1
     }

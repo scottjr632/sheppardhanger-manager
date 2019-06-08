@@ -1,7 +1,9 @@
 import React from 'react'
 import Modal from 'react-modal'
+import { NotificationManager } from 'react-notifications'
 
 import ConfirmButton from '../Buttons/confirm.jsx'
+import CoolLoader from '../Misc/CoolLoader.jsx'
 import * as backend from '../../backend'
 
 Modal.setAppElement('#root')
@@ -65,8 +67,9 @@ class NewEmailModal extends React.Component {
     this.state = {
       email: this.props.email || '',
       subject: this.props.subject || '',
-      emailText: this.props.emailText || '',
-      attachements: this.props.attachements || []
+      email_text: this.props.email_text || '',
+      attachements: this.props.attachements || [],
+      loading: false
     }
   }
 
@@ -83,8 +86,29 @@ class NewEmailModal extends React.Component {
     })
   }
 
-  sendEmail = () => {
-    backend.sendEmail(this.state)
+  exit = () => {
+    this.props.toggleModal()
+    this.setState({ 
+      email: '',
+      subject: '',
+      email_text: '',
+      attachements: [],
+      loading: false
+     })
+  }
+
+  sendEmail = async () => {
+    this.setState({ loading: true })
+    
+    const res = await backend.sendEmail(this.state)
+
+    if (res.statusText === 'ACCEPTED' && res.statusText !== 'OK') {
+      this.setState({ loading: false })
+      NotificationManager.error('Unable to send email, please try again')
+      return
+    }
+    NotificationManager.info(`Sent email to ${this.state.email}`)
+    this.exit()
   }
 
   render(){
@@ -94,6 +118,7 @@ class NewEmailModal extends React.Component {
         contentLabel="New Lessee"
         style={customStyles}
       >
+        {!this.state.loading && 
         <div style={div1Style}>
           <div style={div2Style}>
             <div className={'input-group'}>
@@ -106,18 +131,23 @@ class NewEmailModal extends React.Component {
             </div>
           </div>
           <div>
-            <textarea style={textAreaStyle} name={'emailText'} value={this.state.emailText} onChange={this.handleChange} />
+            <textarea style={textAreaStyle} name={'email_text'} value={this.state.email_text} onChange={this.handleChange} />
           </div>
           <div style={div2Style}>
             {this.state.attachements.map(attach => {
               return <div style={attachStyle}><i class="fas fa-paperclip" style={{margin: '0 5px 0 0'}}></i>{attach.name}</div>
             })}
             <span style={div2Style}>
-              <ConfirmButton  removeMessage={'Cancel'} confirmAction={this.props.toggleModal} />
+              <ConfirmButton  removeMessage={'Cancel'} confirmAction={this.exit} />
               <ConfirmButton style={{marginLeft: '10px',...btnStyle}}  removeMessage={'Send'} confirmAction={this.sendEmail} />
             </span>
           </div>
-        </div>
+        </div>}
+        {this.state.loading && 
+        <React.Fragment>
+          <h2 style={{ color: 'grey', textAlign: 'center' }}>Sending email...</h2>
+          <CoolLoader style={{ height: '80%' }}/>
+        </React.Fragment>}
       </Modal>
     )
   }
