@@ -66,19 +66,32 @@ class Info extends React.Component {
     }
   }
 
+  emailStuff = {
+    generic: {prettyName: 'Send Email', right: <i class="fas fa-envelope"></i>, btnText: 'Create Email', btnAction: () => { this.toggleEmailModal('') }},
+  }
+
   emailInfo = {
-    welcome: {prettyName: 'Welcome', done: false, btnText: 'Welcome Email', btnAction: () => {this.toggleEmailModal('Welcome!'); this.generateEmail(EMAILTYPES.WELCOME) }},
-    contract: {prettyName: 'Contract', done: false, btnText: 'Contract', btnAction: () => {this.toggleEmailModal('Contract'); this.generateEmail(EMAILTYPES.CONTRACT) }},
-    noRooms:  {prettyName: 'No Rooms', done: false, btnText: 'No Rooms', btnAction: () => {this.toggleEmailModal('No Rooms Available'); this.generateEmail(EMAILTYPES.NOROOMS) }}
+    welcome: {prettyName: 'Welcome', right: <i class="fas fa-envelope"></i>, btnText: 'Welcome Email', btnAction: () => {this.toggleEmailModal('Welcome!'); this.generateEmail(EMAILTYPES.WELCOME) }},
+    contract: {prettyName: 'Contract', right: <i class="fas fa-envelope"></i>, btnText: 'Contract', btnAction: () => {this.toggleEmailModal('Contract'); this.generateEmail(EMAILTYPES.CONTRACT) }},
+    noRooms:  {prettyName: 'No Rooms', right: <i class="fas fa-envelope"></i>, btnText: 'No Rooms', btnAction: () => {this.toggleEmailModal('No Rooms Available'); this.generateEmail(EMAILTYPES.NOROOMS) }}
   }
   
   documentsInfo = {
-    masterContract: {prettyName: 'Master Contract', btnText: 'Download master contract', btnAction: () => {this.toggleEmailModal('Master Contract') }},
-    invoiceGenerator: {prettyName: 'Invoice', btnText: 'Generate invoice', btnAction: () => { this.toggleEmailModal('Invoice'); }}
+    masterContract: {prettyName: 'Master Contract', right:<i class="fas fa-file-signature"></i>, btnText: 'Download master contract', btnAction: () => {this.toggleEmailModal('Master Contract') }},
+    invoiceGenerator: {prettyName: 'Invoice', right: <i class="fas fa-receipt"></i>, btnText: 'Generate invoice', btnAction: () => { this.toggleEmailModal('Invoice'); }}
   }
 
   toggleEmailModal = (emailSubject) => {
-    this.setState({ showModal: !this.state.showModal, emailSubject })
+    this.state.showModal ?
+      this.setState({
+        showModal: !this.state.showModal,
+        email_text: '',
+        emailSubject
+      }) :
+      this.setState({ 
+        showModal: !this.state.showModal, 
+        emailSubject 
+      })
   }
 
   generateEmail = async (emailType) => {
@@ -119,7 +132,10 @@ class Info extends React.Component {
         <div className={'container'} style={{...gridStyle}}>
           <div style={{gridArea: 'left', gridRow: 1}}>
             <section style={{marginBottom: '25px'}}>
-              <Emails data={this.emailInfo} title={'EMAILS'}/>
+              <Emails data={this.emailStuff} title={'EMAIL'}/>
+            </section>
+            <section style={{marginBottom: '25px'}}>
+              <Emails data={this.emailInfo} title={'EMAIL TEMPLATES'}/>
             </section>
             <section>
               <Emails data={this.documentsInfo} title={'DOWNLOAD DOCUMENTS'}/>

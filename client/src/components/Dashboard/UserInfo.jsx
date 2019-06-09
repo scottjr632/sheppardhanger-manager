@@ -189,10 +189,10 @@ class UserInfo extends React.Component {
             </tbody>
           </table>
           <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: '10px 0 10px 0'}}>
-            {!this.state.edit && <ConfirmButton removeMessage={'Archive'} confirmAction={this.archiveUser} disabled={this.state.status === 'archived'} /> }
+            {!this.state.edit && <ConfirmButton removeMessage={<span><i class="fas fa-archive"></i>Archive</span>} confirmAction={this.archiveUser} disabled={this.state.status === 'archived'} /> }
             {this.state.edit && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
 
-            {!this.state.edit && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
+            {!this.state.edit && <ConfirmButton removeMessage={<span><i class="far fa-edit"></i>Edit</span>} confirmAction={this.toggleEdit} style={editStyle} /> }
             {this.state.edit && <ConfirmButton removeMessage={'Save'} confirmAction={() => { this.updateUser(); this.toggleEdit(); }} style={saveStyle} /> }
           </div>
         </div>

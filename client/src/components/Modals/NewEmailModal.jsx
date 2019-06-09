@@ -87,14 +87,13 @@ class NewEmailModal extends React.Component {
   }
 
   exit = () => {
-    this.props.toggleModal()
     this.setState({ 
       email: '',
       subject: '',
       email_text: '',
       attachements: [],
       loading: false
-     })
+     }, this.props.toggleModal)
   }
 
   sendEmail = async () => {
@@ -102,7 +101,7 @@ class NewEmailModal extends React.Component {
     
     const res = await backend.sendEmail(this.state)
 
-    if (res.statusText === 'ACCEPTED' && res.statusText !== 'OK') {
+    if (res.statusText !== 'ACCEPTED' && res.statusText !== 'OK') {
       this.setState({ loading: false })
       NotificationManager.error('Unable to send email, please try again')
       return
