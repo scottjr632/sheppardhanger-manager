@@ -1,5 +1,11 @@
 import os
 import sys
+import configparser
+
+from app.config import get_secrets
+from app.definitions import ROOT_DIR
+
+DEFAULT_CONFIG = get_secrets(ROOT_DIR + '/bookshelf/secrets/shmanager.secrets')
 
 
 class BaseConfig(object):
@@ -11,8 +17,8 @@ class BaseConfig(object):
     COOKIE_HTTPONLY = True
     COOKIE_SAMESITE = 'Lax'
     COOKIE_SECURE = True
-    EMAIL = os.environ.get('SENGRID_EMAIL', 'scottjr632@gmail.com')
-    SENDGRID_API_TOKEN = os.environ.get('SENDGRID_API_TOKEN', None)
+    EMAIL = DEFAULT_CONFIG.get('SENGRID_EMAIL') or os.environ.get('SENGRID_EMAIL', 'scottjr632@gmail.com')
+    SENDGRID_API_TOKEN = DEFAULT_CONFIG.get('SENDGRID_API_TOKEN') or os.environ.get('SENDGRID_API_TOKEN', None)
     TOKEN_TTL = {
         'hours' : 1
     }

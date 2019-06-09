@@ -9,6 +9,7 @@ include/
 bin/
 node_modules/
 .vscode/
+shmanager.secrets
 **/dist/*
 
 # allow the image to be pushed
