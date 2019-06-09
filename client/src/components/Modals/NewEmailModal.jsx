@@ -24,7 +24,7 @@ const div1Style = {
 const div2Style = {
   display: 'flex',
   flexDirection: 'row',
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
 }
 
 const inputStyle = {
@@ -132,7 +132,7 @@ class NewEmailModal extends React.Component {
           <div>
             <textarea style={textAreaStyle} name={'email_text'} value={this.state.email_text} onChange={this.handleChange} />
           </div>
-          <div style={div2Style}>
+          <div style={div2Style} style={{marginTop: '20px'}}>
             {this.state.attachements.map(attach => {
               return <div style={attachStyle}><i class="fas fa-paperclip" style={{margin: '0 5px 0 0'}}></i>{attach.name}</div>
             })}

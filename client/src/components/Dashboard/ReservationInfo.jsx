@@ -41,12 +41,28 @@ const saveStyle = {
   backgroundColor: '#12e96f'
 }
 
+const disabledStyle = {
+  ...inputStyle,
+  backgroundColor: '#c7c7c76e',
+  borderRadius: '3px',
+  paddingLeft: '5px'
+}
+
+
 const excludedTypes = [
   'bookingtypeid',
   'id',
   'pet', 
   'roomid',
-  'lesseeid'
+  'lesseeid',
+  'lengthofstay'
+]
+
+const nonEditableTypes = [
+  'status',
+  'lesseeemail',
+  'lesseefname',
+  'lesseelname'
 ]
 
 const prettyNames = {
@@ -251,10 +267,11 @@ class Info extends React.Component {
                           </td>
                         )
                       default:
+                        let disabled = nonEditableTypes.includes(key)
                         return (
                           <td data-title={name}>
                             <span className={'border-grow'}></span>
-                            <input name={key} value={this.state.reservation[key]} style={inputStyle} onChange={this.handleChange}/>
+                            <input name={key} value={this.state.reservation[key]} style={disabled ? disabledStyle : inputStyle} onChange={this.handleChange} disabled={disabled} />
                           </td>
                         )
                       }

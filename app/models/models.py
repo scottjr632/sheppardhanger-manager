@@ -275,3 +275,17 @@ class RefreshToken(db.Model):
             token: self.token,
             expireat: self.expireat
         }
+
+
+class EmailTemplates(db.Model):
+    __tablename__ = 'email_templates'
+    __table_args__ = {'extend_existing': True}
+
+    name = db.Column(db.String, primary_key=True)
+    template = db.Column(db.String)
+
+    def serialize(self):
+        return {
+            'name': self.name,
+            'template': self.template
+        }

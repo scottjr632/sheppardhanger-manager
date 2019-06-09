@@ -5,6 +5,9 @@ from functools import wraps
 import sendgrid
 from sendgrid.helpers.mail import Mail, Content, MimeType
 
+import app.models.models as models
+from app import db, utils
+
 
 def html_wrapper(f):
     @wraps(f)
@@ -28,3 +31,29 @@ def send_email(from_email: str, to_email: str, subject: str, email: str, attache
     except Exception as e:
         print(e, file=sys.stderr)
         return 500
+
+
+def get_all_templates() -> list:
+    res = models.EmailTemplates.query.all()
+    return res
+
+
+def get_template(template_name) -> str:
+    res = models.EmailTemplates.query.get(template_name)
+    return res.template if res is not None else ''
+
+
+@utils.rollback_on_error
+def insert_new_template(data):
+    template = models.EmailTemplates(**data)
+
+    db.session.merge(template)
+    db.session.commit()
+
+
+@utils.rollback_on_error
+def delete_email_template(name):
+    template = models.EmailTemplates.query.get(name)
+
+    db.session.delete(template)
+    db.session.commit()
