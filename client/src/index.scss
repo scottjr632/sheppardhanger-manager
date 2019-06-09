@@ -407,7 +407,7 @@ tr{
 
   &.minimized:hover {
     min-width: 1px;
-    width: 100% !important;
+    width: calc(100% - 10px) !important;
   }
 
   &.more-info {

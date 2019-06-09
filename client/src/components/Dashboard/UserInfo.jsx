@@ -20,12 +20,24 @@ const saveStyle = {
   backgroundColor: '#12e96f'
 }
 
+const disabledStyle = {
+  ...inputStyle,
+  backgroundColor: '#c7c7c76e',
+  borderRadius: '3px',
+  paddingLeft: '5px'
+}
+
 const excludedTypes = [
   'id',
   'bookingtype',
   'checkindate',
   'numberofguests',
   'room'
+]
+
+const nonEditableTypes = [
+  'status',
+  'email'
 ]
 
 const prettyNames = {
@@ -74,10 +86,7 @@ class UserInfo extends React.Component {
       backend.getAllBookingTypesAsync(),
       backend.getAllRanksAsync()
     ]).then(res => {
-      let ranks = res[1].data
-      let activeRank = ranks.find(elem => elem.name == this.props.data.rank)
-      
-      this.setState({ ranks, activeRankId: activeRank ? activeRank.id : 1, bookingTypes: res[0].data })
+      this.setState({ ranks: res[1].data, bookingTypes: res[0].data })
     })
   }
 
@@ -118,7 +127,13 @@ class UserInfo extends React.Component {
   }
 
   toggleEdit = () => {
-    this.setState({ edit: !this.state.edit })
+    if (!this.state.edit) {
+      let { ranks } = this.state
+      let activeRank = ranks.find(elem => elem.name == this.props.data.rank)
+      this.setState({ edit: !this.state.edit, activeRankId: activeRank.id })
+    } else {
+      this.setState({ edit: !this.state.edit })
+    }
   }
 
   goToReservationInfo = (reservtionId) => {
@@ -180,7 +195,13 @@ class UserInfo extends React.Component {
                           </td>
                         )
                       default:
-                        return <td data-title={name}><span className={'border-grow'}></span><input name={key} value={this.state[key]} style={inputStyle} onChange={this.handleChange}/></td>
+                        let disabled = nonEditableTypes.includes(key)
+                        return (
+                          <td data-title={name}>
+                            <span className={'border-grow'}></span>
+                            <input name={key} value={this.state[key]} style={disabled ? disabledStyle : inputStyle} onChange={this.handleChange} disabled={disabled} />
+                          </td>
+                        )
                       }
                     }
                   })
