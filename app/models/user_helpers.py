@@ -15,6 +15,19 @@ ROLES = ('admin', 'user')
 
 
 @utils.rollback_on_error
+def update_user_password(userid, password):
+    user = User.query.get(userid)
+    salt = uuid.uuid4().hex.encode('utf-8')
+    hashed_password = hashlib.sha512(password.encode('utf-8') + 
+                                     salt).hexdigest()
+    user.salt = salt.decode('utf-8')
+    user.password = hashed_password
+
+    db.session.add(user)
+    db.session.commit()
+
+
+@utils.rollback_on_error
 def create_user(user, password) -> User:
     salt = uuid.uuid4().hex.encode('utf-8')
     hashed_password = hashlib.sha512(password.encode('utf-8') + 
