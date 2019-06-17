@@ -16,7 +16,7 @@ import './index.scss';
 // const { createHistory } = require('history')
 require('dotenv').config()
 
-axios.defaults.baseURL = '/api/v1'
+axios.defaults.baseURL = '/api/v1/protected'
 
 ReactDOM.render(
     <Provider {...stores} >

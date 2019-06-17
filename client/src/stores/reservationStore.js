@@ -7,7 +7,7 @@ const formatReservation = (reservationObject) => {
     return {
         id: reservationObject.id,
         resourceId: reservationObject.roomid,
-        title: `${reservationObject.lesseelname}, ${reservationObject.lesseefname}  -  ${reservationObject.house}`,
+        title: `${reservationObject.lesseelname}, ${reservationObject.lesseefname}  -  ${reservationObject.house} ${reservationObject.bookingtype}`,
         start: reservationObject.checkindate,
         end: reservationObject.checkoutdate,
         lesseeId: reservationObject.lesseeid,

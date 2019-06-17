@@ -77,15 +77,19 @@ class Navi extends React.Component {
               <a className={this.state.currentKey === 3 ? 'active' : ''}>
                   <i className="fas fa-user" />
                 {this.props.userStore.email}
+                {this.state.showDropdown &&
+                <div className={'dropdown__menu'} onMouseLeave={this.showDropdown}>
+                  <div onClick={this.handleLogout} style={{padding: '5px 0'}}>
+                    <i class="fas fa-user-cog" />
+                    <a>Preferences</a>
+                  </div>
+                  <div onClick={this.handleLogout} style={{padding: '5px 0'}}>
+                    <i className="fas fa-sign-out-alt"/>
+                    <a>Logout</a>
+                  </div>
+                </div>
+                }
               </a>
-            {this.state.showDropdown &&
-            <div className={'dropdown__menu'} onMouseLeave={this.showDropdown}>
-              <span onClick={this.handleLogout}>
-                <i className="fas fa-sign-out-alt"/>
-                <a>Logout</a>
-              </span>
-            </div>
-            }
           </span>
         </div>
       </header>

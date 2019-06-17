@@ -6,7 +6,8 @@ import UserInfo from '../components/Dashboard/UserInfo.jsx'
 import ReservationTable from '../components/Tables/Reservations'
 import Question from '../components/Dashboard/Question.jsx'
 import NewEmailModal from '../components/Modals/NewEmailModal.jsx'
-import { MONTHNAMES } from '../constants'
+import { buildGmailLink } from '../utils'
+import { MONTHNAMES, EMAILPREFS } from '../constants'
 import * as backend from '../backend'
 
 const testAttach = [
@@ -71,7 +72,7 @@ class Info extends React.Component {
   }
 
   emailInfo = {
-    welcome: {prettyName: 'Welcome', right: <i class="fas fa-envelope"></i>, btnText: 'Welcome Email', btnAction: () => {this.toggleEmailModal('Welcome!'); this.generateEmail(EMAILTYPES.WELCOME) }},
+    welcome: {prettyName: 'Welcome', right: <i class="fas fa-envelope"></i>, btnText: 'Welcome Email', btnAction: () => { this.openGmailLink('Welcome', EMAILTYPES.WELCOME) }},
     contract: {prettyName: 'Contract', right: <i class="fas fa-envelope"></i>, btnText: 'Contract', btnAction: () => {this.toggleEmailModal('Contract'); this.generateEmail(EMAILTYPES.CONTRACT) }},
     noRooms:  {prettyName: 'No Rooms', right: <i class="fas fa-envelope"></i>, btnText: 'No Rooms', btnAction: () => {this.toggleEmailModal('No Rooms Available'); this.generateEmail(EMAILTYPES.NOROOMS) }}
   }
@@ -79,6 +80,27 @@ class Info extends React.Component {
   documentsInfo = {
     masterContract: {prettyName: 'Master Contract', right:<i class="fas fa-file-signature"></i>, btnText: 'Download master contract', btnAction: () => {this.toggleEmailModal('Master Contract') }},
     invoiceGenerator: {prettyName: 'Invoice', right: <i class="fas fa-receipt"></i>, btnText: 'Generate invoice', btnAction: () => { this.toggleEmailModal('Invoice'); }}
+  }
+
+  handleEmailFromUserPrefs = async (emailSubject, emailType) => {
+    let { preferences } = this.props.userStore
+
+    switch (preferences.EMAILPREFS){
+    case EMAILPREFS.BROWSER:
+      this.openGmailLink(emailSubject, emailType)
+      break
+    case EMAILPREFS.MODAL:
+      await this.generateEmail(emailType)
+      this.toggleEmailModal(emailSubject)
+      break
+    }
+  }
+
+  openGmailLink = async (emailSubject, emailType) => {
+    let { userInfo } = this.state
+    const emailInfo = await this.generateEmail(emailType)
+    let link = buildGmailLink(userInfo.email, emailSubject, this.state.email_text)
+    window.open(link, '_blank')
   }
 
   toggleEmailModal = (emailSubject) => {

@@ -9,6 +9,7 @@ import UnfilteredReservations from '../components/Tables/UnfilteredResevations'
 import Question from '../components/Dashboard/Question.jsx'
 import NewUser from '../components/Dashboard/NewUser.jsx'
 import EditEmailTemplates from '../components/Dashboard/EditEmailTemplates.jsx'
+import Configurations from '../components/Dashboard/Configurations.jsx'
 
 
 @inject ('lesseeStore')
@@ -22,9 +23,10 @@ class Admin extends React.Component {
       showAdmin: false,
       editEmailTemplates: false,
       showEventModal: false,
+      showConfigurations: false,
       newEventStart: undefined,
       newEventStop: undefined,
-      lessees: []
+      lessees: [],
     }
   }
 
@@ -58,6 +60,10 @@ class Admin extends React.Component {
     this.setState({ showEventModal: !this.state.showEventModal })
   }
 
+  toggleShowConfigurations = () => {
+    this.setState({ showConfigurations: !this.state.showConfigurations })
+  }
+
   moreInfo = (lesseeId) => {
     this.props.history.push(`/info?id=${lesseeId}`)
   }
@@ -70,19 +76,20 @@ class Admin extends React.Component {
     return (
       <div style={{marginBottom: '100px'}}>
         <Navi />
-        {!this.state.showAdmin && !this.state.editEmailTemplates && 
+        {!this.state.showAdmin && !this.state.editEmailTemplates && !this.state.showConfigurations &&
         <span style={{display: 'flex', justifyContent: 'flex-end', marginRight: '5%'}}>
           <button className={'btn__new'} onClick={this.toggleEditEmailTemplates}>Edit email templates</button>
-          <button className={'btn__new'} onClick={()=>{}}>Edit room names</button>
+          <button className={'btn__new'} onClick={this.toggleShowConfigurations}>Edit configurations</button>
           <button className={'btn__new'} onClick={this.toggleNewAdmin}>Create new admin user</button>
         </span>}
         {this.state.showAdmin && <NewUser toggleAdmin={this.toggleNewAdmin} /> }
+        {this.state.showConfigurations && <Configurations toggle={this.toggleShowConfigurations} />}
         {this.state.editEmailTemplates && 
           <div style={{display: 'flex', flexDirection: 'column', paddingTop: '5vh'}}>
            <EditEmailTemplates toggle={this.toggleEditEmailTemplates}/>
           </div>
         }
-        {!this.state.editEmailTemplates &&
+        {!this.state.editEmailTemplates && !this.state.showConfigurations &&
         <div className={'grid-container__dual'}>
           <div className='table large-screen' style={{gridArea: 'tbl', marginRight: '6px'}}>
             <div>

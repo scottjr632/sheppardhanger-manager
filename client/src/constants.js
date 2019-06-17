@@ -4,6 +4,12 @@ export const BOOKINGTYPECOLORS = {
     'CLEANING': '#ac12e9'
   }
 
+export const EMAILPREFS = {
+    APPLICATION: 'APPLICATION',
+    BROWSER: 'BROWSER',
+    MODAL: 'MODAL',
+    APPLICATION: 'APPLICATION'
+  }
 
 export const STATUS_ARCHIVED = 'archived'
 export const STATUS_ACTIVE = 'active'

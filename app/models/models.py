@@ -94,6 +94,7 @@ class Room(db.Model):
         return {
             'id': self.id,
             'name': self.name,
+            'housename': self.house.name if self.house else '',
             'houseid': self.houseid
         }
 
