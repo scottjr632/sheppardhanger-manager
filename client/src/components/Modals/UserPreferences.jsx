@@ -5,9 +5,25 @@ import Modal from 'react-modal'
 import { inject, observer } from 'mobx-react';
 
 import PreferencesNav from '../Misc/PreferencesNav.jsx';
+import ConfirmButton from '../Buttons/confirm.jsx';
+import { validatePassword1 } from '../../utils'
 import { EMAILPREFS } from '../../constants'
 import { NotificationManager } from 'react-notifications'
-import { updateUserPreferences } from '../../backend'
+import { updateUserPreferences, updateUserPassword } from '../../backend'
+
+const errorSpanStyle = {
+  display: 'inline-block',
+  fontWeight: 'bold',
+  alignSelf: 'center',
+  color: 'white',
+  fontSize: '7pt',
+  width: '85%',
+  backgroundColor: '#d65956',
+  padding: '5px 10px',
+  borderRadius: '3px',
+  margin: '5px 20px',
+  float: 'right',
+}
 
 const customStyles = {
   content : {
@@ -39,6 +55,10 @@ class UserPreferences extends React.Component {
       activeTab: navTabs.GENERAL,
       preferences: preferences,
       emailStyle: preferences.emailStyle || '',
+      errors: {
+        pass1Error: false,
+        pass2Error: false
+      }
     }
   }
 
@@ -60,6 +80,15 @@ class UserPreferences extends React.Component {
       emailStyle: this.state.emailStyle
     }
   }
+
+  resetPassword = () => {
+    if (validatePassword1(this.state.password) && 
+        this.state.password === this.state.password2) {
+      updateUserPassword(this.state.password)
+      NotificationManager.info('Reset password')
+      this.setState({ password: '', password2: '' })
+    }
+  }
  
   updatePreferences = async () => {
     let prefs = this.buildPreferencesFromState()
@@ -77,10 +106,27 @@ class UserPreferences extends React.Component {
 
   handleChange = (event) => {    
     let { target } = event
-    this.setState({ [target.name]: target.value}, () => {
-      console.log(this.state);
-      
-    })
+    this.setState({ [target.name]: target.value })
+  }
+
+  handleWithValidate = (event) => {
+    let { target } = event
+    switch(target.name) {
+    case 'password':
+      this.setState({
+        [target.name]: target.value,
+        errors: {...this.state.errors, pass1Error: !validatePassword1(target.value)}
+      })
+      break
+    case 'password2':
+      this.setState({
+        [target.name]: target.value,
+        errors: {...this.state.errors, pass2Error: target.value !== this.state.password }
+      })
+      break
+    default:
+      this.setState({ [target.name]: target.value })
+    }
   }
 
   render() {
@@ -100,18 +146,36 @@ class UserPreferences extends React.Component {
                   return <option value={key}>{EMAILPREFS[key]}</option>
                 })}
               </select>
-             </div>}
-             {this.state.activeTab === navTabs.ACCOUNT &&
-              <section>
-
-              </section>
-              }
               <button 
                 className={'btn__new'} 
                 style={{alignSelf: 'flex-end'}} 
                 onClick={this.updatePreferences}>
                   Save
-                </button>
+              </button>
+             </div>}
+             {this.state.activeTab === navTabs.ACCOUNT &&
+              <div style={{display: 'flex', flexDirection: 'column'}}>
+                <div style={{display: 'flex', flexDirection: 'column'}}>
+                  <h4>Reset Password</h4>
+                  <div className={'input-group'}>
+                    <label htmlFor="passsword">Enter password</label>
+                    <input type="password" placeholder={'****************'} name={'password'} id="password" onChange={this.handleWithValidate} />
+                    {this.state.errors.pass1Error && <span style={errorSpanStyle}>Password must contain 1 lowercase, 1 uppercase, 1 numeric, and be at least 8 characters</span> }
+                  </div>
+                  <div className="input-group">
+                    <label htmlFor="password2">Confirm password</label>
+                    <input type="password" name="password2" id="password2" placeholder={'****************'} onChange={this.handleWithValidate} />
+                    {this.state.errors.pass2Error && <span style={errorSpanStyle}>Passwords must match</span>}
+                  </div>
+                  <div className={'input-group'} style={{display: 'flex', marginTop: '20px'}}>
+                    <span style={{margin: '0 0 0 auto'}}>
+                      <ConfirmButton removeMessage={'Reset'} style={{backgroundColor: 'rgb(18, 141, 233)'}} confirmAction={this.resetPassword} />
+                    </span>
+                  </div>
+                </div>
+              </div>
+              }
+
            </div>
            <PreferencesNav 
               close={this.props.toggleModal} 

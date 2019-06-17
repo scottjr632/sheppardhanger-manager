@@ -64,6 +64,18 @@ def authenticate(*args):
     return make_response('Authenticated', 200)
 
 
+@mod.route('/user/password', methods=['PUT'])
+@utils.login_required
+def reset_password(user):
+    data = request.get_json(force=True)
+    try:
+        usermodel.update_user_password(user, data.get('password'))
+        return make_response('Reset password', 200)
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to reset password', 500)        
+
+
 @mod.route('/logout', methods=['POST'])
 @utils.login_required
 def logout(user):
