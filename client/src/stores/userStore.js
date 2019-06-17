@@ -11,6 +11,7 @@ class UserStore {
   @observable email = ''
   @observable loginError = false
   @observable role = 'user'
+  @observable preferences = {}
 
   constructor() {
     backend.authenticate(res => {
@@ -68,12 +69,25 @@ class UserStore {
     })
   }
 
+  @action updateUserPreferences(preferences) {
+    this.preferences = preferences
+  }
+
+  @action async setUserPreferences() {
+    let res = await backend.getUserPreferences()
+    let { data } = res
+    if (data) {
+      this.preferences = JSON.parse(data)
+    }
+  }
+
 
   authenticateReaction = reaction(
     () => this.authenticated,
     auth => {
       if (auth) {
         this.setUserInfo()
+        this.setUserPreferences()
       }
     }
   )

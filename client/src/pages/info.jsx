@@ -6,13 +6,11 @@ import UserInfo from '../components/Dashboard/UserInfo.jsx'
 import ReservationTable from '../components/Tables/Reservations'
 import Question from '../components/Dashboard/Question.jsx'
 import NewEmailModal from '../components/Modals/NewEmailModal.jsx'
-import { buildGmailLink } from '../utils'
+import { buildGmailLink, buildMailToLink } from '../utils'
 import { MONTHNAMES, EMAILPREFS } from '../constants'
 import * as backend from '../backend'
+import { inject, observer } from 'mobx-react';
 
-const testAttach = [
-  {'name': 'Master Contract - Richardson.docx'}
-]
 
 const EMAILTYPES = {
   WELCOME: 'WELCOME',
@@ -20,22 +18,6 @@ const EMAILTYPES = {
   CONTRACT: 'CONTRACT'
 }
 
-const getTestFile = () => {
-  backend.getMasterContract(16, 26, request => {
-    console.log(request)
-
-    var blob = new Blob([request.response], { type: 'application/pdf' });
-    var link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = filename;
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-  })
-}
 
 const gridStyle = {
   display: 'grid',
@@ -43,6 +25,9 @@ const gridStyle = {
   gridTemplateRows: 'auto'
 }
 
+
+@inject('userStore')
+@observer
 class Info extends React.Component {
 
   constructor(props) {
@@ -72,9 +57,9 @@ class Info extends React.Component {
   }
 
   emailInfo = {
-    welcome: {prettyName: 'Welcome', right: <i class="fas fa-envelope"></i>, btnText: 'Welcome Email', btnAction: () => { this.openGmailLink('Welcome', EMAILTYPES.WELCOME) }},
-    contract: {prettyName: 'Contract', right: <i class="fas fa-envelope"></i>, btnText: 'Contract', btnAction: () => {this.toggleEmailModal('Contract'); this.generateEmail(EMAILTYPES.CONTRACT) }},
-    noRooms:  {prettyName: 'No Rooms', right: <i class="fas fa-envelope"></i>, btnText: 'No Rooms', btnAction: () => {this.toggleEmailModal('No Rooms Available'); this.generateEmail(EMAILTYPES.NOROOMS) }}
+    welcome: {prettyName: 'Welcome', right: <i class="fas fa-envelope"></i>, btnText: 'Welcome Email', btnAction: () => { this.handleEmailFromUserPrefs('Welcome', EMAILTYPES.WELCOME) }},
+    contract: {prettyName: 'Contract', right: <i class="fas fa-envelope"></i>, btnText: 'Contract', btnAction: () => { this.handleEmailFromUserPrefs('Conctract', EMAILTYPES.CONTRACT) }},
+    noRooms:  {prettyName: 'No Rooms', right: <i class="fas fa-envelope"></i>, btnText: 'No Rooms', btnAction: () => { this.handleEmailFromUserPrefs('No Rooms', EMAILTYPES.NOROOMS) }}
   }
   
   documentsInfo = {
@@ -82,25 +67,40 @@ class Info extends React.Component {
     invoiceGenerator: {prettyName: 'Invoice', right: <i class="fas fa-receipt"></i>, btnText: 'Generate invoice', btnAction: () => { this.toggleEmailModal('Invoice'); }}
   }
 
-  handleEmailFromUserPrefs = async (emailSubject, emailType) => {
+  handleEmailFromUserPrefs = (emailSubject, emailType) => {
     let { preferences } = this.props.userStore
 
-    switch (preferences.EMAILPREFS){
+    switch (preferences.emailStyle){
     case EMAILPREFS.BROWSER:
       this.openGmailLink(emailSubject, emailType)
       break
     case EMAILPREFS.MODAL:
-      await this.generateEmail(emailType)
+      this.generateEmail(emailType)
       this.toggleEmailModal(emailSubject)
+      break
+    case EMAILPREFS.APPLICATION:
+      this.openMailToLink(emailSubject, emailType)
+      break
+    default:
+      this.openMailToLink(emailSubject, emailType)
       break
     }
   }
 
   openGmailLink = async (emailSubject, emailType) => {
+    console.log('==============>','called open gmail!')
+    
     let { userInfo } = this.state
     const emailInfo = await this.generateEmail(emailType)
     let link = buildGmailLink(userInfo.email, emailSubject, this.state.email_text)
     window.open(link, '_blank')
+  }
+
+  openMailToLink = async (emailSubject, emailType) => {
+    let { userInfo } = this.state
+    const emailInfo = await this.generateEmail(emailType)
+    const link = buildMailToLink(userInfo.email, emailSubject, this.state.email_text)
+    window.open(link)
   }
 
   toggleEmailModal = (emailSubject) => {

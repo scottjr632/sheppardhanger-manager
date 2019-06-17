@@ -75,6 +75,8 @@ def check_jwt(token_extractor, c_request, app, should_refresh: bool=False) -> in
         if res is not None:
             set_auth_token_cookie(app, res)
             return user[1]
+        else:
+            abort(401)
     
     if user == INVALID_TOKEN:
         abort(401)

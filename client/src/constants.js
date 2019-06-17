@@ -8,7 +8,7 @@ export const EMAILPREFS = {
     APPLICATION: 'APPLICATION',
     BROWSER: 'BROWSER',
     MODAL: 'MODAL',
-    APPLICATION: 'APPLICATION'
+    DEFAULT: 'DEFAULT'
   }
 
 export const STATUS_ARCHIVED = 'archived'

@@ -229,6 +229,7 @@ class User(db.Model):
     salt = db.Column(db.String)
     roleid = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False, default=2)
     role = db.relationship('Roles', backref=db.backref('roles', lazy=True))
+    preferences = db.Column(db.String)
 
     def __repr__(self):
         return '<User %r>' % self.email
@@ -239,7 +240,8 @@ class User(db.Model):
             'email': self.email,
             'fname': self.fname,
             'lname': self.lname,
-            'role': self.role.name
+            'role': self.role.name,
+            'preferences': self.preferences
         }
 
 

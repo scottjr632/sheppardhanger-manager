@@ -31,6 +31,22 @@ def update_user(user : User):
     pass
 
 
+@utils.rollback_on_error
+def get_user_preferences(user_id) -> dict:
+    user = User.query.get(user_id)
+    return json.loads(user.preferences)
+
+
+@utils.rollback_on_error
+def update_user_preferences(user_id: int, preferences: dict):
+    str_prefs = json.dumps(preferences)
+    user = User.query.get(user_id)
+    user.preferences = str_prefs
+
+    db.session.add(user)
+    db.session.commit()
+
+
 def authenticate_user(email, password) -> User:
     user = User.query.filter_by(email=email).first()
     if user is None:
