@@ -1,6 +1,7 @@
 import os
 import sys
 import configparser
+import logging
 
 from app.config import get_secrets
 from app.definitions import ROOT_DIR
@@ -12,28 +13,35 @@ class BaseConfig(object):
     DEBUG = False
     TESTING = False
     ENV = "production"
+
+    LOG_FILENAME = 'shmanager.log'
+
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL', 'postgresql://postgres:@localhost:5432/shmanager')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     COOKIE_HTTPONLY = True
     COOKIE_SAMESITE = 'Lax'
     COOKIE_SECURE = True
-    EMAIL = DEFAULT_CONFIG.get('SENGRID_EMAIL') or os.environ.get('SENGRID_EMAIL', 'scottjr632@gmail.com')
-    SENDGRID_API_TOKEN = DEFAULT_CONFIG.get('SENDGRID_API_TOKEN') or os.environ.get('SENDGRID_API_TOKEN', None)
     TOKEN_TTL = {
         'hours' : 1
     }
+
+    EMAIL = DEFAULT_CONFIG.get('SENGRID_EMAIL') or os.environ.get('SENGRID_EMAIL', 'scottjr632@gmail.com')
+    SENDGRID_API_TOKEN = DEFAULT_CONFIG.get('SENDGRID_API_TOKEN') or os.environ.get('SENDGRID_API_TOKEN', None)
 
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = True
     ENV = "development"
-    SECRET_KEY = 'not a secret key'
+    LOG_LEVEL = logging.DEBUG
+
     COOKIE_SECURE = False
     TOKEN_TTL = {
-        'minutes': 1
+        'seconds': 15
     }
 
+    SECRET_KEY = 'not a secret key'
 
 class TestingConfig(BaseConfig):
     DEBUG = False

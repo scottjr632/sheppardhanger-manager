@@ -1,5 +1,6 @@
 import sys
 import datetime
+import logging
 
 from flask import make_response, jsonify, current_app
 from flask import Blueprint
@@ -80,6 +81,25 @@ def logout(user):
 def get_user_info(userid):
     user = usermodel.find_user_by_id(userid)
     return jsonify(user.serialize())
+
+
+@mod.route('/user/preferences', methods=['GET'])
+@utils.login_required
+def get_user_preferences(userid):
+    preferences = usermodel.get_user_preferences(userid)
+    return jsonify(preferences)
+
+
+@mod.route('/user/preferences', methods=['POST'])
+@utils.login_required
+def update_user_preferences(userid):
+    data = request.get_json(force=True)
+    try:
+        usermodel.update_user_preferences(userid, data.get('preferences'))
+        return make_response('Updated preferences', 200)
+    except Exception as e:
+        logging.error('Unable to update user preferences')
+        return make_response('Unable to update preferences', 500)
 
 
 @mod.route('/user', methods=['POST'])

@@ -10,6 +10,17 @@ from app import db
 from .auth import *
 
 
+def get_userid_from_ctx(c_request, name='user') -> int:
+    return c_request.environ.get(name)
+
+
+def login_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        return f(get_userid_from_ctx(request), *args, **kwargs)
+    return wrapper
+
+
 def is_valid_json(json_test: str) -> bool:
     try:
         json.loads(json_test)
@@ -157,6 +168,45 @@ def clean_redis_res_list(res: bytes) -> list:
     return list(ls)
 
 
+def create_auth_token(user_id):
+    from app.models.user_helpers import get_refresh_token
+    token = get_refresh_token(user_id)
+    refresh_token = request.cookies.get(token.tokenname)
+    expire_date = datetime.datetime.now() + datetime.timedelta(days=30)
+    if refresh_token is not None:
+        config = current_app.config
+        token_ttl = config.get('TOKEN_TTL')
+        new_token = encode_auth_token(user_id, expire_time=token_ttl)
+        resp = make_response('', 200)
+        resp.set_cookie('access_token', 
+                    new_token, 
+                    httponly=config.get('COOKIE_HTTPONLY'),
+                    secure=config.get('COOKIE_SECURE'),
+                    expires=expire_date)
+        return resp
+    
+    return None
+
+
+def check_jwt(token_extractor, should_refresh: bool=False) -> int:
+    token = token_extractor()
+    if token is None:
+        abort(401)
+    
+    user = decode_auth_token(token)
+    if should_refresh and \
+       len(user) == 2 and \
+       user[0] == TOKEN_EXPIRED:
+        res = create_auth_token(user[1])
+        if res is not None:
+            return res
+    
+    if user == INVALID_TOKEN:
+        abort(401)
+    
+    return user
+
+
 def jwt_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
@@ -181,7 +231,7 @@ def jwt_required(f):
     return wrapper
 
 
-def login_required(f):
+def login_required2(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         token = request.cookies.get('access_token')

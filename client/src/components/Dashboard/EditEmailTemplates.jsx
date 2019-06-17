@@ -3,6 +3,7 @@ import React from "react"
 import { NotificationManager } from "react-notifications"
 
 import ConfirmButton from '../Buttons/confirm.jsx'
+import GoBack from '../Misc/GoBack.jsx'
 import * as backend from '../../backend'
 
 const testData = [
@@ -140,6 +141,7 @@ class EditEmailTemplates extends React.Component {
   render() {
     return (
       <div>
+        <GoBack onClick={this.props.toggle} />
         <div style={gridDisplay}>
           <div style={gridLeft}>
             <ul style={listStyle}>

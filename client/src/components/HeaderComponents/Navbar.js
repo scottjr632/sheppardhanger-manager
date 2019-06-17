@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react'
 import { NotificationManager } from 'react-notifications'
 
-import * as backend from '../../backend'
+import UserPreferences from '../Modals/UserPreferences.jsx'
+import { logout }from '../../backend'
 
 const dropDownStyle = {
   display: 'flex', 
@@ -28,7 +29,8 @@ class Navi extends React.Component {
     super(props)
     this.state = {
       currentKey: 1,
-      showDropdown: false
+      showDropdown: false,
+      showPreferences: false
     }
 
   }
@@ -52,8 +54,12 @@ class Navi extends React.Component {
     this.setState({showDropdown: !this.state.showDropdown})
   }
 
+  togglePreferences = () => {
+    this.setState({ showPreferences: !this.state.showPreferences })
+  } 
+
   handleLogout = () => {
-    backend.logout(status => {
+    logout(status => {
       if (status !== 200) {
         NotificationManager.error('Unable to log you out. Please try again.')
         return
@@ -77,17 +83,22 @@ class Navi extends React.Component {
               <a className={this.state.currentKey === 3 ? 'active' : ''}>
                   <i className="fas fa-user" />
                 {this.props.userStore.email}
+                {this.state.showDropdown &&
+                <div className={'dropdown__menu'} onMouseLeave={this.showDropdown}>
+                  <div onClick={this.togglePreferences} style={{padding: '5px 0'}}>
+                    <i class="fas fa-user-cog" />
+                    <a>Preferences</a>
+                  </div>
+                  <div onClick={this.handleLogout} style={{padding: '5px 0'}}>
+                    <i className="fas fa-sign-out-alt"/>
+                    <a>Logout</a>
+                  </div>
+                </div>
+                }
               </a>
-            {this.state.showDropdown &&
-            <div className={'dropdown__menu'} onMouseLeave={this.showDropdown}>
-              <span onClick={this.handleLogout}>
-                <i className="fas fa-sign-out-alt"/>
-                <a>Logout</a>
-              </span>
-            </div>
-            }
           </span>
         </div>
+        <UserPreferences showModal={this.state.showPreferences} toggleModal={this.togglePreferences} />
       </header>
     )
   }

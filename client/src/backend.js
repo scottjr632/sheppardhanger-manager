@@ -121,6 +121,8 @@ export const sendEmail = async (emailData) => {const data = await axios.post('/e
 export const getEmailTemplates = async () => {const data = await axios.get('/email/templates'); return data}
 export const createNewEmailTemplate = async (data) => {const res = await axios.post('/email/templates', data); return res}
 export const deleteEmailTemplate = async (name) => {const res = await axios.delete(`/email/templates/${name}`); return res}
+export const getUserPreferences = async () => {const res = await axios.get('/auth/user/preferences'); return res}
+export const updateUserPreferences = async (preferences) => {const res = await axios.post('/auth/user/preferences', {preferences}); return res}
 
 export async function createNewLesseeAsync(data) {
   let res =  await axios.post('/lessee/', data)
