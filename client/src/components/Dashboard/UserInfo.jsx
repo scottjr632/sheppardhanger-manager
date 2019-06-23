@@ -47,7 +47,8 @@ const prettyNames = {
   'lesseeemail' : 'Email', 
   'fname' : 'First name', 
   'lname' : 'Last name', 
-  'numberofguests' : 'Guests'
+  'numberofguests' : 'Guests',
+  'zipcode': 'Zip code'
 }
 
 const formatLessee = (lessee) => {
@@ -60,6 +61,7 @@ const formatLessee = (lessee) => {
     address: lessee.address,
     city: lessee.city,
     state: lessee.state,
+    zipcode: lessee.zipcode,
     status: lessee.status,
     notes: lessee.notes
   }
@@ -111,7 +113,7 @@ class UserInfo extends React.Component {
   }
 
   updateUser = () => {
-    backend.updateLessee({...this.state, rank: this.state.activeRankId}, (res) => {
+    backend.updateLessee({...this.state, rank: this.state.activeRankId, status: undefined}, (res) => {
       if (res.status !== 200) {
         NotificationManager.error('Unable to update lessee')
       }

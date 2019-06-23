@@ -61,6 +61,31 @@ def get_all_bookingtypes() -> list:
 
 
 @utils.rollback_on_error
+def add_new_booking_type(name):
+    booking_type = models.BookingType(name=name)
+
+    db.session.add(booking_type)
+    db.session.commit()
+
+
+@utils.rollback_on_error
+def update_booking_type(bid, name):
+    booking_type = models.BookingType.query.get(bid)
+    booking_type.name = name
+
+    db.session.add(booking_type)
+    db.session.commit()
+
+
+@utils.rollback_on_error
+def delete_booking_type(bid):
+    booking_type = models.BookingType.query.get(bid)
+
+    db.session.delete(booking_type)
+    db.session.commit()
+
+
+@utils.rollback_on_error
 def new_reservation(data) -> models.Reservation:
     reservation = models.Reservation(**data)
     db.session.add(reservation)

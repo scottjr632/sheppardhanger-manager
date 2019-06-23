@@ -1,6 +1,7 @@
 import sys
 import io
 import base64
+import logging
 
 from flask import Blueprint
 from flask import request
@@ -96,14 +97,110 @@ def get_all_ranks():
     return jsonify([rank.serialize() for rank in  helpers.get_all_ranktype()])
 
 
+@mod.route('/ranks', methods=['POST'])
+def add_rank_type():
+    data = request.get_json(force=True)
+    try:
+        helpers.add_new_rank_type(data['name'])
+        return make_response('Added new rank type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to add new rank type')
+
+
+@mod.route('/ranks', methods=['PUT'])
+def update_ranks_type():
+    data = request.get_json(force=True)
+    try:
+        helpers.update_rank_type(data['id'], data['name'])
+        return make_response('Updated rank type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to update rank type')
+
+
+@mod.route('/ranks/<rid>', methods=['DELETE'])
+def delete_ranks_type(rid):
+    try:
+        helpers.delete_rank_type(rid)
+        return make_response('Deleted rank type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to delete rank type')
+
+
 @mod.route('/tdys', methods=['GET'])
 def get_all_tdytypes():
     return jsonify([tdy.serialize() for tdy in helpers.get_all_tydtypes()])
 
 
+@mod.route('/tdys', methods=['POST'])
+def add_tdy_type():
+    data = request.get_json(force=True)
+    try:
+        helpers.add_new_tdy_type(data['name'])
+        return make_response('Added new tdy type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to add new tdy type')
+
+
+@mod.route('/tdys', methods=['PUT'])
+def update_tdy_type():
+    data = request.get_json(force=True)
+    try:
+        helpers.update_tdy_type(data['id'], data['name'])
+        return make_response('Updated tdy type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to update tdy type')
+
+
+@mod.route('/tdys/<tid>', methods=['DELETE'])
+def delete_tdy_type(tid):
+    try:
+        helpers.delete_tdy_type(tid)
+        return make_response('Deleted tdy type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to delete tdy type')
+
+
 @mod.route('/guests', methods=['GET'])
 def get_all_guesttypes():
     return jsonify([guest.serialize() for guest in helpers.get_all_guesttype()])
+
+
+@mod.route('/guests', methods=['POST'])
+def add_guest_type():
+    data = request.get_json(force=True)
+    try:
+        helpers.add_new_guest_type(data['name'])
+        return make_response('Added new guest type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to add new guest type')
+
+
+@mod.route('/guests', methods=['PUT'])
+def update_guest_type():
+    data = request.get_json(force=True)
+    try:
+        helpers.update_guest_type(data['id'], data['name'])
+        return make_response('Updated guest type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to update guest type')
+
+
+@mod.route('/guests/<tid>', methods=['DELETE'])
+def delete_guest_type(tid):
+    try:
+        helpers.delete_guest_type(tid)
+        return make_response('Deleted guest type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to delete guest type')
 
 
 @mod.route('/master-contract/<lid>/<rid>', methods=['GET'])
