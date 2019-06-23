@@ -66,6 +66,7 @@ def add_new_booking_type(name):
 
     db.session.add(booking_type)
     db.session.commit()
+    return booking_type
 
 
 @utils.rollback_on_error

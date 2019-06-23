@@ -1,8 +1,7 @@
 var serviceWorkerOption = {
   "assets": [
     "/0.bundle.js",
-    "/1.css",
-    "/1.bundle.js",
+    "/2.bundle.js",
     "/3.css",
     "/3.bundle.js",
     "/4.bundle.js",
@@ -10,6 +9,7 @@ var serviceWorkerOption = {
     "/6.bundle.js",
     "/7.css",
     "/7.bundle.js",
+    "/8.css",
     "/8.bundle.js",
     "/9.bundle.js",
     "/10.bundle.js",
