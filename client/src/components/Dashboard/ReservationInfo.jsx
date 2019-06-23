@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes, { array } from 'prop-types'
 
 import { NotificationManager } from 'react-notifications'
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
 
 import ConfirmButton from '../Buttons/confirm.jsx'
 import * as backend from '../../backend'
@@ -26,6 +28,8 @@ const formatReservation = (reservation, callback) => {
     'lesseefname': reservation.lesseefname,
     'lesseelname': reservation.lesseelname,
     'numberofguests': reservation.numberofguests,
+    'purpose': reservation.purpose,
+    'notes': reservation.notes,
   }
 }
 
@@ -55,7 +59,6 @@ const excludedTypes = [
   'pet', 
   'roomid',
   'lesseeid',
-  'lengthofstay'
 ]
 
 const nonEditableTypes = [
@@ -69,11 +72,11 @@ const prettyNames = {
   'bookingtype' : 'Booking type',
   'checkindate' : 'Check-in-date',
   'checkoutdate' : 'Check-out-date',
+  'lengthofstay': 'Length of stay (days)',
   'lesseeemail' : 'Lessee email', 
   'lesseefname' : 'First name', 
   'lesseelname' : 'Last name', 
   'numberofguests' : 'Guests',
-  'lengthofstay': 'Length of stay (days)'
 }
 
 @inject('reservationStore')
@@ -133,15 +136,22 @@ class Info extends React.Component {
 
   updateReservation = () => {
     let upd_data = {...this.state.reservation, purpose: this.state.reservation.purposeid, numberofguests: this.state.reservation.numberofguestsid }
-    backend.updateReservation(upd_data, res => {
-      if (res.statusText !== 'OK') {
-        NotificationManager.error('Unable to update reservation!')
-        this.toggleEdit()
-        return
-      }
+    if (this.validateDates()) {
+      backend.updateReservation(upd_data, res => {
+        if (res.statusText !== 'OK') {
+          NotificationManager.error('Unable to update reservation!')
+          this.toggleEdit()
+          return
+        }
+  
+        NotificationManager.info('Updated reservation!')
+        NotificationManager.info('Please refresh to see changes...')
+        this.toggleEdit() 
+      })
+    } else {
+      NotificationManager.error('Checkout date cannot be before check in date! ')
+    }
 
-      NotificationManager.info('Updated reservation!')
-    })
   }
 
   handleChange = (event) => {
@@ -155,18 +165,36 @@ class Info extends React.Component {
     })
   }
 
+  setDate = (name, value) => {
+    this.setState( {
+      reservation: {
+        ...this.state.reservation,
+        [name]: value
+      }
+    }, this.validateDates )
+  }
+
   goToLesseePage = (lesseeId) => {
     this.props.history.push(`/info?id=${lesseeId}`)
   }
 
   toggleEdit = () => {
     this.props.toggleEdit()
-    // this.setState({ edit: !this.state.edit })
+  }
+
+  validateDates = () => {
+    let newCheckInDate = new Date(this.state.reservation.checkindate)
+    let newCheckOutDate = new Date(this.state.reservation.checkoutdate)
+    let dateError = newCheckInDate <= newCheckOutDate
+    
+    this.setState({ dateError }, () => console.log('==============>',' dateerror', dateError)
+    )
+    return dateError
   }
 
   render(){
-    console.log(this.props.data)
-    let data = formatReservation(this.props.data, () => this.goToLesseePage(this.props.data.lesseeid))
+    let data = formatReservation(this.state.reservation, () => this.goToLesseePage(this.props.data.lesseeid))
+    
     return (
       <div className={'table'} style={{gridArea: 'right'}}>
         <div className={'table-wrapper full'}>
@@ -193,14 +221,22 @@ class Info extends React.Component {
                       switch (key) {
                       case 'lengthofstay':
                       case 'lesseeemail':
+                        return (
+                          <td data-title={name}>
+                            <span className={'border-grow'}></span>
+                            <input name={key} value={this.state.reservation[key]} style={inputStyle} onChange={this.handleChange} disabled />
+                          </td>
+                        )
                       case 'checkindate':
                       case 'checkoutdate':
                         return (
                           <td data-title={name}>
                             <span className={'border-grow'}></span>
-                            <input name={key} value={this.state.reservation[key]} style={inputStyle} onChange={this.handleChange} disabled/>
+                            {/* <input name={key} value={this.state.reservation[key]} style={inputStyle} onChange={this.handleChange} /> */}
+                            <DayPickerInput onDayChange={day => this.setDate(key, day)} />
+                            {!this.state.dateError && <span className={'error-span'}>CHECKOUT DATE CANNOT BE BEFORE CHECKINDATE</span>}
                           </td>
-                        )
+                        ) 
                       case 'room':
                         return (
                           <td data-title={'rooms'}>
@@ -286,7 +322,7 @@ class Info extends React.Component {
             {this.props.editing && <ConfirmButton removeMessage={'Cancel'} confirmAction={this.toggleEdit} /> }
 
             {!this.props.editing  && <ConfirmButton removeMessage={'Edit'} confirmAction={this.toggleEdit} style={editStyle} /> }
-            {this.props.editing && <ConfirmButton removeMessage={'Save'} confirmAction={() => { this.updateReservation(); this.toggleEdit() }} style={saveStyle} /> }
+            {this.props.editing && <ConfirmButton removeMessage={'Save'} confirmAction={() => { this.updateReservation() }} style={saveStyle} /> }
           </div>
 
         </div>
