@@ -130,6 +130,8 @@ class Lessee(db.Model):
     status = db.Column(Enum(StatusEnum, name='statusenum', create_type=False))
     reservationid = db.Column(db.Integer)
     reservation = db.relationship('Reservation', backref=db.backref('reservations', lazy=True))
+    programid = db.Column(db.Integer, db.ForeignKey('tdytype.id'))
+    program = db.relationship('TDYType', primaryjoin="Lessee.programid == TDYType.id")
 
     def serialize(self):
         return {
@@ -146,6 +148,8 @@ class Lessee(db.Model):
             'notes': self.notes,
             'status': self.status.value if self.status else '',
             'reservations': [res.serialize() for res in self.reservation],
+            'programid': self.programid,
+            'programname': self.program.name,
         }
 
     def update(self, **kwargs):

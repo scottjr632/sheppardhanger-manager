@@ -46,17 +46,20 @@ const prettyNames = {
   'checkoutdate' : 'Check-out-date',
   'lesseeemail' : 'Email', 
   'fname' : 'First name', 
-  'lname' : 'Last name', 
+  'lname' : 'Last name',
   'numberofguests' : 'Guests',
   'zipcode': 'Zip code'
 }
 
 const formatLessee = (lessee) => {
+  console.log('==============>',lessee.programname, 'formattLessee')
+  
   return {
     fname: lessee.fname,
     lname: lessee.lname,
     rank: lessee.rank,
     email: lessee.email,
+    program: lessee.programid,
     phone: lessee.phone,
     address: lessee.address,
     city: lessee.city,
