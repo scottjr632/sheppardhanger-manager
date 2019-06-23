@@ -4,7 +4,19 @@ import moment from 'moment'
 
 
 class ScheduleStore {
-  @observable schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Month);
+  @observable schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Month, false, false, {
+    // eventItemPopoverEnabled: true,
+    dayMaxEvents: 2,
+    weekMaxEvents: 4,
+    monthMaxEvents: 4,
+    quarterMaxEvents: 4,
+    yearMaxEvents: 4,
+    views: [
+        {viewName: 'Agenda View', viewType: ViewTypes.Month, showAgenda: true, isEventPerspective: false},
+        {viewName: 'Resource View', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: false},
+        {viewName: 'Task View', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true},
+    ]
+  });
   @observable viewModel = this.schedulerData
   @observable events = []
   @observable resources = []
