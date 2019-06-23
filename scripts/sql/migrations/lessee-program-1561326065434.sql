@@ -1,0 +1,1 @@
+ALTER TABLE lessee ADD COLUMN programid BIGINT REFERENCES tdytype(id);
