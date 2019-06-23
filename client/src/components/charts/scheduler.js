@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Scheduler, {SchedulerData, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
+import Scheduler, {SchedulerData, AddMorePopover, ViewTypes, DATE_FORMAT} from 'react-big-scheduler'
 import withDragDropContext from './withDnDContext'
 import moment from 'moment'
 import { inject, observer } from 'mobx-react'
@@ -25,7 +25,11 @@ class Schedule extends React.Component{
       viewModel: this.props.scheduleStore.viewModel,
       schedulerData: schedulerData,
       resources: [],
-      events: []
+      events: [],
+      headerItem: undefined,
+      left: 0,
+      top: 0,
+      height: 0,
     }
   }
 
@@ -57,10 +61,21 @@ class Schedule extends React.Component{
   }
 
   render(){
+    const { viewModel } = this.props.scheduleStore
+    let popover = <div />
+    if (this.state.headerItem !== undefined) {
+      popover =
+          <AddMorePopover headerItem={this.state.headerItem} eventItemClick={this.eventClicked}
+                          viewEventClick={this.ops1} viewEventText="Ops 1"
+                          viewEvent2Click={this.ops2} viewEvent2Text="Ops 2"
+                          schedulerData={viewModel}
+                          closeAction={this.onSetAddMoreState} left={this.state.left} top={this.state.top}
+                          height={this.state.height} moveEvent={this.moveEvent}/>;
+  }
     return (
       <div>
         <div>
-          <Scheduler schedulerData={this.props.scheduleStore.viewModel}
+          <Scheduler schedulerData={viewModel}
                      prevClick={this.prevClick}
                      nextClick={this.nextClick}
                      onSelectDate={this.onSelectDate}
@@ -78,7 +93,9 @@ class Schedule extends React.Component{
                      onScrollRight={this.onScrollRight}
                      onScrollTop={this.onScrollTop}
                      onScrollBottom={this.onScrollBottom}
+                     onSetAddMoreState={this.onSetAddMoreState}
           />
+          {popover}
         </div>
       </div>
     )
@@ -237,6 +254,22 @@ class Schedule extends React.Component{
   onScrollBottom = (schedulerData, schedulerContent, maxScrollTop) => {
     console.log('onScrollBottom');
   }
+
+  onSetAddMoreState = (newState) => {
+    if (newState === undefined) {
+        this.setState({
+            headerItem: undefined,
+            left: 0,
+            top: 0,
+            height: 0
+        });
+    }
+    else {
+        this.setState({
+            ...newState,
+        });
+    }
+}
 }
 
 
