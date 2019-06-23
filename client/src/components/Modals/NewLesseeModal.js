@@ -8,6 +8,7 @@ import { inject, observer } from 'mobx-react'
 import ConfirmButton from '../Buttons/confirm.jsx'
 import * as backend from '../../backend'
 import 'react-day-picker/lib/style.css';
+import { CALENDAR_CLEANING } from '../../constants.js';
 
 
 Modal.setAppElement('#root')
@@ -31,6 +32,8 @@ class NewLesseeModal extends React.Component {
       tdys: [],
       ranks: [],
       guests: [],
+      bookingTypes: [],
+      bookingTypeId: 1,
       checkInDate: undefined,
       checkOutDate: undefined,
       isCheckInEmpty: true,
@@ -61,12 +64,14 @@ class NewLesseeModal extends React.Component {
       backend.getTdyTypesAsync(),
       backend.getGuestTypesAsync(),
       backend.getAllRanksAsync(),
+      backend.getAllBookingTypesAsync(),
     ]).then(res => {
       this.setState({
         rooms: res[0].data,
         tdys: res[1].data,
         guests: res[2].data,
         ranks: res[3].data,
+        bookingTypes: res[4].data
       })
     })
   }
@@ -111,7 +116,7 @@ class NewLesseeModal extends React.Component {
         lesseeid: lessee.id,
         checkindate: newCheckInDate,
         checkoutdate: newCheckOutDate,
-        bookingtypeid: 1,
+        bookingtypeid: this.state.bookingTypeId,
         roomid: this.state.activeRoomId,
         pet: this.state.pet,
         purpose: this.state.purpose,
@@ -239,6 +244,15 @@ class NewLesseeModal extends React.Component {
                   <select name={'activeRoomId'} onChange={this.handleChange} value={this.state.activeRoomId}>
                     {this.state.rooms.map(room => {
                       return <option key={room.id} value={room.id}>{room.name}</option>
+                    })}
+                  </select>
+                </div>
+                <div className={'input-group'}>
+                  <label style={{width: '100%'}}>Select a booking type</label>
+                  <select name={'bookingTypeId'} onChange={this.handleChange} style={{width: 'auto'}} value={this.state.bookingTypeId}>
+                    <option value={0}>-- BOOKING TYPE --</option>
+                    {this.state.bookingTypes.map(type => {
+                      return <option value={type.id} disabled={type.name === CALENDAR_CLEANING}>{type.name}</option>
                     })}
                   </select>
                 </div>
