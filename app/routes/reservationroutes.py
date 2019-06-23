@@ -1,4 +1,5 @@
 import sys
+import logging
 
 from flask import Blueprint
 from flask import jsonify
@@ -33,6 +34,38 @@ def get_res_by_lessee(user, lesseeid):
 @utils.login_required
 def get_booking_types(user):
     return jsonify([btype.serialize() for btype in helpers.get_all_bookingtypes()])
+
+
+@mod.route('/bookingtypes', methods=['POST'])
+def add_booking_type():
+    data = request.get_json(force=True)
+    try:
+        helpers.add_new_booking_type(data['name'])
+        return make_response('Added new booking type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to add new booking type')
+
+
+@mod.route('/bookingtypes', methods=['PUT'])
+def update_booking_type():
+    data = request.get_json(force=True)
+    try:
+        helpers.update_booking_type(data['id'], data['name'])
+        return make_response('Updated booking type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to update booking type')
+
+
+@mod.route('/bookingtypes/<bid>', methods=['DELETE'])
+def delete_booking_type(bid):
+    try:
+        helpers.delete_booking_type(bid)
+        return make_response('Deleted booking type!')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to delete booking type')
 
 
 @mod.route('/', methods=['POST'])

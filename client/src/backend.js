@@ -95,11 +95,8 @@ export const updateLesseeStatus = (id, status, callback) => BuildApi(`/lessee/st
 export const deleteLessee = (lesseeId, callback) => BuildApi(`/lessee/${lesseeId}`).delete(callback)
 
 export const getAllRanks = (callback) => BuildApi('/lessee/ranks').get(callback)
-export const addNewRank = (data, callback) => BuildApi('/lessee/ranks', data).post(callback)
 export const getAllTDYTypes = (callback) => BuildApi('/lessee/tdys').get(callback)
-export const addNewTDYType = (data, callback) => BuildApi('/lessee/tdys', data).post(callback)
 export const getAllGuestTypes = (callback) => BuildApi('/lessee/guests').get(callback)
-export const addNewGuestType = (data, callback) => BuildApi('/lessee/guests', data).post(callback)
 
 export async function coolAuthenticate() {
   let res = await axios.get('/auth/authenticate')
@@ -109,11 +106,28 @@ export async function coolAuthenticate() {
 
 export const createNewLesseeAsync = async (data) => {const res = await axios.post('/lessee/', data); return res.data}
 export const getAllLesseeAsync = async () => {const data = await axios.get('/lessee/'); return data}
+
 export const getAllRanksAsync = async () => {const data = await axios.get('/lessee/ranks'); return data}
+export const addNewRank = async (name) => {const res = await axios.post('/lessee/ranks', { name }); return res}
+export const updateRank = async (id, name) => {const res = await axios.put('/lessee/ranks', { id, name }); return res}
+export const deleteRank = async (id) => {const res = await axios.delete(`/lessee/ranks/${id}`); return res}
+
 export const getAllBookingTypesAsync = async () => {const data = await axios.get('reservations/bookingtypes'); return data}
-export const getHousesAsync = async () => {const data = await axios.get('/houses/'); return data}
+export const addBookingType = async (name) => {const res = await axios.post('/reservations/bookingtypes', { name }); return res}
+export const updateBookingType = async (id, name) => {const res = await axios.put('/reservations/bookingtypes', { id, name }); return res}
+export const deleteBookingTypes = async (id) => {const res = await axios.delete(`/reservations/bookingtypes/${id}`); return res}
+
 export const getTdyTypesAsync = async () => {const data = await axios.get('/lessee/tdys'); return data}
+export const addTdyType = async (name) => {const res = await axios.post('/lessee/tdys', { name }); return res}
+export const updateTdyType = async (id, name) => {const res = await axios.put('/lessee/tdys', { id, name }); return res}
+export const deleteTdyType = async (id) => {const res = await axios.delete(`/lessee/tdys/${id}`); return res}
+
 export const getGuestTypesAsync = async () => {const data = await axios.get('/lessee/guests'); return data}
+export const addNewGuestType = async (name) => {const res = await axios.post('/lessee/guests', { name }); return res}
+export const updateGuestType = async (id, name) => {const res = await axios.put('/lessee/guests', { id, name }); return res}
+export const deleteGuestType = async (id) => {const res = await axios.delete(`/lessee/guests/${id}`); return res}
+
+export const getHousesAsync = async () => {const data = await axios.get('/houses/'); return data}
 export const getRoomsAsync = async () => {const data = await axios.get('/houses/rooms'); return data }
 export const getAllReservationsAsync = async () => {const data = await axios.get('/reservations/'); return data}
 export const generateWelcomeEmail = async (lesseeName) => {const data = await axios.get(`/email/welcome/${lesseeName}`); return data}

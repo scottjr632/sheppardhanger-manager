@@ -1,8 +1,15 @@
 import React from 'react'
 
+import { NotificationManager } from 'react-notifications'
+
 import * as backend from '../../backend'
 import ConfirmButton from '../Buttons/confirm.jsx';
 import GoBack from '../Misc/GoBack.jsx'
+
+const BOOKING_TYPE = 'bookingTypes'
+const TDY_TYPE = 'purposeTypes'
+const GUEST_TYPE = 'guests'
+const RANK_TYPES = 'ranks'
 
 const spaceBottom = {
   paddingTop: '1em',
@@ -61,7 +68,34 @@ class ExitableRow extends React.Component {
     this.setState({ isEditing: !this.state.isEditing })
   }
 
-  delete = () => {}
+  doDelete = async (callback) => {
+    if (confirm('Are you sure you want to delete this item?')) {
+      let res = await callback()
+      if (res.statusText !== 'OK') {
+        NotificationManager.error('Unable to delete item')
+        return
+      }
+      this.props.removeFromState(this.props.configName, this.props.id)
+      NotificationManager.info('Delete item!')
+    }
+  }
+
+  delete = () => {
+    switch (this.props.configName) {
+    case BOOKING_TYPE:
+      this.doDelete(() => backend.deleteBookingTypes(this.props.id))
+      break
+    case TDY_TYPE:
+      this.doDelete(() => backend.deleteTdyType(this.props.id))
+      break
+    case GUEST_TYPE:
+      this.doDelete(() => backend.deleteGuestType(this.props.id))
+      break
+    case RANK_TYPES:
+      this.doDelete(() => backend.deleteRank(this.props.id))
+      break
+    }
+  }
 
   save = () => {
     this.toggleEdit()
@@ -74,8 +108,8 @@ class ExitableRow extends React.Component {
         <tr>
           <td style={{...spaceBottom, ...textStyle} }>{this.props.name}</td>
           <td style={spaceBottom}>
-            <button onClick={this.toggleEdit} style={{marginRight: '5px'}}><i class="fas fa-edit" style={iconStyle}></i></button>
-            <button onClick={this.delete} disabled={true}><i class="fas fa-trash"></i></button>
+            <button onClick={this.toggleEdit} style={{marginRight: '5px'}} disabled><i class="fas fa-edit" style={iconStyle}></i></button>
+            <button onClick={this.delete}><i class="fas fa-trash"></i></button>
           </td>
         </tr>}
         {this.state.isEditing &&
@@ -126,8 +160,79 @@ class Configurations extends React.Component {
     })
   }
 
-  addNew = () => {
+  addNewTdy = async (newName) => {
+    const res = await backend.addTdyType(newName)
+    if (res.statusText === 'OK') {
+      NotificationManager.info(`Added ${newName} to ${TDY_TYPE}`)
+      this.setState({
+        purposeTypes: [...this.state.purposeTypes, {id: 999, name: newName}]
+      })
+      return
+    }
+  }
 
+  addGuestType = async (newName) => {
+    const res = await backend.addNewGuestType(newName)
+    if (res.statusText === 'OK') {
+      NotificationManager.info(`Added ${newName} to ${GUEST_TYPE}`)
+      this.setState({
+        guests: [...this.state.guests, {id: 999, name: newName}]
+      })
+      return
+    }
+  }
+
+  addBookingType = async (newName) => {
+    const res = await backend.addBookingType(newName)
+    if (res.statusText === 'OK') {
+      NotificationManager.info(`Added ${newName} to ${BOOKING_TYPE}`)
+      this.setState({
+        bookingTypes: [...this.state.bookingTypes, {id: 999, name: newName}]
+      })
+      return
+    }
+  }
+
+  addRankType = async (newName) => {
+    const res = await backend.addNewRank(newName)
+    if (res.statusText === 'OK') {
+      NotificationManager.info(`Added ${newName} to ${RANK_TYPES}`)
+      this.setState({
+        ranks: [...this.state.ranks, {id: 999, name: newName}]
+      })
+      return
+    }
+  }
+
+  addNew = async (configName) => {
+    let newName = prompt(`Add new ${configName}`)
+
+    switch(configName) {
+    case TDY_TYPE:
+      this.addNewTdy(newName)
+      break
+    case GUEST_TYPE:
+      this.addGuestType(newName)
+      break
+    case BOOKING_TYPE:
+      this.addBookingType(newName)
+      break
+    case RANK_TYPES:
+      this.addRankType(newName)
+      break
+    default:
+      NotificationManager.error(`Unable to add ${newName} to ${configName}` )
+      break
+    }
+  }
+
+  removeFromState = (configName, id) => {
+    let config = this.state[configName]
+    let index = config.findIndex(e => e.id === id)
+    config.splice(index, 1)
+    this.setState({
+      [configName]: config
+    })
   }
 
   render() {
@@ -135,26 +240,15 @@ class Configurations extends React.Component {
       <div style={{margin: '0 5%'}}>
         <GoBack onClick={this.props.toggle} />
         <div style={gridDisplay}>
-        <section>
-          <table>
-            <thead>
-              <th colSpan={1}>Email</th>
-              <th colSpan={1}><button className={'btn__new'} style={newBtn}>+</button></th>
-            </thead>
-            <tbody>
-              <ExitableRow name={'scottjr632@gmail.com'} />
-            </tbody>
-          </table>
-        </section>
         <section style={{gridArea: 'left', gridRowStart: 1, gridRowEnd: 1}}>
           <table>
             <thead>
               <th colSpan={1}>houses</th>
-              <th colSpan={1}><button className={'btn__new'} style={newBtn}>+</button></th>
+              <th colSpan={1}><button className={'btn__new'} style={{...newBtn, opacity: '0.5'}} disabled>+</button></th>
             </thead>
             <tbody>
               {this.state.houses.map(house => {
-                return <ExitableRow name={house.name} />
+                return <ExitableRow id={house.id} name={house.name} />
               })}
             </tbody>
           </table>
@@ -164,7 +258,7 @@ class Configurations extends React.Component {
           <table>
             <thead>
               <th colSpan={1}>Rooms</th>
-              <th colSpan={1}><button className={'btn__new'} style={newBtn}>+</button></th>
+              <th colSpan={1}><button className={'btn__new'} style={{...newBtn, opacity: '0.5'}} disabled>+</button></th>
             </thead>
             <tbody>
               {this.state.rooms.map(room => {
@@ -178,11 +272,11 @@ class Configurations extends React.Component {
           <table>
             <thead>
               <th colSpan={1}>Guest types</th>
-              <th colSpan={1}><button className={'btn__new'} style={newBtn}>+</button></th>
+              <th colSpan={1}><button className={'btn__new'} style={newBtn} onClick={() => this.addNew(GUEST_TYPE) }>+</button></th>
             </thead>
             <tbody>
               {this.state.guests.map(room => {
-                return <ExitableRow name={room.name} />
+                return <ExitableRow id={room.id} name={room.name} configName={GUEST_TYPE  } removeFromState={this.removeFromState}/>
               })}
               {/* <tr colSpan={2}><button className={'btn__new minimized'}>+  Add</button></tr> */}
             </tbody>
@@ -193,11 +287,11 @@ class Configurations extends React.Component {
           <table>
             <thead>
               <th colSpan={1}>TDY Types</th>
-              <th colSpan={1}><button className={'btn__new'} style={newBtn}>+</button></th>
+              <th colSpan={1}><button className={'btn__new'} style={newBtn} onClick={() => this.addNew(TDY_TYPE) }>+</button></th>
             </thead>
             <tbody>
               {this.state.purposeTypes.map(room => {
-                return <ExitableRow name={room.name} />
+                return <ExitableRow id={room.id}  name={room.name} configName={TDY_TYPE} removeFromState={this.removeFromState}/>
               })}
             </tbody>
           </table>
@@ -206,11 +300,11 @@ class Configurations extends React.Component {
           <table>
             <thead>
               <th colSpan={1}>Ranks</th>
-              <th colSpan={1}><button className={'btn__new'} style={newBtn}>+</button></th>
+              <th colSpan={1}><button className={'btn__new'} style={newBtn } onClick={() => this.addNew(RANK_TYPES) }>+</button></th>
             </thead>
             <tbody>
               {this.state.ranks.map(room => {
-                return <ExitableRow name={room.name} />
+                return <ExitableRow id={room.id}  name={room.name} configName={RANK_TYPES} removeFromState={this.removeFromState}/>
               })}
             </tbody>
           </table>
@@ -219,11 +313,11 @@ class Configurations extends React.Component {
           <table>
             <thead>
               <th colSpan={1}>Booking Types</th>
-              <th colSpan={1}><button className={'btn__new'} style={newBtn}>+</button></th>
+              <th colSpan={1}><button className={'btn__new'} style={newBtn} onClick={() => this.addNew(BOOKING_TYPE) }>+</button></th>
             </thead>
             <tbody>
               {this.state.bookingTypes.map(btype => {
-                return <ExitableRow name={btype.name} />
+                return <ExitableRow id={btype.id}  name={btype.name} configName={BOOKING_TYPE} removeFromState={this.removeFromState}/>
               })}
             </tbody>
           </table>
