@@ -12,7 +12,7 @@ import * as backend from '../../backend'
 @inject ('roomStore')
 @inject ('reservationStore')
 @inject ('scheduleStore')
-@observer
+// @observer
 class Schedule extends React.Component{
   constructor(props){
     super(props);
@@ -43,7 +43,10 @@ class Schedule extends React.Component{
     this.props.scheduleStore.setSchedulerResources(rooms)
 
     this.props.reservationStore.populateReservations(reservations => {
-      this.props.scheduleStore.setEvents(reservations)
+      reservations.forEach(event => {
+        this.props.scheduleStore.addEvent(event)
+      })
+      // this.props.scheduleStore.setEvents(reservations)
       this.setState({ resources: schedulerData.resources, events: schedulerData.events })
     })
 
