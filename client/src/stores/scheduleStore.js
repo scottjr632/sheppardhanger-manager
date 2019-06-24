@@ -6,7 +6,7 @@ import moment from 'moment'
 class ScheduleStore {
   @observable schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Month, false, false, {
     eventItemPopoverEnabled: true,
-    dayMaxEvents: 99999,
+    dayMaxEvents: 3,
     weekMaxEvents: 99999,
     monthMaxEvents: 99999,
     quarterMaxEvents: 99999,
