@@ -5,6 +5,8 @@ import withDragDropContext from './withDnDContext'
 import moment from 'moment'
 import { inject, observer } from 'mobx-react'
 import { NotificationManager } from 'react-notifications'
+import Col from 'antd/lib/col'
+import Row from 'antd/lib/row'
 import 'react-big-scheduler/lib/css/style.css'
 
 import * as backend from '../../backend'
@@ -12,7 +14,7 @@ import * as backend from '../../backend'
 @inject ('roomStore')
 @inject ('reservationStore')
 @inject ('scheduleStore')
-// @observer
+@observer
 class Schedule extends React.Component{
   constructor(props){
     super(props);
@@ -33,8 +35,7 @@ class Schedule extends React.Component{
     }
   }
 
-  async componentDidMount() {0
-
+  async componentDidMount() {
     let { schedulerData } = this.state
     schedulerData.localeMoment.locale('en')
 
@@ -43,11 +44,12 @@ class Schedule extends React.Component{
     this.props.scheduleStore.setSchedulerResources(rooms)
 
     this.props.reservationStore.populateReservations(reservations => {
+      this.props.scheduleStore.hasInit ?
+      '' : this.setState({ resources: schedulerData.resources, events: schedulerData.events })
       reservations.forEach(event => {
         this.props.scheduleStore.addEvent(event)
       })
-      // this.props.scheduleStore.setEvents(reservations)
-      this.setState({ resources: schedulerData.resources, events: schedulerData.events })
+      this.props.scheduleStore.setHasInit(true)
     })
 
   }
@@ -97,6 +99,7 @@ class Schedule extends React.Component{
                      onScrollTop={this.onScrollTop}
                      onScrollBottom={this.onScrollBottom}
                      onSetAddMoreState={this.onSetAddMoreState}
+                     eventItemPopoverTemplateResolver={this.eventItemPopoverTemplateResolver}
           />
           {popover}
         </div>
@@ -257,6 +260,40 @@ class Schedule extends React.Component{
   onScrollBottom = (schedulerData, schedulerContent, maxScrollTop) => {
     console.log('onScrollBottom');
   }
+
+  eventItemPopoverTemplateResolver = (schedulerData, eventItem, title, start, end, statusColor) => {
+    const {localeMoment, config} = schedulerData;
+    let dateFormat = config.eventItemPopoverDateFormat;
+    return (
+        <div style={{width: '300px'}}>
+                <Row type="flex" align="middle">
+                    <Col span={2}>
+                        <div className="status-dot" style={{backgroundColor: statusColor}} />
+                    </Col>
+                    <Col span={22} className="overflow-text">
+                        <span className="header2-text" title={title}>{title}</span>
+                    </Col>
+                </Row>
+                {/* {subtitleRow} */}
+                <Row type="flex" align="middle">
+                    <Col span={2}>
+                        <div />
+                    </Col>
+                    <Col span={22}>
+                        <span className="header1-text">{start.format('MMM D')}</span><span className="help-text" style={{marginLeft: '8px'}}>{start.format('HH:mm')}</span><span className="header2-text"  style={{marginLeft: '8px'}}>-</span><span className="header1-text" style={{marginLeft: '8px'}}>{end.format('MMM D')}</span><span className="help-text" style={{marginLeft: '8px'}}>{end.format('HH:mm')}</span>
+                    </Col>
+                </Row>
+                <Row type="flex" align="middle">
+                    <Col span={2}>
+                        <div />
+                    </Col>
+                    <Col span={22}>
+                        <span className="header2-text" style={{color: '#108EE9', cursor: 'pointer'}} onClick={() => { this.ops1(schedulerData, eventItem) }}>Update reservation</span><span className="header2-text" style={{color: '#108EE9', cursor: 'pointer', marginLeft: '16px'}} onClick={() => { this.ops2(schedulerData, eventItem) }}>View lessee</span>
+                    </Col>
+                </Row>
+            </div>
+    );
+}
 
   onSetAddMoreState = (newState) => {
     if (newState === undefined) {
