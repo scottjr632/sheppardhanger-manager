@@ -43,7 +43,7 @@ const gridLeft = {
 
 const textAreaStyle = {
   width: '100%',
-  height: '40vh',
+  height: '60vh',
   padding: '5px',
   resize: 'none',
   borderRadius: '3px',
@@ -168,9 +168,9 @@ class EditEmailTemplates extends React.Component {
           </div>
         </div>
         <div style={btnDivStyle}>
-          <ConfirmButton removeMessage={'Cancel'} confirmAction={this.props.toggle}  style={{marginRight: '5px'}}/>
+          <ConfirmButton removeMessage={'Delete'} confirmAction={this.deleteTemplate} />
           <span style={{display: 'flex'}}>
-          {/* <ConfirmButton removeMessage={'Delete'} confirmAction={this.deleteTemplate} /> */}
+            <ConfirmButton removeMessage={'Cancel'} confirmAction={this.props.toggle}  style={{marginRight: '5px'}}/>
             <ConfirmButton removeMessage={this.state.btnText} style={{backgroundColor: this.state.btnColor}} confirmAction={this.saveNewEmailTemplate} />
           </span>
         </div>

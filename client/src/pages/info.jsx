@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { NotificationManager } from "react-notifications"
+
 import Navi from '../components/HeaderComponents/Navbar'
 import Emails from '../components/Dashboard/Emails.jsx'
 import UserInfo from '../components/Dashboard/UserInfo.jsx'
@@ -25,6 +27,25 @@ const gridStyle = {
   gridTemplateRows: 'auto'
 }
 
+let formatEmails = (callback, ...emails) => {
+  console.log(emails)
+  let formatted = []
+  for (let email of emails) {
+    
+    let newEmail = {
+      name: email.name,
+      prettyName: email.name,
+      right: <i class="fas fa-envelope"/>,
+      btnText: <span style={{textTransform: 'lowercase'}}>{`SEND ${email.name} EMAIL`}</span>,
+      btnAction: () => { callback(email.name, email.name) }
+    }
+    formatted.push(newEmail)
+  }
+  console.log(formatted)
+  return formatted
+}
+
+
 
 @inject('userStore')
 @observer
@@ -38,6 +59,8 @@ class Info extends React.Component {
       showModal: false,
       emailSubject: '',
       email_text: '',
+      originalEmails: [],
+      emailTemplates: [],
     }
   }
 
@@ -50,6 +73,22 @@ class Info extends React.Component {
         if (data) this.setState({ userInfo: data, userId: id[1] })
       })
     }
+
+    this.getAllEmailsTemplates()
+  }
+
+  getAllEmailsTemplates = async () => {
+    const res = await backend.getAllEmailTemplates()
+    let { data } = res
+    if (data) {
+      console.log('==============>',data)
+      let formattedEmails = formatEmails(this.handleEmailFromUserPrefs, ...data)
+      console.log(formattedEmails)
+      this.setState({ emailTemplates: formattedEmails, originalEmails: formattedEmails })
+      return
+    }
+
+    NotificationManager.error('Unable to fetch email templates')
   }
 
   emailStuff = {
@@ -120,6 +159,9 @@ class Info extends React.Component {
     let response
     let { lname, fname } = this.state.userInfo
 
+    // future implementation TODO
+      // await backend.generateEmail()
+
     switch (emailType) {
     case EMAILTYPES.WELCOME:
       response = await backend.generateWelcomeEmail(fname)
@@ -147,6 +189,19 @@ class Info extends React.Component {
     }
   }
 
+  searchEmails = (event) => {
+    event.persist()
+    let { target } = event
+
+    console.log(event)
+
+    let filterd = this.state.originalEmails.filter(obj => obj.name.toUpperCase() === target.value.toUpperCase())
+    this.setState({
+      emailTemplates: filterd
+    })
+
+  }
+
   render() {
     return (
       <div>
@@ -156,12 +211,12 @@ class Info extends React.Component {
             <section style={{marginBottom: '25px'}}>
               <Emails data={this.emailStuff} title={'EMAIL'}/>
             </section>
-            <section style={{marginBottom: '25px'}}>
-              <Emails data={this.emailInfo} title={'EMAIL TEMPLATES'}/>
+            <section style={{marginBottom: '25px', maxHeight: '40vh', overflow: 'auto'}}>
+              <Emails data={this.state.emailTemplates} title={'EMAIL TEMPLATES'} doSearch={this.searchEmails} search />
             </section>
-            <section>
+            {/* <section>
               <Emails data={this.documentsInfo} title={'DOWNLOAD DOCUMENTS'}/>
-            </section>
+            </section> */}
           </div>
           <section style={{gridArea: 'right', gridRow: 1}}>
             <UserInfo data={this.state.userInfo} history={this.props.history} />
