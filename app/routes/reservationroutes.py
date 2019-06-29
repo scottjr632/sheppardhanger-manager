@@ -8,6 +8,7 @@ from flask import make_response
 
 from app import utils
 import app.models.reservation_helpers as helpers
+import app.models.house_helpers as house_helpers
 
 mod = Blueprint('reservationroutes', __name__)
 
@@ -75,6 +76,22 @@ def new_reservation(user):
     try:
         reservation = helpers.new_reservation(data)
         return make_response(jsonify(reservation.serialize()), 200)
+    except Exception as e:
+        print(e, file=sys.stderr)
+        return make_response('Something went wrong', 500)
+
+
+@mod.route('/house-reservation', methods=['POST'])
+def new_house_reservation():
+    data = request.get_json(force=True)
+    
+    try:
+        reservations = []
+        rooms = house_helpers.get_rooms_by_house(data['houseid'])
+        for room in rooms:
+            reservation = helpers.new_reservation(data, roomid=room.id)
+            reservations.append(reservation.serialize())
+        return jsonify(reservations)
     except Exception as e:
         print(e, file=sys.stderr)
         return make_response('Something went wrong', 500)

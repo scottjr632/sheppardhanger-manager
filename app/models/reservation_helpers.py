@@ -87,8 +87,8 @@ def delete_booking_type(bid):
 
 
 @utils.rollback_on_error
-def new_reservation(data) -> models.Reservation:
-    reservation = models.Reservation(**data)
+def new_reservation(data, **kwargs) -> models.Reservation:
+    reservation = models.Reservation(**data, **kwargs)
     db.session.add(reservation)
     db.session.commit()
     print(reservation.serialize(), 'reservation stuff')

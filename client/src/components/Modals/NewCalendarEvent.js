@@ -136,6 +136,19 @@ class NewLesseeModal extends React.Component {
       numberofguests: this.state.numberofguests
     }
     if (this.validateReservation()) {
+
+      if (this.getBookingTypeName(this.state.bookingTypeId) === CALENDAR_CLEANING) {
+        const res = await backend.newHouseReservationAsync(resData)
+        if (res.status !== 200) {
+          NotificationManager.error(`Unable to create calendar event!`)
+          return
+        }
+        let { data } = res
+        NotificationManager.info(`Created event cleaning for house ${data[0].house}`)
+        this.props.closeModal()
+        return
+      }
+
       backend.createNewReservation(resData, (res) => {
         if (res.status !== 200) {
           NotificationManager.error(`Unable to create calendar event!`)

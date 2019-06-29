@@ -35,11 +35,11 @@ class ReservationStore {
             let { data } = res
             if (data){
                 data.forEach(async reservation => {
-                    if (reservation.houseid) {
-                        await this.addReservationFromResObjectWithHouse(reservation)
-                    } else {
+                    // if (reservation.houseid) {
+                    //     await this.addReservationFromResObjectWithHouse(reservation)
+                    // } else {
                         this.addReservationFromResObject(reservation)
-                    }   
+                    // }   
                 })
             }
             return callback(this.reservations)
@@ -55,8 +55,6 @@ class ReservationStore {
     @action addReservationFromResObject(reservationObject) {
         let reservation = formatReservation(reservationObject)
         this.addReservation(reservation)
-        scheduleStore.schedulerData.addEvent(reservation)
-        scheduleStore.viewModel = scheduleStore.schedulerData
         return reservation
     }
 
