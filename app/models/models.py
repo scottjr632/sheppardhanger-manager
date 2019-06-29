@@ -171,6 +171,7 @@ class Reservation(db.Model):
     checkindate = db.Column(db.Date)
     checkoutdate = db.Column(db.Date)
     roomid = db.Column(db.Integer, db.ForeignKey('rooms.id'))
+    houseid = db.Column(db.Integer, db.ForeignKey('houses.id'))
     room = db.relationship('Room', backref=db.backref('rooms', lazy=True))
     status = db.Column(Enum(StatusEnum, name='statusenum', create_type=False))
     notes = db.Column(db.String)
@@ -193,6 +194,7 @@ class Reservation(db.Model):
             'roomid': self.roomid,
             'room': self.room.name if self.room else '',
             'house': self.room.house.name if self.room else '',
+            'houseid': self.houseid,
             'notes': self.notes,
             'status': self.status.value if self.status else '',
             'bookingtypeid': self.bookingtypeid,

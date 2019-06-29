@@ -1,5 +1,6 @@
 import { observable, action } from 'mobx'
 
+import scheduleStore from './scheduleStore'
 import * as backend from '../backend'
 import { BOOKINGTYPECOLORS } from '../constants'
 
@@ -33,8 +34,12 @@ class ReservationStore {
         backend.getAllReservations(res => {
             let { data } = res
             if (data){
-                data.forEach(reservation => {
-                    this.addReservationFromResObject(reservation)
+                data.forEach(async reservation => {
+                    if (reservation.houseid) {
+                        await this.addReservationFromResObjectWithHouse(reservation)
+                    } else {
+                        this.addReservationFromResObject(reservation)
+                    }   
                 })
             }
             return callback(this.reservations)
@@ -50,7 +55,22 @@ class ReservationStore {
     @action addReservationFromResObject(reservationObject) {
         let reservation = formatReservation(reservationObject)
         this.addReservation(reservation)
+        scheduleStore.schedulerData.addEvent(reservation)
+        scheduleStore.viewModel = scheduleStore.schedulerData
         return reservation
+    }
+
+    @action async addReservationFromResObjectWithHouse(reservationObject) {
+        let { houseid } = reservationObject
+        let { data } = await backend.getRoomsByHouseId(houseid)
+        if (data) {
+            data.forEach(room => {
+                let copy = JSON.stringify(reservationObject)
+                copy = JSON.parse(copy)
+                copy.roomid = room.id
+                this.addReservationFromResObject(copy)
+            })
+        }
     }
 
     @action updateReservation(reservation) {

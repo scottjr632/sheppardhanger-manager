@@ -129,6 +129,8 @@ export const deleteGuestType = async (id) => {const res = await axios.delete(`/l
 
 export const getHousesAsync = async () => {const data = await axios.get('/houses/'); return data}
 export const getRoomsAsync = async () => {const data = await axios.get('/houses/rooms'); return data }
+export const getRoomsByHouseId = async (houseId) => {const data = await axios.get(`/houses/${houseId}/rooms`); return data}
+
 export const getAllReservationsAsync = async () => {const data = await axios.get('/reservations/'); return data}
 export const generateWelcomeEmail = async (lesseeName) => {const data = await axios.get(`/email/welcome/${lesseeName}`); return data}
 export const generateNoRoomsEmail = async (lesseeName, month) => {const data = await axios.get(`/email/no-rooms/${lesseeName}/${month}`); return data}

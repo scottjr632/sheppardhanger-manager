@@ -59,7 +59,7 @@ class NewLesseeModal extends React.Component {
       lesseeid: undefined,
       bookingTypeId: 0,
       bookingTypes: [],
-      activeRoomId: 1,
+      activeRoomId: undefined,
       checkInDate: this.props.eventStart,
       checkOutDate: this.props.eventStop,
       isCheckInEmpty: true,
@@ -70,6 +70,7 @@ class NewLesseeModal extends React.Component {
       purpose: undefined,
       createBooking: false,
       rooms: [],
+      houses: [],
       lessees: [],
       dateError: false
     }
@@ -84,6 +85,7 @@ class NewLesseeModal extends React.Component {
       backend.getAllRanksAsync(),
       backend.getAllBookingTypesAsync(),
       backend.getAllLesseeAsync(),
+      backend.getHousesAsync(),
     ]).then(res => {
       this.setState({
         rooms: res[0].data,
@@ -91,7 +93,8 @@ class NewLesseeModal extends React.Component {
         guests: res[2].data,
         ranks: res[3].data,
         bookingTypes: res[4].data,
-        lessees: res[5].data
+        lessees: res[5].data,
+        houses: res[6].data,
       })
     })
   }
@@ -126,6 +129,7 @@ class NewLesseeModal extends React.Component {
       checkindate: newCheckInDate,
       checkoutdate: newCheckOutDate,
       bookingtypeid: this.state.bookingTypeId,
+      houseid: this.state.houseid,
       roomid: this.state.activeRoomId,
       pet: this.state.pet,
       purpose: this.state.purpose,
@@ -215,10 +219,10 @@ class NewLesseeModal extends React.Component {
                     {!this.state.dateError && <span className={'error-span'}>CHECKOUT DATE CANNOT BE BEFORE CHECKINDATE</span>}
                   </div>
                   <div className={'input-group'}>
-                    <label>Room</label><br />
-                    <select name={'activeRoomId'} onChange={this.handleChange} value={this.state.activeRoomId}>
-                      {this.state.rooms.map(room => {
-                        return <option value={room.id}>{room.name}</option>
+                    <label>House</label><br />
+                    <select name={'houseid'} onChange={this.handleChange} value={this.state.houseid}>
+                      {this.state.houses.map(house => {
+                        return <option value={house.id}>{house.name}</option>
                       })}
                     </select>
                   </div>
