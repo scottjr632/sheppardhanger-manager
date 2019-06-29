@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { NotificationManager } from 'react-notifications'
+
 import ConfirmButton from '../Buttons/confirm.jsx'
 import * as backend from '../../backend'
 
