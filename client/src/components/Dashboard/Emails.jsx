@@ -36,7 +36,6 @@ const Emails = props => {
       <div style={gridStyle}>
         {
           Object.keys(props.data).map(key => {
-            console.log(props.data[key])
             let { prettyName, done, right, btnText, btnAction, name } = props.data[key]
             return (
               <span style={{display: 'grid', gridTemplateColumns: '[left] 100px [center] 35px [right] auto', gridRowGap: '10px'}} key={name}>
