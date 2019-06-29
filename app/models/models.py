@@ -149,7 +149,7 @@ class Lessee(db.Model):
             'status': self.status.value if self.status else '',
             'reservations': [res.serialize() for res in self.reservation],
             'programid': self.programid,
-            'programname': self.program.name,
+            'programname': self.program.name if self.programid else '',
         }
 
     def update(self, **kwargs):
