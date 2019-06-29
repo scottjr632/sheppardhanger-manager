@@ -96,17 +96,31 @@ class Table extends React.Component {
       let { target } = event
       let filter = target.value.toUpperCase()
 
-      this.props.lesseeStore.searchformattedLessees(filter, searchCode)
+      let _tempArray = this.state.initialArray.slice()
+      let data = _tempArray.filter(value => { return value[searchCode].toUpperCase().indexOf(filter) >= 0 })
+
+      this.setState({ data })
     }
 
     sort = (event, sortKey) => {
       const sortOrder = this.state.sort.direction === "asc" ? 1 : -1;
       
-      this.props.lesseeStore.sortFormattedLessees(sortKey, sortOrder)
+      let { data } = this.state
+      data.sort((a, b) => {
+        const val1 = a[sortKey].toString().toUpperCase()
+        const val2 = b[sortKey].toString().toUpperCase()
+        
+        if (isNaN(val1) && isNaN(val2)) {
+          return val1 < val2 ? -sortOrder : val1 > val2 ? sortOrder : 0;
+        } else {
+          return sortOrder === 1 ? val1 - val2 : val2 - val1;
+        }
+      })
+
       if (sortOrder === 1) {
-        this.setState({ sort: { column: sortKey, direction: "desc" } });
+        this.setState({ sort: { column: sortKey, direction: "desc" }, data });
       } else {
-        this.setState({ sort: { column: sortKey, direction: "asc" } });
+        this.setState({ sort: { column: sortKey, direction: "asc" }, data });
       }
     }
 
@@ -132,9 +146,7 @@ class Table extends React.Component {
                 <select onChange={this.handleSelectChange}>
                     <option value={'name'}>Name</option>
                     <option value={'email'}>Email</option>
-                    <option value={'phone'}>Phone</option>
-                    <option value={'rank'}>Rank</option>
-                    <option value={'reservation'}>Reservation</option>
+                    <option value={'archived'}>Status</option>
                 </select>
             </div>
             <table className="table-responsive card-list-table">
@@ -151,8 +163,8 @@ class Table extends React.Component {
                     className={`${this.setArrow('email')} email sortable-header`}>
                   Email</th>
                   <th 
-                    onClick={e => {this.sort(e, 'phone')}} 
-                      className={`${this.setArrow('phone')} phone sortable-header`}>
+                    onClick={e => {this.sort(e, 'archived')}} 
+                      className={`${this.setArrow('archived')} archived sortable-header`}>
                       Status</th>
                   <th 
                     onClick={e => {this.sort(e, 'rank')}} 
