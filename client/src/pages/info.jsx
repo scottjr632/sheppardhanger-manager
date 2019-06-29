@@ -212,7 +212,7 @@ class Info extends React.Component {
               <Emails data={this.emailStuff} title={'EMAIL'}/>
             </section>
             <section style={{marginBottom: '25px', maxHeight: '40vh', overflow: 'auto'}}>
-              <Emails data={this.state.emailTemplates} title={'EMAIL TEMPLATES'} doSearch={this.searchEmails} search />
+              <Emails data={this.emailInfo} title={'EMAIL TEMPLATES'} doSearch={this.searchEmails} search />
             </section>
             {/* <section>
               <Emails data={this.documentsInfo} title={'DOWNLOAD DOCUMENTS'}/>
