@@ -87,10 +87,10 @@ class NewLesseeModal extends React.Component {
 
   createNewLessee = async () => {
     let {
-      fname, lname, email, rank, phone, address, city, state, zipcode, notes, createBooking
+      fname, lname, email, rank, phone, address, city, state, zipcode, notes, createBooking, programid
     } = this.state
     let lesseeData = {
-      fname, lname, email, rank, phone, address, city, state, zipcode, notes
+      fname, lname, email, rank, phone, address, city, state, zipcode, notes, programid
     }
     if (createBooking && !this.validateDates()) {
       NotificationManager.error('Check dates')
@@ -101,7 +101,6 @@ class NewLesseeModal extends React.Component {
       lessee = await backend.createNewLesseeAsync(lesseeData)
       this.props.lesseeStore.addNewLessee(lessee)
     } catch (error) {
-      console.log(error)
       NotificationManager.error(`User already exists with email ${this.state.email}`) 
       return   
     }
@@ -174,14 +173,26 @@ class NewLesseeModal extends React.Component {
                 <label>Phone number</label> <input name={'phone'} onChange={this.handleChange} autoFocus={true}/>
               </div>
             </div>
-            <div className={'input-group'}>
-              <label style={{width: '100%'}}>Rank</label>
-              <select onChange={this.handleChange} name={'rank'} style={{width: '70%'}}>
-                {this.state.ranks.map(rank => {
-                    return <option key={rank.id} value={rank.id}>{rank.name}</option>
+            <div style={{display: 'flex'}}>
+              <div className={'input-group'}>
+                <label style={{width: '100%'}}>Program</label>
+                <select onChange={this.handleChange} name={'programid'} style={{width: '70%'}} value={this.state.programid}>
+                {
+                  this.state.tdys.map(tdy => {
+                    return <option key={tdy.id} value={tdy.id}>{tdy.name}</option>
                   })
                 }
-              </select>
+                </select>
+              </div>
+              <div className={'input-group'}>
+                <label style={{width: '100%'}}>Rank</label>
+                <select onChange={this.handleChange} name={'rank'} style={{width: '70%'}}>
+                  {this.state.ranks.map(rank => {
+                      return <option key={rank.id} value={rank.id}>{rank.name}</option>
+                    })
+                  }
+                </select>
+              </div>
             </div>
             <div style={{display: 'flex'}}>
               <div className={'input-group'}>
@@ -199,9 +210,11 @@ class NewLesseeModal extends React.Component {
                 <label>Zipcode</label> <input name={'zipcode'} onChange={this.handleChange}/>
               </div>
             </div>
-            <div className={'input-group'}>
-              <label>Notes</label> 
-              <input name={'notes'} onChange={this.handleChange}/>
+            <div style={{display: 'flex'}}>
+              <div className={'input-group'}>
+                <label>Notes</label> 
+                <input name={'notes'} onChange={this.handleChange}/>
+              </div>
             </div>
             <div className={'input-group'}>
                 <label>Create booking </label> <br />

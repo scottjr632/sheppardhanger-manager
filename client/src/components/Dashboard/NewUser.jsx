@@ -87,7 +87,6 @@ class NewUser extends React.Component {
           backend.createNewUser(data, res => {
             if (res.statusText !== 'CREATED') {
               NotificationManager.error('Something went wrong')
-              console.log(res)
               return
             }
           })

@@ -188,7 +188,6 @@ class Configurations extends React.Component {
 
   addBookingType = async (newName) => {
     const res = await backend.addBookingType(newName)
-    console.log(res)
     if (res.statusText === 'OK') {
       let { data } = res
 

@@ -45,6 +45,7 @@ const prettyNames = {
   'checkindate' : 'Check-in-date',
   'checkoutdate' : 'Check-out-date',
   'lesseeemail' : 'Email', 
+  'programname': 'Program',
   'fname' : 'First name', 
   'lname' : 'Last name',
   'numberofguests' : 'Guests',
@@ -52,14 +53,12 @@ const prettyNames = {
 }
 
 const formatLessee = (lessee) => {
-  console.log('==============>',lessee.programname, 'formattLessee')
-  
   return {
     fname: lessee.fname,
     lname: lessee.lname,
     rank: lessee.rank,
     email: lessee.email,
-    program: lessee.programid,
+    programname: lessee.programname,
     phone: lessee.phone,
     address: lessee.address,
     city: lessee.city,
@@ -81,6 +80,7 @@ class UserInfo extends React.Component {
       editable: this.props.editable || false,
       edit: false,
       bookingTypes: [],
+      programs: [],
       ranks: [],
       activeRankId: 1,
     }
@@ -89,9 +89,10 @@ class UserInfo extends React.Component {
   componentDidMount() {
     Promise.all([
       backend.getAllBookingTypesAsync(),
-      backend.getAllRanksAsync()
+      backend.getAllRanksAsync(),
+      backend.getTdyTypesAsync(),
     ]).then(res => {
-      this.setState({ ranks: res[1].data, bookingTypes: res[0].data })
+      this.setState({ ranks: res[1].data, bookingTypes: res[0].data, programs: res[2].data })
     })
   }
 
@@ -187,6 +188,18 @@ class UserInfo extends React.Component {
                                 })}
                               </select>
                             </td>
+                        )
+                      case 'programname':
+                        return (
+                          <td data-title={'Program'}>
+                            <select onChange={this.handleChange} name={'programid'} style={{width: '70%'}} value={this.state.programid}>
+                            {
+                              this.state.programs.map(tdy => {
+                                return <option key={tdy.id} value={tdy.id}>{tdy.name}</option>
+                              })
+                            }
+                            </select>
+                          </td>
                         )
                       case 'rank':
                         return (

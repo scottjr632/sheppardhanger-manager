@@ -28,7 +28,6 @@ const gridStyle = {
 }
 
 let formatEmails = (callback, ...emails) => {
-  console.log(emails)
   let formatted = []
   for (let email of emails) {
     
@@ -41,7 +40,6 @@ let formatEmails = (callback, ...emails) => {
     }
     formatted.push(newEmail)
   }
-  console.log(formatted)
   return formatted
 }
 
@@ -81,9 +79,7 @@ class Info extends React.Component {
     const res = await backend.getAllEmailTemplates()
     let { data } = res
     if (data) {
-      console.log('==============>',data)
       let formattedEmails = formatEmails(this.handleEmailFromUserPrefs, ...data)
-      console.log(formattedEmails)
       this.setState({ emailTemplates: formattedEmails, originalEmails: formattedEmails })
       return
     }
@@ -127,7 +123,6 @@ class Info extends React.Component {
   }
 
   openGmailLink = async (emailSubject, emailType) => {
-    console.log('==============>','called open gmail!')
     
     let { userInfo } = this.state
     const emailInfo = await this.generateEmail(emailType)
