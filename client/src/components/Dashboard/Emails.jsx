@@ -28,15 +28,15 @@ const Emails = props => {
   return (
     <div style={{position: 'relative', fontStyle: '13pt'}}>
       <span style={{fontSize: '15pt', textDecoration: 'underline'}}>{props.title}</span>
-      {props.search && 
+      {/* {props.search && 
         <div>
           <input type="text" placeholder="Search emails..." onInput={props.doSearch} />
         </div>
-      }
+      } */}
       <div style={gridStyle}>
         {
-          props.data.forEach(key => {
-            let { prettyName, done, right, btnText, btnAction, name } = key
+          Object.keys(props.data).map(key => {
+            let { prettyName, done, right, btnText, btnAction, name } = props.data[key]
             return (
               <span style={{display: 'grid', gridTemplateColumns: '[left] 100px [center] 35px [right] auto', gridRowGap: '10px'}} key={name}>
                 <div style={{textAlign: 'left', gridArea: 'left', ...leftBorder}}>{prettyName}</div>
