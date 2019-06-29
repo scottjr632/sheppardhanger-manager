@@ -72,6 +72,7 @@ def add_new_tdy_type(name):
 
     db.session.add(tdy_type)
     db.session.commit()
+    return tdy_type
 
 
 @utils.rollback_on_error
@@ -101,6 +102,7 @@ def add_new_rank_type(name):
 
     db.session.add(rank_type)
     db.session.commit()
+    return rank_type
 
 
 @utils.rollback_on_error
@@ -130,6 +132,7 @@ def add_new_guest_type(name):
 
     db.session.add(guest_type)
     db.session.commit()
+    return guest_type
 
 
 @utils.rollback_on_error

@@ -163,9 +163,11 @@ class Configurations extends React.Component {
   addNewTdy = async (newName) => {
     const res = await backend.addTdyType(newName)
     if (res.statusText === 'OK') {
+      let { data } = res
+
       NotificationManager.info(`Added ${newName} to ${TDY_TYPE}`)
       this.setState({
-        purposeTypes: [...this.state.purposeTypes, {id: 999, name: newName}]
+        purposeTypes: [...this.state.purposeTypes, {id: data.id, name: newName}]
       })
       return
     }
@@ -174,9 +176,11 @@ class Configurations extends React.Component {
   addGuestType = async (newName) => {
     const res = await backend.addNewGuestType(newName)
     if (res.statusText === 'OK') {
+      let { data } = res
+
       NotificationManager.info(`Added ${newName} to ${GUEST_TYPE}`)
       this.setState({
-        guests: [...this.state.guests, {id: 999, name: newName}]
+        guests: [...this.state.guests, {id: data.id, name: newName}]
       })
       return
     }
@@ -184,10 +188,13 @@ class Configurations extends React.Component {
 
   addBookingType = async (newName) => {
     const res = await backend.addBookingType(newName)
+    console.log(res)
     if (res.statusText === 'OK') {
+      let { data } = res
+
       NotificationManager.info(`Added ${newName} to ${BOOKING_TYPE}`)
       this.setState({
-        bookingTypes: [...this.state.bookingTypes, {id: 999, name: newName}]
+        bookingTypes: [...this.state.bookingTypes, {id: data.id, name: newName}]
       })
       return
     }
@@ -196,9 +203,10 @@ class Configurations extends React.Component {
   addRankType = async (newName) => {
     const res = await backend.addNewRank(newName)
     if (res.statusText === 'OK') {
+      let { data } = res
       NotificationManager.info(`Added ${newName} to ${RANK_TYPES}`)
       this.setState({
-        ranks: [...this.state.ranks, {id: 999, name: newName}]
+        ranks: [...this.state.ranks, {id: data.id, name: newName}]
       })
       return
     }
@@ -206,6 +214,10 @@ class Configurations extends React.Component {
 
   addNew = async (configName) => {
     let newName = prompt(`Add new ${configName}`)
+    if (newName === "" || newName === null || newName === undefined) {
+      NotificationManager.error('Did not add new config')
+      return
+    }
 
     switch(configName) {
     case TDY_TYPE:

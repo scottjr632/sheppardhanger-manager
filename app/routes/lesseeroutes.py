@@ -101,8 +101,8 @@ def get_all_ranks():
 def add_rank_type():
     data = request.get_json(force=True)
     try:
-        helpers.add_new_rank_type(data['name'])
-        return make_response('Added new rank type!')
+        new_rank = helpers.add_new_rank_type(data['name'])
+        return jsonify(new_rank.serialize())
     except Exception as e:
         logging.error(e)
         return make_response('Unable to add new rank type')
@@ -138,8 +138,8 @@ def get_all_tdytypes():
 def add_tdy_type():
     data = request.get_json(force=True)
     try:
-        helpers.add_new_tdy_type(data['name'])
-        return make_response('Added new tdy type!')
+        tdy = helpers.add_new_tdy_type(data['name'])
+        return jsonify(tdy)
     except Exception as e:
         logging.error(e)
         return make_response('Unable to add new tdy type')
@@ -175,8 +175,8 @@ def get_all_guesttypes():
 def add_guest_type():
     data = request.get_json(force=True)
     try:
-        helpers.add_new_guest_type(data['name'])
-        return make_response('Added new guest type!')
+        guest = helpers.add_new_guest_type(data['name'])
+        return jsonify(guest)
     except Exception as e:
         logging.error(e)
         return make_response('Unable to add new guest type')

@@ -4,9 +4,10 @@ import moment from 'moment'
 
 
 class ScheduleStore {
+  @observable hasInit = false
   @observable schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Month, false, false, {
     eventItemPopoverEnabled: true,
-    dayMaxEvents: 99999,
+    dayMaxEvents: 3,
     weekMaxEvents: 99999,
     monthMaxEvents: 99999,
     quarterMaxEvents: 99999,
@@ -20,6 +21,10 @@ class ScheduleStore {
   @observable viewModel = this.schedulerData
   @observable events = []
   @observable resources = []
+
+  @action setHasInit(hasInit) {
+    this.hasInit = hasInit
+  }
 
   @action setViewModel(schedulerData) {
     this.viewModel = schedulerData
@@ -44,9 +49,12 @@ class ScheduleStore {
   }
 
   @action addEvent(event) {
-    this.schedulerData.addEvent(event)
-    this.viewModel = this.schedulerData
-    this.events = this.schedulerData.events
+    let index = this.schedulerData.events.findIndex(e => e.id === event.id)
+    if (index === -1) {
+      this.schedulerData.addEvent(event)
+      this.viewModel = this.schedulerData
+      this.events = this.schedulerData.events
+    }
   }
 
   @action addResource(resource) {

@@ -40,8 +40,8 @@ def get_booking_types(user):
 def add_booking_type():
     data = request.get_json(force=True)
     try:
-        helpers.add_new_booking_type(data['name'])
-        return make_response('Added new booking type!')
+        btype = helpers.add_new_booking_type(data['name'])
+        return jsonify(btype)
     except Exception as e:
         logging.error(e)
         return make_response('Unable to add new booking type')

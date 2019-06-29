@@ -9,6 +9,28 @@ import app.models.models as models
 from app import db, utils
 
 
+FORMATTERS = {
+    '**LESSEENAME**': 'NAME',
+    '**DATE**': 'DATE',
+    '**MONTH**': 'MONTH',
+    '**CODE**': 'CODE',
+    '**HOUSE**': 'HOUSE',
+    '**ROOM**': 'ROOM',
+    '**LESSEEADDRESS**': 'LESSEEADDRESS',
+    '**LESSE1**': 'LESSEE'
+}
+
+def format_email_template(email: str, **kwargs) -> str:
+    """ formats an email template with the proper format thingys.
+    the kwargs should be a dictionary and replacers should start 
+    and end with ** """
+
+    for k, v in kwargs.items():
+        email = email.replace(k, v)
+
+    return email
+
+
 def html_wrapper(f):
     @wraps(f)
     def wrapper(*args, **kwargs):

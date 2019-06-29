@@ -140,3 +140,5 @@ export const deleteEmailTemplate = async (name) => {const res = await axios.dele
 export const getUserPreferences = async () => {const res = await axios.get('/auth/user/preferences'); return res}
 export const updateUserPreferences = async (preferences) => {const res = await axios.post('/auth/user/preferences', {preferences}); return res}
 export const updateUserPassword = async (password) => {const res = await axios.put('/auth/user/password', {password}); return res}
+
+export const getAllEmailTemplates = async () => {const res = await axios.get('/email/templates'); return res}

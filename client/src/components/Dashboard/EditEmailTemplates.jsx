@@ -38,12 +38,12 @@ const gridRight = {
 }
 
 const gridLeft = {
-  gridArea: 'left'
+  gridArea: 'left',
 }
 
 const textAreaStyle = {
   width: '100%',
-  height: '40vh',
+  height: '60vh',
   padding: '5px',
   resize: 'none',
   borderRadius: '3px',
@@ -56,7 +56,7 @@ const btnDivStyle = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  margin: '25px 5% 0 25%'
+  // margin: '25px 5% 0 25%'
 }
 
 class EditEmailTemplates extends React.Component {
@@ -111,7 +111,6 @@ class EditEmailTemplates extends React.Component {
 
     let { data } = this.state
     let elem = data.find(elem => elem.name === selectedKey)
-    console.log('==============>', elem, data, selectedKey)
     
     if (elem) {
       elem.template = templateText
@@ -143,7 +142,7 @@ class EditEmailTemplates extends React.Component {
       <div>
         <GoBack onClick={this.props.toggle} />
         <div style={gridDisplay}>
-          <div style={gridLeft}>
+          <div style={{...gridLeft, gridRowStart: 1, gridRowEnd: 4}}>
             <ul style={listStyle}>
               {this.state.data.map(elem => {
                 let { name } = elem
@@ -163,16 +162,16 @@ class EditEmailTemplates extends React.Component {
               </li>
             </ul>
           </div>
-          <div style={gridRight}>
+          <div style={{...gridRight, gridRowStart: 1, gridRowEnd: 1}}>
             <textarea name={'templateText'} value={this.state.templateText} style={textAreaStyle} onChange={this.handleChange} />
           </div>
-        </div>
-        <div style={btnDivStyle}>
-          <ConfirmButton removeMessage={'Cancel'} confirmAction={this.props.toggle}  style={{marginRight: '5px'}}/>
-          <span style={{display: 'flex'}}>
-          {/* <ConfirmButton removeMessage={'Delete'} confirmAction={this.deleteTemplate} /> */}
-            <ConfirmButton removeMessage={this.state.btnText} style={{backgroundColor: this.state.btnColor}} confirmAction={this.saveNewEmailTemplate} />
-          </span>
+          <div style={{...btnDivStyle, ...gridRight, gridRowStart: 2, gridRowEnd: 2}}>
+            <ConfirmButton removeMessage={'Delete'} confirmAction={this.deleteTemplate} />
+            <span style={{display: 'flex'}}>
+              <ConfirmButton removeMessage={'Cancel'} confirmAction={this.props.toggle}  style={{marginRight: '5px'}}/>
+              <ConfirmButton removeMessage={this.state.btnText} style={{backgroundColor: this.state.btnColor}} confirmAction={this.saveNewEmailTemplate} />
+            </span>
+          </div>
         </div>
       </div>
     )
