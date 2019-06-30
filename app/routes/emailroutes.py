@@ -32,6 +32,16 @@ def new_template(user):
         return make_response('Unable to add template', 500)
 
 
+@mod.route('/templates/<old_name>/<new_name>', methods=['PUT'])
+def update_template_name(old_name, new_name):
+    try:
+        helpers.update_template_name(old_name, new_name)
+        return make_response('Updated template name to %s' % new_name, 200)
+    except Exception as e:
+        print(e, file=sys.stderr)
+        return make_response('Unable to update template name to %s' % new_name, 500)
+
+
 @mod.route('/templates/<name>', methods=['DELETE'])
 @utils.login_required
 def delete_template(user, name):

@@ -1,10 +1,12 @@
 import React from "react"
+import PropTypes from 'prop-types'
 
 import { NotificationManager } from "react-notifications"
 
 import ConfirmButton from '../Buttons/confirm.jsx'
 import GoBack from '../Misc/GoBack.jsx'
 import * as backend from '../../backend'
+import EditableListItem from '../editableListItem.jsx';
 
 const testData = [
   { name: "DISCUSSION", template: "THIS SHOULD BE A REALLY LOG template!!!!" },
@@ -15,17 +17,6 @@ const listStyle = {
   listStyleType: 'none'
 }
 
-const listItemStyle = {
-  padding: '10px',
-  cursor: 'pointer'
-}
-
-const selected = {
-  ...listItemStyle,
-  backgroundColor: '#55c4b7',
-  fontWeight: 'bold',
-  borderRadius: '3px'
-}
 
 const gridDisplay = {
   display: 'grid',
@@ -67,6 +58,7 @@ class EditEmailTemplates extends React.Component {
       selectedId: 0,
       selectedKey: '',
       templateText: '',
+      forceRefresh: false,
       data: testData,
       btnColor: '#128de9',
       btnText: 'Update'
@@ -132,6 +124,19 @@ class EditEmailTemplates extends React.Component {
     this.setState({ templateText: template, selectedId: id, selectedKey: key })
   }
 
+  updateName = async (key, newKey) => {
+    try {
+      const res = await backend.updateEmailTemplateName(key, newKey)
+
+      let template = this.state.data.find(elem => elem.name === key)
+      template.name = newKey
+
+     this.setState({ selectedKey: newKey })
+    } catch (error) {
+      NotificationManager.error('Unable to update template name')
+    }
+  }
+
   handleChange = (event) => {
     let { target } = event
     this.setState({ [target.name]: target.value })
@@ -147,12 +152,12 @@ class EditEmailTemplates extends React.Component {
               {this.state.data.map(elem => {
                 let { name } = elem
                 return (
-                  <li
-                    style={this.state.selectedKey === name ? selected : listItemStyle} 
-                    onClick={() => this.handleClick(name)}
-                  >
-                    { name }
-                  </li>
+                  <EditableListItem 
+                    name={name}
+                    selectedKey={this.state.selectedKey} 
+                    handleClick={this.handleClick}
+                    updateName={this.updateName}
+                  />
                 )
               })}
               <li>

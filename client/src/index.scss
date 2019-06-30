@@ -1365,3 +1365,15 @@ h4 {
 .scheduler-view > div::-webkit-scrollbar-corner {
   background: #000;
 }
+
+// overides for font awesome
+.fa-minus-circle {
+  color: #f5e032;
+  font-size: 15pt;
+  cursor: pointer;
+}
+
+.fa-check-circle {
+  font-size: 15pt;
+  cursor: pointer;
+}

@@ -138,9 +138,12 @@ export const generateWelcomeEmail = async (lesseeName) => {const data = await ax
 export const generateNoRoomsEmail = async (lesseeName, month) => {const data = await axios.get(`/email/no-rooms/${lesseeName}/${month}`); return data}
 export const generateContractEmail = async (lesseeName) => {const data = await axios.get(`/email/contract/${lesseeName}`); return data}
 export const sendEmail = async (emailData) => {const data = await axios.post('/email/', emailData); return data}
+
 export const getEmailTemplates = async () => {const data = await axios.get('/email/templates'); return data}
 export const createNewEmailTemplate = async (data) => {const res = await axios.post('/email/templates', data); return res}
 export const deleteEmailTemplate = async (name) => {const res = await axios.delete(`/email/templates/${name}`); return res}
+export const updateEmailTemplateName = async (oldName, newName) => {const res = await axios.put(`/email/templates/${oldName}/${newName}`); return res}
+
 export const getUserPreferences = async () => {const res = await axios.get('/auth/user/preferences'); return res}
 export const updateUserPreferences = async (preferences) => {const res = await axios.post('/auth/user/preferences', {preferences}); return res}
 export const updateUserPassword = async (password) => {const res = await axios.put('/auth/user/password', {password}); return res}

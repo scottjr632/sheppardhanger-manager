@@ -66,6 +66,15 @@ def get_template(template_name) -> str:
 
 
 @utils.rollback_on_error
+def update_template_name(old_name: str, new_name: str):
+    template = models.EmailTemplates.query.get(old_name)
+    template.name = new_name.upper()
+
+    db.session.add(template)
+    db.session.commit()
+
+
+@utils.rollback_on_error
 def insert_new_template(data):
     template = models.EmailTemplates(**data)
 
