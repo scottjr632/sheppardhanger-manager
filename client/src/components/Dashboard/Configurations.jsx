@@ -297,7 +297,7 @@ class Configurations extends React.Component {
         <section style={{gridArea: 'right', gridRowStart: 2, gridRowEnd: 2}}>
           <table>
             <thead>
-              <th colSpan={1}>TDY Types</th>
+              <th colSpan={1}>Program Types</th>
               <th colSpan={1}><button className={'btn__new'} style={newBtn} onClick={() => this.addNew(TDY_TYPE) }>+</button></th>
             </thead>
             <tbody>
