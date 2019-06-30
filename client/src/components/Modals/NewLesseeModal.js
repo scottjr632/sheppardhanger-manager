@@ -50,7 +50,7 @@ class NewLesseeModal extends React.Component {
       notes: '',
       pet: false,
       numberofguests: 1,
-      purpose: 1,
+      purpose: undefined,
       createBooking: false,
       rooms: [],
       activeRoomId: 1,
@@ -89,6 +89,7 @@ class NewLesseeModal extends React.Component {
     let {
       fname, lname, email, rank, phone, address, city, state, zipcode, notes, createBooking, programid
     } = this.state
+
     let lesseeData = {
       fname, lname, email, rank, phone, address, city, state, zipcode, notes, programid
     }
@@ -141,7 +142,16 @@ class NewLesseeModal extends React.Component {
   handleChange = (event) => {
     let { target } = event
     let value = target.type === 'checkbox' ? target.checked : target.value
-    this.setState({ [target.name]: value })
+
+    if (target.name === 'createBooking') {
+      this.setState({
+        [target.name]: value,
+        purpose: this.state.programid,
+      })
+    } else {
+      this.setState({ [target.name]: value })
+    }
+
   }
 
   setDate = (name, value) => {
@@ -177,6 +187,7 @@ class NewLesseeModal extends React.Component {
               <div className={'input-group'}>
                 <label style={{width: '100%'}}>Program</label>
                 <select onChange={this.handleChange} name={'programid'} style={{width: '70%'}} value={this.state.programid}>
+                  <option value={undefined}>-- NONE --</option>
                 {
                   this.state.tdys.map(tdy => {
                     return <option key={tdy.id} value={tdy.id}>{tdy.name}</option>
@@ -234,7 +245,8 @@ class NewLesseeModal extends React.Component {
               <div style={{display: 'flex'}}>
               <div className={'input-group'}>
                   <label style={{width: '100%'}}>Purpose</label> 
-                  <select onChange={this.handleChange} name={'purpose'} style={{width: '70%'}}>
+                  <select onChange={this.handleChange} name={'purpose'} style={{width: '70%'}} value={this.state.purpose}>
+                    <option value={undefined}>-- NONE --</option>
                   {
                     this.state.tdys.map(tdy => {
                       return <option key={tdy.id} value={tdy.id}>{tdy.name}</option>
