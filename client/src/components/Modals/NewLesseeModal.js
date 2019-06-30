@@ -91,7 +91,8 @@ class NewLesseeModal extends React.Component {
     } = this.state
 
     let lesseeData = {
-      fname, lname, email, rank, phone, address, city, state, zipcode, notes, programid
+      fname, lname, email, rank, phone, address, city, state, zipcode, notes, 
+      programid: isNaN(programid) ? undefined : programid 
     }
     if (createBooking && !this.validateDates()) {
       NotificationManager.error('Check dates')
@@ -119,7 +120,7 @@ class NewLesseeModal extends React.Component {
         bookingtypeid: this.state.bookingTypeId,
         roomid: this.state.activeRoomId,
         pet: this.state.pet,
-        purpose: this.state.purpose,
+        purpose: isNaN(this.state.purpose) ? undefined : this.state.purpose,
         numberofguests: this.state.numberofguests
       }
       backend.createNewReservation(resData, (res) => {
