@@ -1,10 +1,12 @@
 import sys
 import logging
+import io
 
 from flask import Blueprint
 from flask import jsonify
 from flask import request
 from flask import make_response
+from flask import send_file
 
 from app import utils
 import app.models.reservation_helpers as helpers
@@ -96,6 +98,24 @@ def new_house_reservation():
         print(e, file=sys.stderr)
         return make_response('Something went wrong', 500)
 
+
+@mod.route('/excel', methods=['GET'])
+def get_calendar_as_excel():
+    import app.business.xlsx as xlsx
+    try:
+        reservations = helpers.get_all_res_filtered()
+        reservations = [reservation.serialize() for reservation in reservations]
+        output = xlsx.create_calender_file(reservations)
+
+        return send_file(
+            io.BytesIO(output.read()),
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            attachment_filename='calendar-test.xlsx')
+    except Exception as e:
+        logging.error(e)
+        return make_response('Unable to create excel backup', 500)
+                
 
 @mod.route('/', methods=['GET'])
 @utils.login_required

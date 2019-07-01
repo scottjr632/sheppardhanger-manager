@@ -58,7 +58,10 @@ class Dashboard extends React.Component {
     return (
       <div style={{marginBottom: '100px'}}>
         <Navi />
-        <Schedule history={this.props.history} showCreateEventModal={this.toggleEventModal} setNewEventStartAndStop={this.setNewEventStartAndStop} />
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          <Schedule history={this.props.history} showCreateEventModal={this.toggleEventModal} setNewEventStartAndStop={this.setNewEventStartAndStop} />
+          <a style={{cursor: 'pointer', alignSelf: 'flex-end', marginRight: '20px'}} href='/api/v1/protected/reservations/excel'>Download calendar</a>
+        </div>
         {/* <Question helpText={'Search to find a lessee. Click on their name to get more information or click on headers to sort.'} /> */}
         <div className={'grid-container'}>
           <div className='table large-screen' style={{gridArea: 'tbl'}}>
