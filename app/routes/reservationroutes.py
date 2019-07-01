@@ -111,7 +111,7 @@ def get_calendar_as_excel():
             io.BytesIO(output.read()),
             mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             as_attachment=True,
-            attachment_filename='calendar-test.xlsx')
+            attachment_filename='calendar.xlsx')
     except Exception as e:
         logging.error(e)
         return make_response('Unable to create excel backup', 500)
