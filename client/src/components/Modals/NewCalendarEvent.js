@@ -128,9 +128,9 @@ class NewLesseeModal extends React.Component {
       lesseeid: this.state.lesseeid,
       checkindate: newCheckInDate,
       checkoutdate: newCheckOutDate,
-      bookingtypeid: this.state.bookingTypeId,
+      bookingtypeid: this.state.bookingTypeId || 1,
       houseid: this.state.houseid,
-      roomid: this.state.activeRoomId,
+      roomid: this.state.activeRoomId || 1,
       pet: this.state.pet,
       purpose: this.state.purpose,
       numberofguests: this.state.numberofguests
@@ -162,7 +162,7 @@ class NewLesseeModal extends React.Component {
       })
       let event = this.state.bookingTypes.find(type => parseInt(type.id) === parseInt(this.state.bookingTypeId))
       if (this.state.lesseeid) {
-        let roomObj = this.state.rooms.find(room => parseInt(room.id) === parseInt(this.state.activeRoomId))
+        let roomObj = this.state.rooms.find(room => parseInt(room.id) === resData.roomid)
         this.props.lesseeStore.updateFormattedLesseeValue(this.state.lesseeid, 
           'reservations', `${roomObj.name} - ${this.state.checkInDate}`)
       }
