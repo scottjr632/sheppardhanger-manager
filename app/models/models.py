@@ -177,7 +177,7 @@ class Reservation(db.Model):
     notes = db.Column(db.String)
     bookingtypeid = db.Column(db.Integer, db.ForeignKey('bookingtype.id'))
     bookingtype = db.relationship('BookingType', backref=db.backref('bookingtype', lazy=True))
-    door_code = db.Column(db.String)
+    doorcode = db.Column(db.String)
 
     def serialize(self):
         return {
@@ -200,7 +200,7 @@ class Reservation(db.Model):
             'status': self.status.value if self.status else '',
             'bookingtypeid': self.bookingtypeid,
             'bookingtype': self.bookingtype.name,
-            'doorcode': self.door_code,
+            'doorcode': self.doorcode,
         }
 
     def update(self, **kwargs):

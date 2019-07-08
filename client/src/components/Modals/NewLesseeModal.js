@@ -123,7 +123,8 @@ class NewLesseeModal extends React.Component {
         roomid: this.state.activeRoomId,
         pet: this.state.pet,
         purpose: isNaN(this.state.purpose) ? undefined : this.state.purpose,
-        numberofguests: this.state.numberofguests
+        numberofguests: this.state.numberofguests,
+        doorcode: this.state.doorcode,
       }
       backend.createNewReservation(resData, (res) => {
         if (res.status !== 200) {
@@ -274,8 +275,13 @@ class NewLesseeModal extends React.Component {
                       return <option key={room.id} value={room.id}>{room.name}</option>
                     })}
                   </select>
-                </div>
+                </div>                
                 <div className={'input-group'}>
+                  <label>Room door code</label><br />
+                  <input name={'doorcode'} type="text" onChange={this.handleChange} />
+                </div>
+              </div>
+              <div className={'input-group'}>
                   <label style={{width: '100%'}}>Select a booking type</label>
                   <select name={'bookingTypeId'} onChange={this.handleChange} style={{width: 'auto'}} value={this.state.bookingTypeId}>
                     <option value={0}>-- BOOKING TYPE --</option>
@@ -284,7 +290,6 @@ class NewLesseeModal extends React.Component {
                     })}
                   </select>
                 </div>
-              </div>
             </section>
             }
           </div>

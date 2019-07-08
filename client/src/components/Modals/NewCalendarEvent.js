@@ -128,7 +128,8 @@ class NewLesseeModal extends React.Component {
       roomid: this.state.activeRoomId || 1,
       pet: this.state.pet,
       purpose: this.state.purpose,
-      numberofguests: this.state.numberofguests
+      numberofguests: this.state.numberofguests,
+      doorcode: this.state.doorcode,
     }
     if (this.validateReservation()) {
 
@@ -270,6 +271,10 @@ class NewLesseeModal extends React.Component {
                         return <option value={room.id}>{room.name}</option>
                       })}
                     </select>
+                  </div>
+                  <div className={'input-group'}>
+                      <label>Room door code</label><br />
+                      <input type="text" name={'doorcode'} onChange={this.handleChange} />
                   </div>
                 </React.Fragment>
               }
