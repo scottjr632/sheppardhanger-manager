@@ -16,6 +16,7 @@ const formatReservation = (reservation, callback) => {
     'checkindate': reservation.checkindate,
     'checkoutdate': reservation.checkoutdate,
     'room': reservation.room,
+    'doorcode': reservation.doorcode,
     'house': reservation.house,
     'lengthofstay': reservation.lengthofstay,
     'lesseeemail' : reservation.lesseeemail ? 
@@ -77,6 +78,7 @@ const prettyNames = {
   'lesseefname' : 'First name', 
   'lesseelname' : 'Last name', 
   'numberofguests' : 'Guests',
+  'doorcode': 'Door code'
 }
 
 @inject('reservationStore')
