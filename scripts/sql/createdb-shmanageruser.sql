@@ -320,9 +320,9 @@ CREATE TABLE public.reservations (
     pet boolean,
     checkindate date,
     checkoutdate date,
-    roomid bigint,
+    roomid bigint not null,
     notes text,
-    bookingtypeid bigint
+    bookingtypeid bigint not null
 );
 
 
