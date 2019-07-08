@@ -19,12 +19,6 @@ Modal.setAppElement('#root')
 
 const customStyles = {
   content : {
-    // top                   : '50%',
-    // left                  : '50%',
-    // right                 : 'auto',
-    // bottom                : 'auto',
-    // marginRight           : '-50%',
-    // transform             : 'translate(-50%, -50%)'
     boxShadow: '0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4)'
   },
   overlay : {
@@ -130,7 +124,7 @@ class NewLesseeModal extends React.Component {
       checkindate: newCheckInDate,
       checkoutdate: newCheckOutDate,
       bookingtypeid: this.state.bookingTypeId || 1,
-      houseid: this.state.houseid,
+      houseid: this.state.houseid || 1,
       roomid: this.state.activeRoomId || 1,
       pet: this.state.pet,
       purpose: this.state.purpose,

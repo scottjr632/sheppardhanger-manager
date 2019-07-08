@@ -91,11 +91,13 @@ def new_house_reservation():
         reservations = []
         rooms = house_helpers.get_rooms_by_house(data['houseid'])
         for room in rooms:
-            reservation = helpers.new_reservation(data, roomid=room.id)
+            print(room.id)
+            data['roomid'] = room.id
+            reservation = helpers.new_reservation(data)
             reservations.append(reservation.serialize())
         return jsonify(reservations)
     except Exception as e:
-        print(e, file=sys.stderr)
+        logging.error(e)
         return make_response('Something went wrong', 500)
 
 
