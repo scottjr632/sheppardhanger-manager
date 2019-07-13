@@ -6,7 +6,7 @@ import { NotificationManager } from "react-notifications"
 import ConfirmButton from '../Buttons/confirm.jsx'
 import GoBack from '../Misc/GoBack.jsx'
 import * as backend from '../../backend'
-import EditableListItem from '../editableListItem.jsx';
+import EditableListItem from '../editableListItem.jsx'
 
 const testData = [
   { name: "DISCUSSION", template: "THIS SHOULD BE A REALLY LOG template!!!!" },
