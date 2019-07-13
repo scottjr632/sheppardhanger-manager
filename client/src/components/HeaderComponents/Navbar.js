@@ -18,7 +18,9 @@ const navStyle = {
 
 const links = [
   {key: 1, name: 'Home', path: '/dashboard'},
-  {key: 2, name: 'Admin', path: '/admin'}
+  {key: 2, name: 'Admin', path: '/admin'},
+  {key: 3, name: 'Emails', path: '/emails'},
+  {key: 4, name: 'Documents', path: '/documents'}
 ]
 
 @inject('userStore')
@@ -77,7 +79,7 @@ class Navi extends React.Component {
         </div>
         <div className={'pull-right nav__link'} style={navStyle}>
           {links.map(link => {
-            return <a className={this.state.currentKey === link.key ? 'active' : ''} key={link.key} onClick={() => this.handleSelect(link.key)}>{link.name}</a>
+            return <a style={{fontSize: '10pt'}} className={this.state.currentKey === link.key ? 'active' : ''} key={link.key} onClick={() => this.handleSelect(link.key)}>{link.name}</a>
           })}
           <span className={'username dropdown__toggle'} style={dropDownStyle} onClick={this.showDropdown}>
               <a className={this.state.currentKey === 3 ? 'active' : ''}>
