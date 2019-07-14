@@ -13,7 +13,10 @@ COPY ./client/package-lock.json /shmanager/client/package-lock.json
 WORKDIR /shmanager
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
-RUN apt-get install --assume-yes build-essential nodejs 
+RUN apt-get install --assume-yes build-essential nodejs \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+  
 RUN node --version
 RUN npm --version
 
