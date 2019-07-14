@@ -300,3 +300,28 @@ class EmailTemplates(db.Model):
             'name': self.name,
             'template': self.template
         }
+
+
+class Documents(db.Model):
+    __tablename__ = 'documents'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=True)
+    path = db.Column(db.String, nullable=True)
+    userid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    lesseeid = db.Column(db.Integer, db.ForeignKey('lessee.id'))
+    reservationid = db.Column(db.Integer, db.ForeignKey('reservations.id'))
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'path': self.path,
+            'userid': self.userid,
+            'lesseeid': self.lesseeid,
+            'reservationid': self.reservationid
+        }
+
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+            if hasattr(self, k): setattr(self, k, v)

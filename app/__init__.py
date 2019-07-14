@@ -65,6 +65,7 @@ def _add_blueprints(app):
     from app.routes import reservationroutes
     from app.routes import lesseeroutes
     from app.routes import emailroutes
+    from app.routes import documentroutes
 
     # Blueprints
     app.register_blueprint(authroutes.mod, url_prefix=APIV + '/auth')
@@ -74,6 +75,7 @@ def _add_blueprints(app):
     jwtMiddleware.register_blueprint(reservationroutes.mod, url_prefix='reservations')
     jwtMiddleware.register_blueprint(lesseeroutes.mod, url_prefix='lessee')
     jwtMiddleware.register_blueprint(emailroutes.mod, url_prefix='email')
+    jwtMiddleware.register_blueprint(documentroutes.mod, url_prefix='documents')
 
 
 def create_app(config_name="default", serve_client=True):

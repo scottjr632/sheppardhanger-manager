@@ -50,11 +50,14 @@ module.exports = {
         ]
       },
       {
-        test: /\.tsx?$/,
+        test: /\.ts|tsx$/,
         loader: "ts-loader",
         exclude: /node_modules/
       }
     ]
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   devServer: {
     historyApiFallback: true,

@@ -692,6 +692,16 @@ h4 {
       // margin-left: 10px;
       vertical-align: middle
     }
+
+    &.full {
+      display: flex;
+      flex-direction: 'row';
+      width: 100%;
+
+      input {
+        width: 100%;
+      }
+    }
   }
   
   /* modules/form.css */
