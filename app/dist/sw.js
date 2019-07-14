@@ -13,12 +13,12 @@ var serviceWorkerOption = {
     "/7.bundle.js",
     "/8.bundle.js",
     "/9.bundle.js",
-    "/10.bundle.js",
     "/11.bundle.js",
     "/12.bundle.js",
     "/13.bundle.js",
     "/14.bundle.js",
     "/15.bundle.js",
+    "/16.bundle.js",
     "/main.css",
     "/bundle.js",
     "/index.html"
