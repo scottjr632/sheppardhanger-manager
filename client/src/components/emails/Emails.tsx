@@ -1,10 +1,11 @@
 import React, { ChangeEvent } from 'react'
+import { inject, observer } from 'mobx-react';
 
 import { NotificationManager } from 'react-notifications';
 
 import { EmailTemplate } from '../../interfaces'
 import { backend } from '../../backendts'
-import { inject, observer } from 'mobx-react';
+import { buildGmailLink, buildMailToLink } from '../../utils'
 
 import { UserStore } from '../../stores/userStore'
 import ConfirmButton from '../Buttons/confirm';
@@ -73,6 +74,18 @@ class Emails extends React.Component<EmailProps, EmailState> {
     this.setState({ showEmails: !this.state.showEmails })
   }
 
+  openGmailLink = () => {
+    let { toEmail, subject, emailText } = this.state
+    let gmailLink = buildGmailLink(toEmail, subject, emailText)
+    window.open(gmailLink, '_blank')
+  }
+
+  openApplicationLink = () => {
+    let { toEmail, subject, emailText } = this.state
+    let mailLink = buildMailToLink(toEmail, subject, emailText)
+    window.open(mailLink, '_blank')        
+  }
+
   filterEmails = (filter: string): Array<string> => {
     let filteredEmails = this.state.originalEmails.filter(email => email.startsWith(filter))
     return filteredEmails
@@ -91,6 +104,14 @@ class Emails extends React.Component<EmailProps, EmailState> {
 
   putToEmailInState = (toEmail: string) => {
     this.setState({ toEmail })
+  }
+
+  clearForm = () => {
+    this.setState({
+      toEmail: '',
+      subject: '',
+      emailText: ''
+    })
   }
 
   handleClick = (e) => {
@@ -147,7 +168,7 @@ class Emails extends React.Component<EmailProps, EmailState> {
               <div className="dropdown__email">
                 <ul>
                   {this.state.emails.map(email => {
-                    return <li onClick={() => { this.putToEmailInState(email) }}>{email}</li>
+                    return <button onClick={() => { this.putToEmailInState(email); this.toggleShowEmails() }}>{email}</button>
                   })}
                 </ul>
               </div>
@@ -174,9 +195,15 @@ class Emails extends React.Component<EmailProps, EmailState> {
         <div>
           <textarea style={{...textAreaStyle, resize: 'none', borderRadius: '3px', overflow: 'auto'}} name={'emailText'} value={this.state.emailText} onChange={this.handleChange} />
         </div>
-        <span className={'flex row end'}>
-          {/* <ConfirmButton  removeMessage={'Cancel'} /> */}
-          <ConfirmButton style={{marginLeft: '10px', backgroundColor: '#2D9CDB'}}  removeMessage={'Send'} confirmAction={() => {}} />
+        <span className={'email__links'}>
+          <span>
+            <a onClick={this.openApplicationLink}>Open in mail</a>
+            <a onClick={this.openGmailLink}>Open in gmail</a>
+          </span>
+          <span style={{display: 'flex'}}>
+            <ConfirmButton  removeMessage={'Clear'} confirmAction={this.clearForm} />
+            <ConfirmButton style={{marginLeft: '10px', backgroundColor: '#2D9CDB'}}  removeMessage={'Send'} confirmAction={() => {}} />
+          </span>
         </span>
       </div>
     )

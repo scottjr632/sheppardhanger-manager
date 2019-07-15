@@ -1,6 +1,8 @@
 import os
 import sys
 import logging
+import calendar
+import datetime
 from functools import wraps
 
 import sendgrid
@@ -14,7 +16,9 @@ from app import db, utils
 FORMATTERS = {
     '**LESSEENAME**': 'fname',
     '**DATE**': 'DATE',
-    '**MONTH**': 'MONTH',
+    '**CURRENTMONTH**': calendar.month_name[datetime.datetime.today().month],
+    '**CURRENTDATE**': datetime.datetime.today().strftime("%A, %b %d, %Y"),
+    '**TOMORROWDATE**': (datetime.datetime.today() + datetime.timedelta(days=1)).strftime("%A, %b %d, %Y"),
     '**CODE**': 'code',
     '**HOUSE**': 'HOUSE',
     '**ROOM**': 'ROOM',
