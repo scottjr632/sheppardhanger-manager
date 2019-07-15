@@ -1,0 +1,45 @@
+.dropdown__email {
+  position: absolute;
+  background: #c4cbda;
+  z-index: 9999;
+  top: 90%;
+  margin-left: 50px;
+  border-radius: 30px;
+  box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.4);
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    padding: 5px 50px;
+    cursor: pointer;
+
+  }
+
+  li:hover {
+    font-weight: bold;
+  }
+}
+
+// TODO: move to another file
+
+.flex {
+  display: flex;
+  &.row {
+    flex-direction: row;
+  }
+
+  &.column {
+    flex-direction: column;
+  }
+
+  &.end {
+    justify-content: flex-end;
+  }
+
+  &.start {
+    justify-content: flex-start;
+  }
+}

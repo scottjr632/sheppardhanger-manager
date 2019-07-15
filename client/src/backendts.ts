@@ -63,6 +63,16 @@ export namespace backend {
       return await axios.put<ServerResponse>(`/email/templates/${oldName}/${newName}`)
     }
 
+    export async function resolveEmailTemplate(templateName: string, lesseeEmail: string): Promise<EmailTemplate> {
+      const res =  await axios.get<ServerResponse>(`/email/templates/resolve/${templateName}/${lesseeEmail}`)
+      return <EmailTemplate><unknown>res.data
+    }
+
+    export async function getAllLesseesEmails(): Promise<Array<string>> {
+      const res = await axios.get<ServerResponse>('/lessee/emails')
+      return  <Array<string>><unknown>res.data
+    }
+
   }
 
 }

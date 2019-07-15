@@ -4,7 +4,7 @@ import { NotificationManager } from 'react-notifications'
 import * as backend from '../backend'
 
 
-class UserStore {
+export class UserStore {
   @observable authenticated = false
   @observable fullname = ''
   @observable id = 0

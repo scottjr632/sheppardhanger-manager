@@ -1,7 +1,13 @@
 import React, { ChangeEvent } from 'react'
 
+import { NotificationManager } from 'react-notifications';
+
 import { EmailTemplate } from '../../interfaces'
 import { backend } from '../../backendts'
+import { inject, observer } from 'mobx-react';
+
+import { UserStore } from '../../stores/userStore'
+import ConfirmButton from '../Buttons/confirm';
 
 const textAreaStyle = {
   width: '100%',
@@ -10,30 +16,94 @@ const textAreaStyle = {
   fontSize: '13pt'
 }
 
-interface EmailProps {}
-interface EmailState {
-  templates: Array<EmailTemplate>
-  toEmail: string,
-  fromEmail: string,
-  emailText: string,
-  subject: string
+interface EmailProps {
+  userStore: UserStore
 }
 
+interface EmailState {
+  templates: Array<EmailTemplate>
+  emails: Array<string>
+  originalEmails: Array<string>
+  toEmail: string
+  fromEmail: string
+  emailText: string
+  subject: string
+  showEmails: Boolean
+}
+
+@inject('userStore')
+@observer
 class Emails extends React.Component<EmailProps, EmailState> {
 
+  node: any = null;
   state = {
     templates: new Array<EmailTemplate>(),
+    emails: new Array<string>(),
+    originalEmails: new Array<string>(),
     toEmail: '',
-    fromEmail: '',
+    fromEmail: this.props.userStore.email,
     emailText: '',
     subject: '',
+    showEmails: false
   }
+
+  componentWillMount() {
+		document.addEventListener('mousedown', this.handleClick, false)
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('mousedown', this.handleClick, false)
+	}
 
   componentDidMount() {
     backend.emails.getAllEmailTemplate()
       .then(templates => this.setState({ templates }) )
       .catch(err => console.log(err))
+
+    backend.emails.getAllLesseesEmails()
+      .then(emails => this.setState({ emails, originalEmails: emails }))
+      .catch(err => console.log(err))
   }
+
+  validateToEmail = (toEmail: string): Boolean => {
+    return toEmail.length > 0
+  }
+
+  toggleShowEmails = () => {
+    this.setState({ showEmails: !this.state.showEmails })
+  }
+
+  filterEmails = (filter: string): Array<string> => {
+    let filteredEmails = this.state.originalEmails.filter(email => email.startsWith(filter))
+    return filteredEmails
+  }
+  
+  resolveTemplate = async (templateName: string, toEmail: string): Promise<string> => {
+    if (!this.validateToEmail(this.state.toEmail)) {
+      NotificationManager.error('To email cannot be blank')
+      return
+    }
+
+    let resolvedTemplate = await backend.emails.resolveEmailTemplate(templateName, toEmail)
+      .catch(err => { throw new Error(err) })
+    return resolvedTemplate.template
+  }
+
+  putToEmailInState = (toEmail: string) => {
+    this.setState({ toEmail })
+  }
+
+  handleClick = (e) => {
+		if (this.node.contains(e.target)) {
+			if (!this.state.showEmails) {
+        this.setState({ showEmails: true })
+        return
+      }
+		} else {
+      this.setState({ showEmails: false })
+    }
+
+	}
 
   handleChange = (event: ChangeEvent<any>) => {
     let { target } = event
@@ -44,14 +114,24 @@ class Emails extends React.Component<EmailProps, EmailState> {
     })
   }
 
-  handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  handleToEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
     let { target } = event
-    let emailTemplate = this.state.templates.find(template => template.name === target.value)
+    let filteredEmails = this.filterEmails(target.value)
 
     this.setState({
-      emailText: emailTemplate ? emailTemplate.template : ''
+      toEmail: target.value,
+      emails: filteredEmails
     })
+  }
 
+  handleSelectChange = async (event: ChangeEvent<HTMLSelectElement>) => {
+    let { target } = event
+    let resovledTemplate = await this.resolveTemplate(target.value, this.state.toEmail)
+      .catch(err => { console.log(err); NotificationManager.error('Unable to resolve template'); return })
+
+    this.setState({
+      emailText: resovledTemplate || ''
+    })
   }
 
   render(){
@@ -60,22 +140,31 @@ class Emails extends React.Component<EmailProps, EmailState> {
       <div>
         {/* HEADER SECTION */}
         <div>
-          <div className="input-group full">
+          <div className="input-group full" ref={node => this.node = node}>
             <label htmlFor='toEmail'>To</label>
-            <input type='text' name={'toEmail'} onChange={this.handleChange}/>
+            <input type='text' name={'toEmail'} onChange={this.handleToEmailChange} value={this.state.toEmail} />
+            {this.state.showEmails &&             
+              <div className="dropdown__email">
+                <ul>
+                  {this.state.emails.map(email => {
+                    return <li onClick={() => { this.putToEmailInState(email) }}>{email}</li>
+                  })}
+                </ul>
+              </div>
+            }
           </div>
           <div className="input-group full">
             <label htmlFor='fromEmail'>From</label>
-            <input type='text' name={'fromEmail'} onChange={this.handleChange}/>
+            <input type='text' name={'fromEmail'} onChange={this.handleChange} value={this.state.fromEmail} />
           </div>
           <div className="input-group full">
             <label htmlFor='subject'>Subject</label>
-            <input type='text' name={'subject'} onChange={this.handleChange}/>
+            <input type='text' name={'subject'} onChange={this.handleChange} value={this.state.subject} />
           </div>
           <div className="input-group full">
             <label>Template</label>
             <select onChange={this.handleSelectChange}>
-              <option value={0}>-- NONE --</option>
+              <option value={null}>-- NONE --</option>
               {templates.map(template => {
                 return <option value={template.name}>{template.name}</option>
               })}
@@ -85,6 +174,10 @@ class Emails extends React.Component<EmailProps, EmailState> {
         <div>
           <textarea style={{...textAreaStyle, resize: 'none', borderRadius: '3px', overflow: 'auto'}} name={'emailText'} value={this.state.emailText} onChange={this.handleChange} />
         </div>
+        <span className={'flex row end'}>
+          {/* <ConfirmButton  removeMessage={'Cancel'} /> */}
+          <ConfirmButton style={{marginLeft: '10px', backgroundColor: '#2D9CDB'}}  removeMessage={'Send'} confirmAction={() => {}} />
+        </span>
       </div>
     )
   }
