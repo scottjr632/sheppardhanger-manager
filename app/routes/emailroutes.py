@@ -87,7 +87,7 @@ def send_email(user):
     email = current_app.config.get('EMAIL')
     apitoken = current_app.config.get('SENDGRID_API_TOKEN')
     res = helpers.send_email(
-        email, 
+        data.get('from_email'), 
         data.get('email'),
         data.get('subject'),
         data.get('email_text'),

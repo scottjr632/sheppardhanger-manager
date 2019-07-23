@@ -11,3 +11,11 @@ export interface EmailTemplate {
   name: string,
   template: string
 }
+
+export interface EmailData {
+  from_email: string,
+  email: string,
+  subject: string,
+  email_text: string,
+  attachements?: Array<string>,
+}
