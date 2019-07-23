@@ -1,4 +1,4 @@
-import { Document, EmailTemplate } from './interfaces';
+import { Document, EmailTemplate, EmailData } from './interfaces';
 import axios from 'axios';
 import { Server } from 'http';
 
@@ -71,6 +71,10 @@ export namespace backend {
     export async function getAllLesseesEmails(): Promise<Array<string>> {
       const res = await axios.get<ServerResponse>('/lessee/emails')
       return  <Array<string>><unknown>res.data
+    }
+
+    export async function sendEmail(emailData: EmailData): Promise<ServerResponse> {
+      return await axios.post<ServerResponse>('/email/', emailData)
     }
 
   }
