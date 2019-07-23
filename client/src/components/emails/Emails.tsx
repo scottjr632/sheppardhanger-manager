@@ -119,7 +119,7 @@ class Emails extends React.Component<EmailProps, EmailState> {
         if (res.statusText !== 'ACCEPTED' && res.statusText !== 'OK') { throw new Error('Bad request') }
 
         NotificationManager.info(`Sent email to ${this.state.toEmail}`)
-        this.setState({ loading: false, toEmail: '', fromEmail: '', emailText: '' })
+        this.setState({ loading: false, toEmail: '', subject: '', emailText: '' })
       })
       .catch(err => {
         console.log(err)
