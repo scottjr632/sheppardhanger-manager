@@ -3,12 +3,13 @@ import { inject, observer } from 'mobx-react';
 
 import { NotificationManager } from 'react-notifications';
 
-import { EmailTemplate } from '../../interfaces'
+import { EmailTemplate, EmailData } from '../../interfaces'
 import { backend } from '../../backendts'
 import { buildGmailLink, buildMailToLink } from '../../utils'
 
 import { UserStore } from '../../stores/userStore'
 import ConfirmButton from '../Buttons/confirm';
+import CoolLoader from '../Misc/CoolLoader'
 
 const textAreaStyle = {
   width: '100%',
@@ -30,6 +31,7 @@ interface EmailState {
   emailText: string
   subject: string
   showEmails: Boolean
+  loading: Boolean
 }
 
 @inject('userStore')
@@ -45,7 +47,8 @@ class Emails extends React.Component<EmailProps, EmailState> {
     fromEmail: this.props.userStore.email,
     emailText: '',
     subject: '',
-    showEmails: false
+    showEmails: false,
+    loading: false
   }
 
   componentWillMount() {
@@ -100,6 +103,30 @@ class Emails extends React.Component<EmailProps, EmailState> {
     let resolvedTemplate = await backend.emails.resolveEmailTemplate(templateName, toEmail)
       .catch(err => { throw new Error(err) })
     return resolvedTemplate.template
+  }
+
+  sendEmail = async () => {
+    this.setState({ loading: true })
+    const emailData : EmailData = {
+      from_email: this.state.fromEmail,
+      email: this.state.toEmail,
+      subject: this.state.subject,
+      email_text: this.state.emailText,
+    }
+    
+    backend.emails.sendEmail(emailData)
+      .then(res => {
+        if (res.statusText !== 'ACCEPTED' && res.statusText !== 'OK') { throw new Error('Bad request') }
+
+        NotificationManager.info(`Sent email to ${this.state.toEmail}`)
+        this.setState({ loading: false, toEmail: '', fromEmail: '', emailText: '' })
+      })
+      .catch(err => {
+        console.log(err)
+
+        this.setState({ loading: false })
+        NotificationManager.error('Unable to send email, please try again')
+      })
   }
 
   putToEmailInState = (toEmail: string) => {
@@ -160,51 +187,58 @@ class Emails extends React.Component<EmailProps, EmailState> {
     return (
       <div>
         {/* HEADER SECTION */}
-        <div>
-          <div className="input-group full" ref={node => this.node = node}>
-            <label htmlFor='toEmail'>To</label>
-            <input type='text' name={'toEmail'} onChange={this.handleToEmailChange} value={this.state.toEmail} autoComplete={'false'}/>
-            {this.state.showEmails &&             
-              <div className="dropdown__email">
-                <ul>
-                  {this.state.emails.map(email => {
-                    return <button onClick={() => { this.putToEmailInState(email); this.toggleShowEmails() }}>{email}</button>
-                  })}
-                </ul>
-              </div>
-            }
+        {!this.state.loading ? 
+        <section>
+          <div>
+            <div className="input-group full" ref={node => this.node = node}>
+              <label htmlFor='toEmail'>To</label>
+              <input type='text' name={'toEmail'} onChange={this.handleToEmailChange} value={this.state.toEmail} autoComplete={'false'}/>
+              {this.state.showEmails &&             
+                <div className="dropdown__email">
+                  <ul>
+                    {this.state.emails.map(email => {
+                      return <button onClick={() => { this.putToEmailInState(email); this.toggleShowEmails() }}>{email}</button>
+                    })}
+                  </ul>
+                </div>
+              }
+            </div>
+            <div className="input-group full">
+              <label htmlFor='fromEmail'>From</label>
+              <input type='text' name={'fromEmail'} onChange={this.handleChange} value={this.state.fromEmail} />
+            </div>
+            <div className="input-group full">
+              <label htmlFor='subject'>Subject</label>
+              <input type='text' name={'subject'} onChange={this.handleChange} value={this.state.subject} />
+            </div>
+            <div className="input-group full">
+              <label>Template</label>
+              <select onChange={this.handleSelectChange}>
+                <option value={null}>-- NONE --</option>
+                {templates.map(template => {
+                  return <option value={template.name}>{template.name}</option>
+                })}
+              </select>
+            </div>
           </div>
-          <div className="input-group full">
-            <label htmlFor='fromEmail'>From</label>
-            <input type='text' name={'fromEmail'} onChange={this.handleChange} value={this.state.fromEmail} />
+          <div>
+            <textarea style={{...textAreaStyle, resize: 'none', borderRadius: '3px', overflow: 'auto'}} name={'emailText'} value={this.state.emailText} onChange={this.handleChange} />
           </div>
-          <div className="input-group full">
-            <label htmlFor='subject'>Subject</label>
-            <input type='text' name={'subject'} onChange={this.handleChange} value={this.state.subject} />
-          </div>
-          <div className="input-group full">
-            <label>Template</label>
-            <select onChange={this.handleSelectChange}>
-              <option value={null}>-- NONE --</option>
-              {templates.map(template => {
-                return <option value={template.name}>{template.name}</option>
-              })}
-            </select>
-          </div>
-        </div>
-        <div>
-          <textarea style={{...textAreaStyle, resize: 'none', borderRadius: '3px', overflow: 'auto'}} name={'emailText'} value={this.state.emailText} onChange={this.handleChange} />
-        </div>
-        <span className={'email__links'}>
-          <span>
-            <a onClick={this.openApplicationLink}>Open in mail</a>
-            <a onClick={this.openGmailLink}>Open in gmail</a>
+          <span className={'email__links'}>
+            <span>
+              <a onClick={this.openApplicationLink}>Open in mail</a>
+              <a onClick={this.openGmailLink}>Open in gmail</a>
+            </span>
+            <span style={{display: 'flex'}}>
+              <ConfirmButton  removeMessage={'Clear'} confirmAction={this.clearForm} />
+              <ConfirmButton style={{marginLeft: '10px', backgroundColor: '#2D9CDB'}}  removeMessage={'Send'} confirmAction={this.sendEmail} />
+            </span>
           </span>
-          <span style={{display: 'flex'}}>
-            <ConfirmButton  removeMessage={'Clear'} confirmAction={this.clearForm} />
-            <ConfirmButton style={{marginLeft: '10px', backgroundColor: '#2D9CDB'}}  removeMessage={'Send'} confirmAction={() => {}} />
-          </span>
-        </span>
+        </section> :
+        <React.Fragment>
+          <h2 style={{ color: 'grey', textAlign: 'center' }}>Sending email...</h2>
+          <CoolLoader style={{ height: '80%' }}/>
+        </React.Fragment>}
       </div>
     )
   }
