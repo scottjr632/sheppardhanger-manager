@@ -4,6 +4,7 @@
         "allowJs": true,
         "jsx": "react",
         "esModuleInterop": true,
+        "baseUrl": "./node_modules",
         "paths": {
             "*.ts": ["*"]
         }
