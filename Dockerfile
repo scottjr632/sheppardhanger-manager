@@ -1,29 +1,29 @@
-FROM python:3.6.8-slim-stretch
+FROM node:alpine as frontend
 
-RUN mkdir /shmanager
-RUN mkdir /shmanager/client
-
-RUN apt-get update
-RUN apt-get install --assume-yes curl
-
-COPY ./requirements.txt /shmanager/requirements.txt
-COPY ./client/package.json /shmanager/client/package.json
-COPY ./client/package-lock.json /shmanager/client/package-lock.json
+RUN mkdir -p /shmanager/client
+RUN mkdir -p /shmanager/app/dist
 
 WORKDIR /shmanager
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
-RUN apt-get install --assume-yes build-essential nodejs 
-RUN node --version
-RUN npm --version
+COPY ./client /shmanager/client
+
+RUN npm --prefix client install
+RUN npm --prefix client run build
+
+
+FROM python:3.6.8-slim-stretch
+
+RUN mkdir /shmanager
+
+COPY ./requirements.txt /shmanager/requirements.txt
+
+WORKDIR /shmanager
 
 RUN pip3 install -r requirements.txt
-RUN npm --prefix client install
 
 COPY . /shmanager
 
-# RUN npm --prefix client run start
-RUN npm --prefix client run build
+COPY --from=frontend /shmanager/app/dist /shmanager/app/dist
 
 ENTRYPOINT ["/shmanager/docker-entrypoint.sh"]
 

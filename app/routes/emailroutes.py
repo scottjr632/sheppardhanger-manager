@@ -95,3 +95,12 @@ def send_email(user):
         apikey=apitoken)
 
     return make_response('Sent email', res)
+
+
+@mod.route('/templates/resolve/<templatename>/<lesseeemail>')
+def resolve_template(templatename: str, lesseeemail: str):
+    template = helpers.get_email_template(templatename)
+    formatted_template = helpers.format_template(template.template, lesseeemail)
+
+    template.template = formatted_template
+    return jsonify(template.serialize())

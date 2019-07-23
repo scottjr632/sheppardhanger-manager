@@ -15,6 +15,8 @@ $gray-border: darken(#f8f8f8, 10%);
 $gray-light: rgba(0, 0, 0, .35);
 $faded-yellow: lighten(#f1c40f, 40%);
 
+@import "scss/dropdown";
+
 // thx, @HugoGiraudel
 @mixin scrollbars($size, $foreground-color, $background-color: mix($foreground-color, white, 50%)) {
   ::-webkit-scrollbar {
@@ -691,6 +693,24 @@ h4 {
     select {
       // margin-left: 10px;
       vertical-align: middle
+    }
+
+    &.full {
+      display: flex;
+      flex-direction: 'row';
+      width: 100%;
+
+      input {
+        width: 100%;
+      }
+
+      label {
+        width: 50px;
+      }
+
+      select {
+        margin-left: 50px;
+      }
     }
   }
   

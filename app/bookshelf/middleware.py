@@ -59,7 +59,7 @@ class JWtMiddleware(FlaskMiddleware):
         return self.wsgi_app(environ, start_response)
 
     def register_blueprint(self, blueprint, url_prefix=''):
-        print('Added protected blueprint {}'.format(blueprint))
+        print('Added protected blueprint {}'.format(blueprint.name))
         self.app.register_blueprint(blueprint, 
             url_prefix='{}/{}'.format(self.url_prefix, url_prefix))
 

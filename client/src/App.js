@@ -33,6 +33,14 @@ const Admin = asyncComponent(() =>
   import('./pages/admin.jsx').then(module => module.default)
 )
 
+const Documents = asyncComponent(() => 
+  import ('./pages/document.jsx').then(module => module.default)
+)
+
+const Emails = asyncComponent(() =>
+  import ('./pages/emails.jsx').then(module => module.default)
+)
+
 // const ReservationInfoPage = asyncComponent(() => {
 //   import('./pages/info.jsx').then(module => module.default)
 // })
@@ -65,6 +73,8 @@ class App extends Component {
                 <PrivateRoute path='/info' component={ Info } />
                 <PrivateRoute path='/dashboard' component={ Dashboard } />
                 <PrivateRoute path='/admin' component={ Admin } />
+                <PrivateRoute path='/documents' component={ Documents } />  
+                <PrivateRoute path='/emails' component={ Emails } />  
                 <Route name="not-found" path='*' component={ NotFound } />
               </Switch>
             </section>

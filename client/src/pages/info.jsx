@@ -88,18 +88,18 @@ class Info extends React.Component {
   }
 
   emailStuff = {
-    generic: {prettyName: 'Send Email', right: <i class="fas fa-envelope"></i>, btnText: 'Create Email', btnAction: () => { this.toggleEmailModal('') }},
+    generic: {prettyName: 'Send Email', right: <i class="fas fa-envelope"></i>, btnText: 'Create Email', btnAction: () => { this.goToEmailPage() }},
   }
 
-  emailInfo = {
-    welcome: {prettyName: 'Welcome', right: <i class="fas fa-envelope"></i>, btnText: 'Welcome Email', btnAction: () => { this.handleEmailFromUserPrefs('Welcome', EMAILTYPES.WELCOME) }},
-    contract: {prettyName: 'Contract', right: <i class="fas fa-envelope"></i>, btnText: 'Contract', btnAction: () => { this.handleEmailFromUserPrefs('Conctract', EMAILTYPES.CONTRACT) }},
-    noRooms:  {prettyName: 'No Rooms', right: <i class="fas fa-envelope"></i>, btnText: 'No Rooms', btnAction: () => { this.handleEmailFromUserPrefs('No Rooms', EMAILTYPES.NOROOMS) }}
-  }
+  emailInfo = {}
   
   documentsInfo = {
     masterContract: {prettyName: 'Master Contract', right:<i class="fas fa-file-signature"></i>, btnText: 'Download master contract', btnAction: () => {this.toggleEmailModal('Master Contract') }},
     invoiceGenerator: {prettyName: 'Invoice', right: <i class="fas fa-receipt"></i>, btnText: 'Generate invoice', btnAction: () => { this.toggleEmailModal('Invoice'); }}
+  }
+
+  goToEmailPage = () => {
+    this.props.history.push('/emails')
   }
 
   handleEmailFromUserPrefs = (emailSubject, emailType) => {
@@ -207,7 +207,7 @@ class Info extends React.Component {
               <Emails data={this.emailStuff} title={'EMAIL'}/>
             </section>
             <section style={{marginBottom: '25px', maxHeight: '40vh', overflow: 'auto'}}>
-              <Emails data={this.emailInfo} title={'EMAIL TEMPLATES'} doSearch={this.searchEmails} search />
+              <Emails data={this.emailInfo} title={'RELATED DOCUMENTS'} doSearch={this.searchEmails} search />
             </section>
             {/* <section>
               <Emails data={this.documentsInfo} title={'DOWNLOAD DOCUMENTS'}/>

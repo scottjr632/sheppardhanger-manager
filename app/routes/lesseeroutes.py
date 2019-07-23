@@ -92,6 +92,12 @@ def get_lessee_by_filter(user):
     return helpers.get_lessee_by_email(**data)
 
 
+@mod.route('/emails', methods=['GET'])
+def get_lessee_emails():
+    lessees = helpers.get_all_lessees()
+    return jsonify([lessee.email for lessee in lessees])
+
+
 @mod.route('/ranks', methods=['GET'])
 def get_all_ranks():
     return jsonify([rank.serialize() for rank in  helpers.get_all_ranktype()])

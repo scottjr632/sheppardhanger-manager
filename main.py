@@ -26,8 +26,11 @@ ROOT = cwd
 #     raise Exception("Script must be called from the root or script directory")
 
 # set process group and globals
+try:
+    os.setpgrp()
+except Exception as e:
+    print(e, file=sys.stderr)
 
-os.setpgrp()
 
 SCRIPTS = os.path.join(ROOT, 'scripts')
 PID_FILE_PATH = os.path.join(ROOT, 'var/run-dev.pid')

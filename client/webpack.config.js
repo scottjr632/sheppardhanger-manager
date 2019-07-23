@@ -48,8 +48,16 @@ module.exports = {
             loader: 'sass-loader',
           }
         ]
+      },
+      {
+        test: /\.ts|tsx$/,
+        loader: "ts-loader",
+        exclude: /node_modules/
       }
     ]
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
   },
   devServer: {
     historyApiFallback: true,

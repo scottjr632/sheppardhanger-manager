@@ -1,6 +1,11 @@
 {
     "compilerOptions": {
         "experimentalDecorators": true,
-        "allowJs": true
+        "allowJs": true,
+        "jsx": "react",
+        "esModuleInterop": true,
+        "paths": {
+            "*.ts": ["*"]
+        }
     }
 }
