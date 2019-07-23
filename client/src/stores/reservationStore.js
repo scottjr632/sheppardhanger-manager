@@ -1,6 +1,5 @@
 import { observable, action } from 'mobx'
 
-import scheduleStore from './scheduleStore'
 import * as backend from '../backend'
 import { BOOKINGTYPECOLORS } from '../constants'
 

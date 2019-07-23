@@ -1,6 +1,6 @@
 .dropdown__email {
   position: absolute;
-  background: #c4cbda;
+  background: #95a5a6;
   z-index: 9999;
   top: 90%;
   margin-left: 50px;
@@ -19,6 +19,8 @@
     background: rgba(0, 0, 0, 0);
     border: none;
     padding: 5px;
+    text-align: left;
+    margin-left: 15px;
   }
   button:focus { font-weight: bold; }
   button:hover { font-weight: bold; }
