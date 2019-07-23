@@ -88,7 +88,7 @@ class Info extends React.Component {
   }
 
   emailStuff = {
-    generic: {prettyName: 'Send Email', right: <i class="fas fa-envelope"></i>, btnText: 'Create Email', btnAction: () => { this.toggleEmailModal('') }},
+    generic: {prettyName: 'Send Email', right: <i class="fas fa-envelope"></i>, btnText: 'Create Email', btnAction: () => { this.goToEmailPage() }},
   }
 
   emailInfo = {}
@@ -96,6 +96,10 @@ class Info extends React.Component {
   documentsInfo = {
     masterContract: {prettyName: 'Master Contract', right:<i class="fas fa-file-signature"></i>, btnText: 'Download master contract', btnAction: () => {this.toggleEmailModal('Master Contract') }},
     invoiceGenerator: {prettyName: 'Invoice', right: <i class="fas fa-receipt"></i>, btnText: 'Generate invoice', btnAction: () => { this.toggleEmailModal('Invoice'); }}
+  }
+
+  goToEmailPage = () => {
+    this.props.history.push('/emails')
   }
 
   handleEmailFromUserPrefs = (emailSubject, emailType) => {

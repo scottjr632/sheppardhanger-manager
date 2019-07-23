@@ -20,7 +20,7 @@ const links = [
   {key: 1, name: 'Home', path: '/dashboard'},
   {key: 2, name: 'Admin', path: '/admin'},
   {key: 3, name: 'Emails', path: '/emails'},
-  {key: 4, name: 'Documents', path: '/documents'}
+  // {key: 4, name: 'Documents', path: '/documents'}
 ]
 
 @inject('userStore')
