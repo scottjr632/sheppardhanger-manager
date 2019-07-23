@@ -10,6 +10,7 @@ from sqlalchemy import Enum
 
 from app import db
 
+
 class StatusEnum(enum.Enum):
     archived = 'archived'
     active = 'active'

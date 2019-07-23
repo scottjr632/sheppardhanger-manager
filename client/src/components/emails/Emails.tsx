@@ -163,7 +163,7 @@ class Emails extends React.Component<EmailProps, EmailState> {
         <div>
           <div className="input-group full" ref={node => this.node = node}>
             <label htmlFor='toEmail'>To</label>
-            <input type='text' name={'toEmail'} onChange={this.handleToEmailChange} value={this.state.toEmail} />
+            <input type='text' name={'toEmail'} onChange={this.handleToEmailChange} value={this.state.toEmail} autoComplete={'false'}/>
             {this.state.showEmails &&             
               <div className="dropdown__email">
                 <ul>
