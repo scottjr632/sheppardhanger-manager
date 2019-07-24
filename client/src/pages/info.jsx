@@ -88,7 +88,7 @@ class Info extends React.Component {
   }
 
   emailStuff = {
-    generic: {prettyName: 'Send Email', right: <i class="fas fa-envelope"></i>, btnText: 'Create Email', btnAction: () => { this.goToEmailPage() }},
+    generic: {prettyName: 'Send Email', right: <i class="fas fa-envelope"></i>, btnText: 'Create Email', btnAction: () => { this.goToEmailPage(this.state.userInfo.email) }},
   }
 
   emailInfo = {}
@@ -98,8 +98,9 @@ class Info extends React.Component {
     invoiceGenerator: {prettyName: 'Invoice', right: <i class="fas fa-receipt"></i>, btnText: 'Generate invoice', btnAction: () => { this.toggleEmailModal('Invoice'); }}
   }
 
-  goToEmailPage = () => {
-    this.props.history.push('/emails')
+  goToEmailPage = (to) => {
+    let search = to ? `/emails?to=${to}` : '/emails'
+    this.props.history.push(search)
   }
 
   handleEmailFromUserPrefs = (emailSubject, emailType) => {
