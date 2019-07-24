@@ -52,7 +52,10 @@ class Emails extends React.Component<EmailProps, EmailState> {
   }
 
   componentWillMount() {
-		document.addEventListener('mousedown', this.handleClick, false)
+    document.addEventListener('mousedown', this.handleClick, false)
+    
+    let to = this.extractToEmailFromURL(window.location.href)
+    if (to) { this.setState({ toEmail: to.replace('#/', '') }) }
 	}
 
 	componentWillUnmount() {
@@ -67,6 +70,18 @@ class Emails extends React.Component<EmailProps, EmailState> {
     backend.emails.getAllLesseesEmails()
       .then(emails => this.setState({ emails, originalEmails: emails }))
       .catch(err => console.log(err))
+  }
+
+  extractToEmailFromURL = (url: string): string => {
+    const re = /to=(?<to>.*)/im
+    
+    let matches = url.match(re)
+    if (matches) {
+      let { to } = matches.groups
+      return to || ''
+    }
+
+    return ''
   }
 
   validateToEmail = (toEmail: string): Boolean => {
