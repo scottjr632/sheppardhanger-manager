@@ -17,6 +17,18 @@ const listStyle = {
   listStyleType: 'none'
 }
 
+const templateFillers = [
+  { template: '**LESSEENAME**',  filler: "Lessee's first name" },
+  { template: '**DATE**', filler: 'No filler yet' },
+  { template: '**CURRENTMONTH**', filler: 'The current month' },
+  { template: '**CURRENTDATE**', filler: 'The current date' },
+  { template: '**TOMORROWDATE**', filler: "Tomorrow's date" },
+  { template: '**CODE**', filler: "Door code for lessee's current or upcomming reservation" },
+  { template: '**HOUSE**', filler: "House name for lessee's current or upcomming reservation" },
+  { template: '**ROOM**', filler: "Room name for lessee's current or upcomming reservation" },
+  { template: '**RESERVATIONMONTH**', filler: "Reservation month for lessee's current or upcomming reservation" },
+  { template: '**LESSEEADDRESS**', filler: "Address for lessee" },
+]
 
 const gridDisplay = {
   display: 'grid',
@@ -177,6 +189,25 @@ class EditEmailTemplates extends React.Component {
               <ConfirmButton removeMessage={this.state.btnText} style={{backgroundColor: this.state.btnColor}} confirmAction={this.saveNewEmailTemplate} />
             </span>
           </div>
+        </div>
+        <div className="table-wrapper large-screen">
+          <h4>Filler templates</h4>
+          <table className="table-responsive card-list-table">
+            <thead>
+              <th>Filler</th>
+              <th>To be resolved with</th>
+            </thead>
+            <tbody>
+            {templateFillers.map(filler => {
+              return (
+                <tr>
+                  <td>{filler.template}</td>
+                  <td>{filler.filler}</td>
+                </tr>
+              ) 
+            })}
+            </tbody>
+          </table>
         </div>
       </div>
     )
