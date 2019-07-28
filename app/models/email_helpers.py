@@ -15,13 +15,14 @@ from app import db, utils
 
 FORMATTERS = {
     '**LESSEENAME**': 'fname',
-    '**DATE**': 'DATE',
+    '**DATE**': '#*#* DATE #*#*',
     '**CURRENTMONTH**': calendar.month_name[datetime.datetime.today().month],
     '**CURRENTDATE**': datetime.datetime.today().strftime("%A, %b %d, %Y"),
     '**TOMORROWDATE**': (datetime.datetime.today() + datetime.timedelta(days=1)).strftime("%A, %b %d, %Y"),
-    '**CODE**': 'code',
-    '**HOUSE**': 'HOUSE',
-    '**ROOM**': 'ROOM',
+    '**CODE**': 'reservation:doorcode',
+    '**HOUSE**': 'reservation:house',
+    '**ROOM**': 'reservation:room',
+    '**RESERVATIONMONTH**': 'reservation:month',
     '**LESSEEADDRESS**': 'address',
     '**LESSE1**': 'LESSEE'
 }
@@ -84,11 +85,35 @@ def format_template(template: str, lessee_email: str) -> str:
     lessee = lessee[0]
     formatted_template = template
     for k, v in FORMATTERS.items():
-        if hasattr(lessee, v):
+        test = v.split(':')
+        if test[0] == 'reservation':
+            reservataions = lessee.serialize()['reservations']
+            res = return_current_reservation(*reservataions)
+            if res is not None:
+                if test[1] == 'month':
+                    v = calendar.month_name[res['checkindate'].month]
+                else:
+                    v = res[test[1]]
+            else:
+                v = '#*#* NO CURRENT RESERVATION FOUND *#*#'
+        elif hasattr(lessee, v):
             v = lessee.__dict__[v]
 
         formatted_template = formatted_template.replace(k, v)
     return formatted_template
+
+
+def return_current_reservation(*reservataions) -> bool:
+    from datetime import date
+    c_date = date.today()
+    for res in reservataions:
+        if res['checkindate'] <= c_date <= res['checkoutdate']:
+            return res
+    for res in reservataions:
+        if res['checkindate'] >= c_date:
+            return res
+
+    return None
 
 
 @utils.rollback_on_error

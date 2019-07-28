@@ -17,6 +17,30 @@ const listStyle = {
   listStyleType: 'none'
 }
 
+const templateFillers = [
+  { template: '**LESSEENAME**',  filler: "Lessee's first name", copy: () => {copy('**LESSEENAME**')} },
+  { template: '**DATE**', filler: 'No filler yet', copy: () => copy('**DATE**') },
+  { template: '**CURRENTMONTH**', filler: 'The current month', copy: () => copy('**CURRENTMONTH**') },
+  { template: '**CURRENTDATE**', filler: 'The current date', copy: () => copy('**CURRENTDATE**') },
+  { template: '**TOMORROWDATE**', filler: "Tomorrow's date", copy: () => copy('**TOMORROWDATE**') },
+  { template: '**CODE**', filler: "Door code for lessee's current or upcomming reservation", copy: () => copy('**CODE**') },
+  { template: '**HOUSE**', filler: "House name for lessee's current or upcomming reservation", copy: () => copy('**HOUSE**') },
+  { template: '**ROOM**', filler: "Room name for lessee's current or upcomming reservation", copy: () => copy('**ROOM**') },
+  { template: '**RESERVATIONMONTH**', filler: "Reservation month for lessee's current or upcomming reservation", copy: () => copy('**RESERVATIONMONTH**') },
+  { template: '**LESSEEADDRESS**', filler: "Address for lessee", copy: () => copy('**LESSEEADDRESS**') },
+]
+
+const copy = (toBeCopied) => {
+  const el = document.createElement('textarea')
+  el.value = toBeCopied
+
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+  NotificationManager.info(`Copied ${toBeCopied} to clipboard!`)
+
+}
 
 const gridDisplay = {
   display: 'grid',
@@ -147,7 +171,7 @@ class EditEmailTemplates extends React.Component {
       <div>
         <GoBack onClick={this.props.toggle} />
         <div style={gridDisplay}>
-          <div style={{...gridLeft, gridRowStart: 1, gridRowEnd: 4}}>
+          <div style={{...gridLeft, gridRowStart: 1, gridRowEnd: 4, maxHeight: '60vh', overflowY: 'scroll'}}>
             <ul style={listStyle}>
               {this.state.data.map(elem => {
                 let { name } = elem
@@ -177,6 +201,26 @@ class EditEmailTemplates extends React.Component {
               <ConfirmButton removeMessage={this.state.btnText} style={{backgroundColor: this.state.btnColor}} confirmAction={this.saveNewEmailTemplate} />
             </span>
           </div>
+        </div>
+        <div className="table-wrapper large-screen">
+          <h4>Filler templates</h4>
+          <table className="table-responsive card-list-table">
+            <thead>
+              <th>Filler</th>
+              <th>To be resolved with</th>
+            </thead>
+            <tbody>
+            {templateFillers.map(filler => {
+              return (
+                <tr>
+                  <td>{filler.template}</td>
+                  <td>{filler.filler}</td>
+                  <td className={'.nobefore'}><button onClick={filler.copy}>Copy filler</button></td>
+                </tr> 
+              ) 
+            })}
+            </tbody>
+          </table>
         </div>
       </div>
     )
