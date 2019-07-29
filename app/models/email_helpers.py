@@ -93,7 +93,7 @@ def format_template(template: str, lessee_email: str) -> str:
                 if test[1] == 'month':
                     v = calendar.month_name[res['checkindate'].month]
                 else:
-                    v = res[test[1]]
+                    v = res[test[1]] or v
             else:
                 v = '#*#* NO CURRENT RESERVATION FOUND *#*#'
         elif hasattr(lessee, v):
