@@ -22,6 +22,8 @@ FORMATTERS = {
     '**CODE**': 'reservation:doorcode',
     '**HOUSE**': 'reservation:house',
     '**ROOM**': 'reservation:room',
+    '**RESERVATIONCHECKINDATE**': 'reservation:checkindate',
+    '**RESERVATIONCHECKOUTDATE**': 'reservation:checkoutdate',
     '**RESERVATIONMONTH**': 'reservation:month',
     '**LESSEEADDRESS**': 'address',
     '**LESSE1**': 'LESSEE'
@@ -99,7 +101,7 @@ def format_template(template: str, lessee_email: str) -> str:
         elif hasattr(lessee, v):
             v = lessee.__dict__[v]
 
-        formatted_template = formatted_template.replace(k, v)
+        formatted_template = formatted_template.replace(k, str(v))
     return formatted_template
 
 

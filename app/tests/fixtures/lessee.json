@@ -1,0 +1,59 @@
+[
+  {
+    "model": "app.models.models.Lessee",
+    "records": [{    
+      "id": 9999999,
+      "fname": "john",
+      "lname": "sno",
+      "rank": 1,
+      "email": "jsno1@gmail.com",
+      "phone": "8888888888",
+      "address": "1234 No Name Rd",
+      "city": "Sin City",
+      "state": "NV",
+      "zipcode": "123456",
+      "notes": "No Notes",
+      "status": "active",
+      "programid": 1
+      }
+    ]
+  },
+  {
+    "model": "app.models.models.Reservation",
+    "records": [
+      {
+        "id": 9999999,
+        "lesseeid" : 9999999,
+        "purpose" : 1,
+        "checkindate" : "2019-08-10",
+        "checkoutdate" : "2019-08-29",
+        "roomid" : 1,
+        "houseid" : 1,
+        "status" : "active",
+        "notes" : "No Notes",
+        "bookingtypeid" : 1
+      }
+    ]
+  },
+  {
+    "model": "app.models.models.EmailTemplates",
+    "records": [
+      {
+        "name": "my test template",
+        "template": "this is a cool template"
+      },
+      {
+        "name": "has a current month",
+        "template": "this should be the **CURRENTMONTH**"
+      },
+      {
+        "name": "has upcomming check in date",
+        "template": " should be **RESERVATIONCHECKINDATE**"
+      },
+      {
+        "name": "has upcomming check out date",
+        "template": " should be **RESERVATIONCHECKOUTDATE**"
+      }
+    ]
+  }
+]
