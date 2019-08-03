@@ -12,6 +12,7 @@ export class UserStore {
   @observable loginError = false
   @observable role = 'user'
   @observable preferences = {}
+  @observable shouldresetpassword = false
 
   constructor() {
     backend.authenticate(res => {
@@ -21,14 +22,19 @@ export class UserStore {
     })
   }
 
+  @action setshouldresetpassword(shouldresetpassword) {
+    this.shouldresetpassword = shouldresetpassword
+  }
+
   @action loginUser (userInfo, callback) {
     backend.authenticateUser(userInfo, res => {
       this.loginError = false
       this.authenticated = false
 
-      let { id, email } = res
+      let { id, email, shouldresetpassword } = res
       if ( id && email ) {
         this.authenticated = true
+        this.shouldresetpassword = shouldresetpassword
         return callback(true)
       } else {
         NotificationManager.error('Username or password was incorrect.', '', 5000)
@@ -44,9 +50,10 @@ export class UserStore {
       this.loginError = false
       this.authenticated = false
 
-      let { id, email } = res
+      let { id, email, shouldresetpassword } = res
       if ( id && email ) {
         this.authenticated = true
+        this.shouldresetpassword = shouldresetpassword
         return callback(true)
       } else {
         NotificationManager.error('Username or password was incorrect.', '', 5000)

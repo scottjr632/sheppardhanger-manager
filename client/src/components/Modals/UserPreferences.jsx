@@ -53,7 +53,7 @@ class UserPreferences extends React.Component {
     let { userStore } = this.props
     let { preferences } =  userStore
     this.state = {
-      activeTab: navTabs.GENERAL,
+      activeTab: this.props.userStore.shouldresetpassword ? navTabs.ACCOUNT : navTabs.GENERAL,
       preferences: preferences,
       emailStyle: preferences.emailStyle || '',
       errors: {
@@ -87,6 +87,7 @@ class UserPreferences extends React.Component {
         this.state.password === this.state.password2) {
       updateUserPassword(this.state.password)
       NotificationManager.info('Reset password')
+      this.props.userStore.setshouldresetpassword(false)
       this.setState({ password: '', password2: '' })
     }
   }
@@ -131,9 +132,10 @@ class UserPreferences extends React.Component {
   }
 
   render() {
+    let { shouldresetpassword } = this.props.userStore
     return(
       <Modal
-        isOpen={this.props.showModal}
+        isOpen={this.props.showModal || shouldresetpassword}
         contentLabel={'User Preferences'}
         style={customStyles}
       >
@@ -154,9 +156,10 @@ class UserPreferences extends React.Component {
                   Save
               </button>
              </div>}
-             {this.state.activeTab === navTabs.ACCOUNT &&
+             {this.state.activeTab === navTabs.ACCOUNT  &&
               <div style={{display: 'flex', flexDirection: 'column'}}>
                 <div style={{display: 'flex', flexDirection: 'column'}}>
+                  {shouldresetpassword && <h4>We have updated our password security. In order to enhance security, please reset your password.</h4>}
                   <h4>Reset Password</h4>
                   <div className={'input-group'}>
                     <label htmlFor="passsword">Enter password</label>
