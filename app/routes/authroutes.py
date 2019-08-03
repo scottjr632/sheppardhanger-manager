@@ -34,10 +34,12 @@ def login():
             auth_token = utils.encode_auth_token(user.id)
 
         if user is not None and auth_token is not None:
+            should_reset_password = True if user.hash_version != usermodel.CURRENT_HASH_VERSION else False
             resp = make_response(jsonify({'id': user.id,
                                           'fname': user.fname,
                                           'lname': user.lname,
-                                          'email': user.email}), 200)
+                                          'email': user.email,
+                                          'shouldresetpassword': should_reset_password}), 200)
             resp.set_cookie('access_token', 
                              auth_token, 
                              httponly=config.get('COOKIE_HTTPONLY'),

@@ -5,6 +5,7 @@ import datetime
 from functools import wraps
 
 from werkzeug.exceptions import abort
+from passlib.hash import argon2
 
 import app.utils as utils
 from app import db
@@ -12,16 +13,41 @@ import app.models.models as models
 from app.models.models import User
 
 ROLES = ('admin', 'user')
+ARGON2_ROUNDS = 6
+CURRENT_HASH_VERSION = 2
+
+def sha512_salted_hash(password) -> (str, str):
+    """ return (salt, salted_hash) """
+    salt = uuid.uuid4().hex.encode('utf-8')
+    hashed_password = hashlib.sha512(password.encode('utf-8') + 
+                                     salt).hexdigest()
+    return salt.decode('utf-8'), hashed_password
+
+
+def sha512_salted_hash_verify(user: models.User, password: str) -> bool:
+    hashed_password = hashlib.sha512(password.encode('utf-8') +
+                                     user.salt.encode('utf-8')).hexdigest()
+
+    return user.password == hashed_password
+
+
+hash_fns = {
+    1: lambda password: sha512_salted_hash(password),
+    2: lambda password: argon2.using(rounds=ARGON2_ROUNDS).hash(password)
+}
+
+hash_verify_fns = {
+    1: lambda user, password: sha512_salted_hash_verify(user, password),
+    2: lambda user, password: argon2.verify(password, user.password)
+}
 
 
 @utils.rollback_on_error
 def update_user_password(userid, password):
     user = User.query.get(userid)
-    salt = uuid.uuid4().hex.encode('utf-8')
-    hashed_password = hashlib.sha512(password.encode('utf-8') + 
-                                     salt).hexdigest()
-    user.salt = salt.decode('utf-8')
-    user.password = hashed_password
+    hash_fn = hash_fns[CURRENT_HASH_VERSION]
+    user.hash_version = CURRENT_HASH_VERSION
+    user.password = hash_fn(password)
 
     db.session.add(user)
     db.session.commit()
@@ -30,10 +56,10 @@ def update_user_password(userid, password):
 @utils.rollback_on_error
 def create_user(user, password) -> User:
     salt = uuid.uuid4().hex.encode('utf-8')
-    hashed_password = hashlib.sha512(password.encode('utf-8') + 
-                                     salt).hexdigest()
-    user.salt = salt.decode('utf-8')
-    user.password = hashed_password
+    hash_fn = hash_fns[CURRENT_HASH_VERSION]
+    user.hash_version = CURRENT_HASH_VERSION
+    user.password = hash_fn(password)
+
     db.session.add(user)
     db.session.commit()
     return user
@@ -65,9 +91,10 @@ def authenticate_user(email, password) -> User:
     if user is None:
         return user
 
-    hashed_password = hashlib.sha512(password.encode('utf-8') +
-                                     user.salt.encode('utf-8')).hexdigest()
-    if hashed_password == user.password:
+    verify_fn = hash_verify_fns[user.hash_version]
+
+    authenticated = verify_fn(user, password)
+    if authenticated:
         return user
     else:
         return None

@@ -1,0 +1,22 @@
+[
+  {
+   "model": "app.models.models.User",
+   "records": [
+     {
+       "id": 999999999,
+       "email": "another_test_user@gmail",
+       "fname": "myfname",
+       "lname": "blank",
+       "password": "not really a password"
+     },
+     {
+       "id": 999999990,
+       "email": "test_old_pass@gmail",
+       "fname": "test",
+       "lname": "test",
+       "password": "5dff03a060dfc941f3432a1a2de113733ee5ea7703c211d5a235cd1fc578ed86c3edae8778d5a5063667831e42c91fd29d83779bfd6805a43bd10cd3f271d1bc",
+       "salt": "2f2c0a37a965469ca26e0ad00511b3bb",
+       "hash_version": 1
+     }
+   ]
+  }]

@@ -236,6 +236,7 @@ class User(db.Model):
     lname = db.Column(db.String)
     password = db.Column(db.String, nullable=False)
     salt = db.Column(db.String)
+    hash_version = db.Column(db.Integer)
     roleid = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False, default=2)
     role = db.relationship('Roles', backref=db.backref('roles', lazy=True))
     preferences = db.Column(db.String)
