@@ -20,7 +20,7 @@ def test_can_reset_password(test_client, init_user_db):
 
 
 def test_can_user_diff_hash_version(test_client, init_user_db):
-    test_pass = '!@QWASZX12qwaszx'
+    test_pass = 'password1'
     auth = user_helpers.authenticate_user('test_old_pass@gmail', test_pass)
     auth2 = user_helpers.authenticate_user('test_old_pass@gmail', '123412341234')
 
@@ -29,7 +29,7 @@ def test_can_user_diff_hash_version(test_client, init_user_db):
 
 
 def test_does_prompt_resert_password_old_hash_version(test_client, init_user_db):
-    old_pass = '!@QWASZX12qwaszx'
+    old_pass = 'password1'
     mimetype = 'application/json'
     headers = {
         'Content-Type': mimetype,
@@ -50,7 +50,7 @@ def test_does_prompt_resert_password_old_hash_version(test_client, init_user_db)
 
 
 def test_does_update_password_to_updated_hash_version(test_client, init_user_db):
-    old_pass = '!@QWASZX12qwaszx'
+    old_pass = 'password1'
     user = models.User.query.get(999999990)
     assert user.hash_version == 1
     assert user_helpers.authenticate_user('test_old_pass@gmail', old_pass)
