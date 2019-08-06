@@ -12,9 +12,17 @@ class ScheduleStore {
     monthMaxEvents: 99999,
     quarterMaxEvents: 99999,
     yearMaxEvents: 99999,
+    dayCellWidth: 30,
+    weekCellWidth: '12%',
+    monthCellWidth: '3%',
+    quarterCellWidth: 40,
+    yearCellWidth: 80,
+    customCellWidth: 80,
     views: [
         {viewName: 'Agenda View', viewType: ViewTypes.Month, showAgenda: true, isEventPerspective: false},
-        {viewName: 'Resource View', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: false},
+        {viewName: 'Week', viewType: ViewTypes.Week, showAgenda: true, isEventPerspective: false},
+        {viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: false},
+        {viewName: 'Quarter', viewType: ViewTypes.Quarter, showAgenda: false, isEventPerspective: false},
         {viewName: 'Task View', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true},
     ]
   });

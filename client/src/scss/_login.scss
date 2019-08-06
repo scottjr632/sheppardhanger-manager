@@ -1,0 +1,135 @@
+
+/* NEW LOGIN CSS */
+.authpage_modal {
+  position: relative;
+  background: initial;
+  display: flex;
+  margin: 30vh auto auto auto;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.33);
+}
+
+.authpage_modal-blur {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  filter: blur(10px);
+  background: url("bg.jpg") center center / cover fixed;
+}
+
+.authpage_modal-content {
+  display: flex;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.59);
+  border-radius: 4px;
+}
+
+.authpage_modal-header {
+  display: flex;
+  flex-direction: column;
+  width: 206px;
+  padding: 25px 40px;
+  box-sizing: border-box;
+}
+
+.authpage_body {
+  transition: 0.5s;
+  width: 500px;
+  background-color: #ffffff;
+  border-radius: 0 4px 4px 0;
+  padding: 25px 60px;
+  box-sizing: border-box;
+  font-size: 12pt;
+  color: #61708b;
+
+  &.left {
+    transform: translateX(-67%);
+  }
+}
+
+.authpage_field {
+  display: flex;
+  position: relative;
+  margin: 1em 0;
+  border-radius: 4px;
+  transition: border-color 0.25s;
+  border: 1px solid #e7e7e7;
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    text-indent: 10px;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active  {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+  }
+
+  label {
+    transition: font-size 0.25s ease-out 0.1s, color 0.25s ease-out 0.1s, top 0.25s ease-out 0.1s, background-color 0.25s ease-out 0.1s;
+    color: #2e2f32;
+    background-color: transparent;
+    font-size: 14px;
+    position: absolute;
+    left: 0px;
+    top: -7px;
+    letter-spacing: 1px;
+    margin: 7px 8px;
+    padding: 2px;
+    pointer-events: none;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 20px);
+
+    &.float {
+      top: -20px !important;
+      font-size: 0.8em !important;
+      letter-spacing: 0px !important;
+    }
+
+  }
+
+}
+
+.authpage_submit {
+  vertical-align: middle;
+  border: 0px;
+  border-radius: 4px;
+  font-family: 'Nunito', Arial, Helvetica, Sans-Serif;
+  font-size: 14px;
+  color: white;
+  background-color: #108EE9;
+  width: auto;
+  padding: 7px;
+  padding-left: 1.5em;
+  padding-right: 1.5em;
+  cursor: pointer;
+  display: inline-block;
+  outline: none;
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.authpage_link,
+.authpage_link:hover,
+.authpage_link:visited {
+  text-decoration: none;
+  margin: 5px;
+  color: green;
+}
+
+.authpage_checkbox {
+  vertical-align: center;
+
+  input[type=checkbox] {
+    margin: 0 5px;
+  }
+}
