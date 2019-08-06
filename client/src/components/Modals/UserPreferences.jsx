@@ -7,7 +7,7 @@ import { inject, observer } from 'mobx-react';
 import PreferencesNav from '../Misc/PreferencesNav.jsx';
 import ConfirmButton from '../Buttons/confirm.jsx';
 import { validatePassword1 } from '../../utils'
-import { EMAILPREFS } from '../../constants'
+import { SCHEDULER_VIEWS } from '../../constants'
 import { NotificationManager } from 'react-notifications'
 import { updateUserPreferences, updateUserPassword } from '../../backend'
 
@@ -56,6 +56,9 @@ class UserPreferences extends React.Component {
       activeTab: this.props.userStore.shouldresetpassword ? navTabs.ACCOUNT : navTabs.GENERAL,
       preferences: preferences,
       emailStyle: preferences.emailStyle || '',
+      cellWidth: preferences.monthCellWidth ? preferences.monthCellWidth.replace('%', '') : 3,
+      selectedViews: preferences.selectedViews || [],
+      views: preferences.views || [],
       errors: {
         pass1Error: false,
         pass2Error: false
@@ -65,9 +68,13 @@ class UserPreferences extends React.Component {
 
   componentWillRecieveProps(nextProps) {
     if (nextProps.userStore.preferences !== this.state.preferences) {
+      let { emailStyle, monthCellWidth, selectedViews, views } = nextProps.userStore.preferences
       this.setState({ 
         preferences: nextProps.userStore.preferences,
-        emailStyle: nextProps.userStore.preferences.emailStyle 
+        emailStyle: emailStyle,
+        cellWidth:  monthCellWidth ? monthCellWidth.replace('%', '') : 3,
+        selectedViews: selectedViews || [],
+        views: views || [],
       })
     }
   }
@@ -78,7 +85,10 @@ class UserPreferences extends React.Component {
 
   buildPreferencesFromState = () => {
     return {
-      emailStyle: this.state.emailStyle
+      emailStyle: this.state.emailStyle,
+      selectedViews: this.state.selectedViews,
+      views: this.state.views,
+      monthCellWidth: `${this.state.cellWidth}%`,
     }
   }
 
@@ -104,6 +114,29 @@ class UserPreferences extends React.Component {
 
     NotificationManager.info('Updated preferences')
     this.props.userStore.updateUserPreferences(prefs)
+  }
+
+  toggleSelectedView = (viewName) => {
+    let { selectedViews, views } = this.state
+    let viewNameIdx = selectedViews.findIndex(name => name === viewName )
+    if (viewNameIdx < 0) {
+      let viewIdx = SCHEDULER_VIEWS.findIndex(view => view.viewName === viewName)
+
+      selectedViews.push(viewName)
+      views.push(SCHEDULER_VIEWS[viewIdx])
+    } else {
+      let viewIdx = views.findIndex(view => view.viewName === viewName)
+
+      selectedViews.splice(viewNameIdx, 1)
+      views.splice(viewIdx, 1)
+    }
+  
+    this.setState({ selectedViews, views })
+  }
+
+  handleSelectedViews = (event) => {
+    let { target } = event
+    this.toggleSelectedView(target.name)
   }
 
   handleChange = (event) => {    
@@ -142,20 +175,39 @@ class UserPreferences extends React.Component {
          <div className={'preferences'}>
            <div className={'preferences__settings'}>
              {this.state.activeTab === navTabs.GENERAL &&
-             <div style={{display: 'flex', flexDirection: 'column'}}>
-              <label htmlFor="emailOptions">Email Style</label>
-              <select value={this.state.emailStyle} name={'emailStyle'} onChange={this.handleChange}>
-                {Object.keys(EMAILPREFS).map(key => {
-                  return <option value={key}>{EMAILPREFS[key]}</option>
-                })}
-              </select>
-              <button 
-                className={'btn__new'} 
-                style={{alignSelf: 'flex-end'}} 
-                onClick={this.updatePreferences}>
-                  Save
-              </button>
-             </div>}
+             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+              <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                <div className="input-group" >
+                  <h4>Scheduler cell size</h4>
+                  <span style={{ display: 'flex', flexDirection: 'row' }}>
+                    <label htmlFor={'cellWidth'}>Size of cells (%)</label>
+                    <input type="number" name="cellWidth" value={this.state.cellWidth} style={{ width: '50px', minWidth: '2px', textAlign: 'center' }} onChange={this.handleChange} />
+                  </span>
+                </div>
+                <div className="input-group">
+                  <h4>Scheduler Views</h4>
+                  {SCHEDULER_VIEWS.map(view => {
+                    let { viewName } = view
+                    return (
+                      <div>
+                        <span style={{ display: 'flex', flexDirection: 'row' }}>
+                          <input type="checkbox" checked={ this.state.selectedViews.includes(viewName) } name={viewName} onChange={this.handleSelectedViews} />
+                          <label>{viewName}</label>
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+                <br/>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <h4>Update will require page refresh to take affect</h4>
+                <button className="btn__new" onClick={this.updatePreferences}>
+                  Update
+                </button>
+              </div>
+            </div>
+            }
              {this.state.activeTab === navTabs.ACCOUNT  &&
               <div style={{display: 'flex', flexDirection: 'column'}}>
                 <div style={{display: 'flex', flexDirection: 'column'}}>

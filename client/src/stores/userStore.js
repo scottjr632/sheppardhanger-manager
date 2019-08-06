@@ -2,6 +2,7 @@ import { observable, action, reaction } from 'mobx'
 import { NotificationManager } from 'react-notifications'
 
 import * as backend from '../backend'
+import scheduleStore from './scheduleStore'
 
 
 export class UserStore {
@@ -84,6 +85,7 @@ export class UserStore {
     let res = await backend.getUserPreferences()
     let { data } = res
     if (data) {
+      scheduleStore.setNewSchedulerWithCustumConfig(data)
       this.preferences = JSON.parse(data)
     }
   }

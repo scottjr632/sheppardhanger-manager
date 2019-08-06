@@ -30,12 +30,45 @@ class ScheduleStore {
   @observable events = []
   @observable resources = []
 
+  @action setNewSchedulerWithCustumConfig(config) {
+    if (config) { 
+      try { config = JSON.parse(config)} catch (e) {}
+    }
+
+    this.schedulerData = new SchedulerData(new moment().format(DATE_FORMAT), ViewTypes.Month, false, false, {
+      eventItemPopoverEnabled: true,
+      dayMaxEvents: 3,
+      weekMaxEvents: 99999,
+      monthMaxEvents: 99999,
+      quarterMaxEvents: 99999,
+      yearMaxEvents: 99999,
+      dayCellWidth: 30,
+      weekCellWidth: '12%',
+      monthCellWidth: '3%',
+      quarterCellWidth: 40,
+      yearCellWidth: 80,
+      customCellWidth: 80,
+      views: [
+        {viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: false},
+      ],
+      ...config
+    });
+    
+    this.viewModel = this.schedulerData
+  }
+
   @action setHasInit(hasInit) {
     this.hasInit = hasInit
   }
 
   @action setViewModel(schedulerData) {
     this.viewModel = schedulerData
+  }
+
+  @action setResourcesAndEvents() {
+    this.schedulerData.setResources(this.resources)
+    this.schedulerData.setEvents(this.events)
+    this.viewModel = this.schedulerData    
   }
 
   @action setViewType(type, agenda, isEventPerspective) {

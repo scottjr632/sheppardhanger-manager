@@ -1,3 +1,5 @@
+import { ViewTypes } from 'react-big-scheduler'
+
 const OTHER_COLORS = [
     '#1abc9c', '#2ecc71', '#3498db', '#9b59b6',
     '#34495e', '#16a085', '#27ae60', '#2980b9', 
@@ -30,4 +32,12 @@ export const CALENDAR_TENTATVE = 'TENTATIVE'
 export const MONTHNAMES = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
+]
+
+export const SCHEDULER_VIEWS = [
+  {viewName: 'Agenda View', viewType: ViewTypes.Month, showAgenda: true, isEventPerspective: false},
+  {viewName: 'Week', viewType: ViewTypes.Week, showAgenda: true, isEventPerspective: false},
+  {viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: false},
+  {viewName: 'Quarter', viewType: ViewTypes.Quarter, showAgenda: false, isEventPerspective: false},
+  {viewName: 'Task View', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true},
 ]
