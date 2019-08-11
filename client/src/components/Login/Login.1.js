@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { inject, observer } from 'mobx-react'
 import { NotificationManager } from 'react-notifications'
 
+import { backend } from '../../backendts'
 
 @inject('userStore')
 @observer
@@ -82,7 +83,18 @@ class Login extends React.Component {
       password: "",
       loginPending: true
     });
-  };
+  }
+
+  sendPasswordResetEmail = async () => {
+    let res = await backend.password.sendResetPasswordEmail(this.state.email).catch(() => NotificationManager.error('Unable to send email. Please try again.'))
+    if (res.statusText !== 'OK') {
+      NotificationManager.error('Unable to send email. Please try again.')
+      return
+    } 
+
+    NotificationManager.info('Reset password email sent. Please check email and spam.')
+    this.setState({ left: true })
+  }
 
   render() {
     return (
@@ -95,7 +107,8 @@ class Login extends React.Component {
               <h3>MANAGER</h3>
             </div>
           </div>
-          <div className={`authpage_body ${this.state.left ? 'left' : ''}`}>
+          {!this.state.left ? 
+          <div className={`authpage_body`}>
             <h2>Sign in</h2>
             <div>
               <form _lpchecked="1" autocomplete="off">
@@ -112,7 +125,20 @@ class Login extends React.Component {
                 <span><span className={'authpage_checkbox'}>Stay logged in<input type="checkbox" name="stayLoggedIn" onChange={this.handleChange} checked={this.state.stayLoggedIn} /></span></span>
               </form>
             </div>
+          </div> : 
+          <div className={`authpage_body`}>
+            <h2>Set a new password</h2>
+            <div className="authpage_field" style={{ marginBottom: '2px' }}>
+              <input type="text" name="email" onChange={this.handleChange} label="Email" value={this.state.email} autoComplete={'false'} onBlur={()=>{this.emailFocused(false)}} onFocus={()=>{this.emailFocused(true)}}/>
+              <label htmlFor="email" className={this.state.email.length > 0 || this.state.emailIsFocused? 'float' : ''}>Email</label>
+            </div>
+            <span style={{ fontSize: '12px' }}>A verification email will be sent to your inbox to confirm setting your new password.</span>
+            <div style={{ textAlign: 'center' }}>
+              <input type="submit" className="authpage_submit" value="Send Reset Email" onClick={this.sendPasswordResetEmail} style={{ marginBottom: '5px' }}/>
+              <span><span><a href="#" className={'authpage_link'} onClick={this.toggleLeft}>Sign in instead</a></span></span>
+            </div>
           </div>
+          }
         </div>
       </div>
     );

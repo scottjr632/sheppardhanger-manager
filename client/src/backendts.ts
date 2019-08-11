@@ -76,7 +76,21 @@ export namespace backend {
     export async function sendEmail(emailData: EmailData): Promise<ServerResponse> {
       return await axios.post<ServerResponse>('/email/', emailData)
     }
+  }
 
+  export namespace password {
+
+    export const sendResetPasswordEmail = async (email: string): Promise<ServerResponse> => {
+      return await axios.post<ServerResponse>('/auth/user/resetpassword/email', { email, fquri: window.location.origin })
+    }
+
+    export const resetPassword = async (token: string, password: string): Promise<ServerResponse> => {
+      return await axios.post<ServerResponse>('/auth/user/resetpassword/link', { token, password })
+    }
+
+    export const checkIfValidResetToken = async (token: string): Promise<ServerResponse> => {
+      return await axios.post<ServerResponse>('/auth/user/resetpassword/token', { token })
+    }
   }
 
 }

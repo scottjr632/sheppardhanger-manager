@@ -13,7 +13,7 @@ class FlaskMiddleware(object):
         self.app = app
         self.wsgi_app = app.wsgi_app if app is not None else None
         if app is not None:
-          app.wsgi_app = self
+            app.wsgi_app = self
 
     def __call__(self, environ, start_response):
         raise NotImplementedError(r"""
@@ -24,11 +24,11 @@ class FlaskMiddleware(object):
         pass
 
     def register(self, app):
-      if self.app is None:
-        self.app = app
-        self.wsgi_app = app.wsgi_app
-        app.wsgi_app = self
-        return self
+        if self.app is None:
+            self.app = app
+            self.wsgi_app = app.wsgi_app
+            app.wsgi_app = self
+            return self
 
 
 class JWtMiddleware(FlaskMiddleware):
@@ -54,13 +54,12 @@ class JWtMiddleware(FlaskMiddleware):
 
                 environ['user'] = user_id
             print('path: %s, url: %s' % (request.path, request.url))
-            print('FOUND IN JWT MIDDLEWARE')
 
         return self.wsgi_app(environ, start_response)
 
     def register_blueprint(self, blueprint, url_prefix=''):
         print('Added protected blueprint {}'.format(blueprint.name))
-        self.app.register_blueprint(blueprint, 
+        self.app.register_blueprint(blueprint,
             url_prefix='{}/{}'.format(self.url_prefix, url_prefix))
 
 

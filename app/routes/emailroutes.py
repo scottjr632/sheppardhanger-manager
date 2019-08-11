@@ -80,6 +80,7 @@ def generate_contract_email_text(user, lesseename):
         'message': message.replace('**LESSEENAME**', lesseename)
     })
 
+
 @mod.route('/', methods=['POST'])
 @utils.login_required
 def send_email(user):
@@ -87,7 +88,7 @@ def send_email(user):
     email = current_app.config.get('EMAIL')
     apitoken = current_app.config.get('SENDGRID_API_TOKEN')
     res = helpers.send_email(
-        data.get('from_email'), 
+        data.get('from_email'),
         data.get('email'),
         data.get('subject'),
         data.get('email_text'),
@@ -100,7 +101,8 @@ def send_email(user):
 @mod.route('/templates/resolve/<templatename>/<lesseeemail>')
 def resolve_template(templatename: str, lesseeemail: str):
     template = helpers.get_email_template(templatename)
-    formatted_template = helpers.format_template(template.template, lesseeemail)
+    formatted_template = helpers.format_template(template.template,
+                                                 lesseeemail)
 
     template.template = formatted_template
     return jsonify(template.serialize())

@@ -18,7 +18,10 @@ FORMATTERS = {
     '**DATE**': '#*#* DATE #*#*',
     '**CURRENTMONTH**': calendar.month_name[datetime.datetime.today().month],
     '**CURRENTDATE**': datetime.datetime.today().strftime("%A, %b %d, %Y"),
-    '**TOMORROWDATE**': (datetime.datetime.today() + datetime.timedelta(days=1)).strftime("%A, %b %d, %Y"),
+    '**TOMORROWDATE**':
+        (datetime.datetime.today() +
+         datetime.timedelta(days=1)).strftime("%A, %b %d, %Y"),
+
     '**CODE**': 'reservation:doorcode',
     '**HOUSE**': 'reservation:house',
     '**ROOM**': 'reservation:room',
@@ -29,9 +32,10 @@ FORMATTERS = {
     '**LESSE1**': 'LESSEE'
 }
 
+
 def format_email_template(email: str, **kwargs) -> str:
     """ formats an email template with the proper format thingys.
-    the kwargs should be a dictionary and replacers should start 
+    the kwargs should be a dictionary and replacers should start
     and end with ** """
 
     for k, v in kwargs.items():
@@ -43,24 +47,26 @@ def format_email_template(email: str, **kwargs) -> str:
 def html_wrapper(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-       return '<html>{}</html'.format(f(*args, **kwargs)) 
+        return '<html>{}</html'.format(f(*args, **kwargs)) 
     return wrapper
 
 
-def send_email(from_email: str, to_email: str, subject: str, email: str, attachements, apikey=None) -> int:
+def send_email(from_email: str, to_email: str, subject: str, email: str, 
+               attachements=[], apikey=None) -> int:
     message = Mail(
         from_email=from_email,
         to_emails=to_email,
         subject=subject,
     )
-    
+
     message.content = Content(MimeType.text, email)
     try:
-        sg = sendgrid.SendGridAPIClient((apikey if apikey else os.environ.get('SENDGRID_API_KEY1234')))
+        apikey = apikey if apikey else os.environ.get('SENDGRID_API_KEY1234')
+        sg = sendgrid.SendGridAPIClient(apikey)
         response = sg.send(message)
         return response.status_code
     except Exception as e:
-        print(e, file=sys.stderr)
+        logging.error(e)
         return 500
 
 

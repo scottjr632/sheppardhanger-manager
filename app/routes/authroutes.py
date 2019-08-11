@@ -8,6 +8,7 @@ from flask import request
 
 import app.utils as utils
 import app.models.user_helpers as usermodel
+import app.models.email_helpers as emailhelpers
 
 
 mod = Blueprint('authroutes', __name__)
@@ -27,31 +28,34 @@ def login():
         r_expire = expire_date + datetime.timedelta(days=30)
         if keep_login is not None and user is not None:
             token_ttl = config.get('TOKEN_TTL')
-            auth_token = utils.encode_auth_token(user.id, expire_time=token_ttl)
+            auth_token = utils.encode_auth_token(user.id,
+                                                 expire_time=token_ttl)
             expire_date = expire_date + datetime.timedelta(hours=1)
             r_name, r_token = usermodel.create_refresh_token(user.id)
         elif user is not None:
             auth_token = utils.encode_auth_token(user.id)
 
         if user is not None and auth_token is not None:
-            should_reset_password = True if user.hash_version != usermodel.CURRENT_HASH_VERSION else False
+            pass_reset = user.hash_version != usermodel.CURRENT_HASH_VERSION
             resp = make_response(jsonify({'id': user.id,
                                           'fname': user.fname,
                                           'lname': user.lname,
                                           'email': user.email,
-                                          'shouldresetpassword': should_reset_password}), 200)
-            resp.set_cookie('access_token', 
-                             auth_token, 
-                             httponly=config.get('COOKIE_HTTPONLY'),
-                             secure=config.get('COOKIE_SECURE'),
-                             expires=r_expire)
+                                          'shouldresetpassword': pass_reset}),
+                                 200)
+
+            resp.set_cookie('access_token',
+                            auth_token,
+                            httponly=config.get('COOKIE_HTTPONLY'),
+                            secure=config.get('COOKIE_SECURE'),
+                            expires=r_expire)
             if keep_login is not None:
                 resp.set_cookie(r_name,
                                 r_token,
                                 httponly=config.get('COOKIE_HTTPONLY'),
                                 secure=config.get('COOKIE_SECURE'),
                                 expires=r_expire)
- 
+
             return resp
         return make_response('User could not be authenticated', 401)
 
@@ -125,6 +129,72 @@ def new_user():
     except Exception as e:
         print(e, file=sys.stderr)
         return make_response('Something went wrong', 500)
+
+
+@mod.route('/user/resetpassword/email', methods=['POST'])
+def get_resetpassword_token():
+    data = request.get_json(force=True)
+    if data.get('fquri') is None and data.get('email') is None:
+        return make_response('<a href="https://http.cat/422"></a>', 422)
+
+    user = usermodel.find_user_by_email(data.get('email'))
+    if user is None:
+        return make_response(jsonify({'error': 'User was not found!'}), 401)
+
+    token = usermodel.create_reset_token(user.id)
+    link = '{}/resetPassword?user={}&token={}'.format(data['fquri'],
+                                                      user.email, token)
+
+    apitoken = current_app.config.get('SENDGRID_API_TOKEN')
+    email_content = 'Follow link to reset password {}'.format(link)
+    status = emailhelpers.send_email('admin@admin.sheppardhanger.con',
+                                     user.email,
+                                     'Reset Password Link',
+                                     email_content,
+                                     apikey=apitoken)
+    if utils.first_n_digits(status, 1) != 2:
+        return make_response(jsonify({'Unable to send email'}), status)
+
+    return make_response('Emails reset password link to {}'.
+                         format(user.email))
+
+
+@mod.route('/user/resetpassword/link', methods=['POST'])
+def reset_password_from_link():
+    data = request.get_json(force=True)
+    if data.get('token') is None or data.get('password') is None:
+        return make_response('<a href="https://http.cat/422"></a>', 422)
+
+    token = data['token']
+    password = data['password']
+
+    reset_token = usermodel.get_reset_token_by_token(token, delete_after=True)
+    if reset_token is not None:
+        try:
+            usermodel.update_user_password(reset_token.uid, password)
+            return make_response('Updated password', 200)
+        except Exception as e:
+            logging.error(e)
+            return make_response(jsonify({'error',
+                                          'Unable to update users password'}),
+                                 500)
+
+    return make_response(jsonify({'error', 'Token is not valid'}), 401)
+
+
+@mod.route('/user/resetpassword/token', methods=['POST'])
+def verify_reset_password_token():
+    data = request.get_json(force=True)
+    if data.get('token') is None:
+        return jsonify({'error': 'No token supplied'})
+
+    token = data['token']
+    reset_token = usermodel.get_reset_token_by_token(token)
+
+    if reset_token is None:
+        return make_response(jsonify({'error': 'Token is invalid'}), 401)
+
+    return make_response('valid token', 200)
 
 
 @mod.route('/test', methods=['GET', 'POST'])

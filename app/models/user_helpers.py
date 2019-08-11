@@ -1,5 +1,6 @@
 import hashlib
 import json
+import sys
 import uuid
 import datetime
 from functools import wraps
@@ -16,10 +17,11 @@ ROLES = ('admin', 'user')
 ARGON2_ROUNDS = 6
 CURRENT_HASH_VERSION = 2
 
+
 def sha512_salted_hash(password) -> (str, str):
     """ return (salt, salted_hash) """
     salt = uuid.uuid4().hex.encode('utf-8')
-    hashed_password = hashlib.sha512(password.encode('utf-8') + 
+    hashed_password = hashlib.sha512(password.encode('utf-8') +
                                      salt).hexdigest()
     return salt.decode('utf-8'), hashed_password
 
@@ -66,7 +68,7 @@ def create_user(user, password) -> User:
 
 
 @utils.update_with_rollback
-def update_user(user : User):
+def update_user(user: User):
     pass
 
 
@@ -98,6 +100,11 @@ def authenticate_user(email, password) -> User:
         return user
     else:
         return None
+
+
+def get_user_by_userid(userid: int) -> models.User:
+    user = User.query.query(userid)
+    return user
 
 
 def find_user_by_email(email) -> User:
@@ -134,8 +141,10 @@ def create_refresh_token(userid: User.id, expire={'days': 30}) -> (str, str):
     """
     name, token = utils.generate_refresh_token()
     expire_time = datetime.datetime.now() + datetime.timedelta(**expire)
-    refresh_token = models.RefreshToken(userid=userid, 
-        tokenname=name, token=token, expireat=expire_time)
+    refresh_token = models.RefreshToken(userid=userid,
+                                        tokenname=name,
+                                        token=token,
+                                        expireat=expire_time)
 
     db.session.merge(refresh_token)
     db.session.commit()
@@ -182,3 +191,65 @@ def require_admin(f):
             abort(401)
         return f(user, *args, **kwargs)
     return wrapper
+
+
+@utils.rollback_on_error
+def create_reset_token(userid: int, expire={'hours': 1}) -> str:
+    token, hashed_token = utils.create_reset_password_tokens()
+    token_expiry = datetime.datetime.now() + datetime.timedelta(**expire)
+    reset_token = models.ResetTokens(uid=userid, token=hashed_token,
+                                     expires_at=token_expiry)
+
+    db.session.merge(reset_token)
+    db.session.commit()
+
+    return token
+
+
+@utils.rollback_on_error
+def delete_reset_token(userid: int):
+    """ Deletes the reset token for a user from the database.
+    Returns
+    -------
+    string \n
+        The token name to delete from cookies
+    """
+    reset_token = models.ResetTokens.query.get(userid)
+
+    if reset_token is not None:
+        db.session.delete(reset_token)
+        db.session.commit()
+
+
+@utils.rollback_on_error
+def get_reset_token(userid: int) -> models.ResetTokens:
+    """ Gets the reset token of a user.
+    Returns None if reset token is expired or none is there """
+    token = models.ResetTokens.query.filter_by(userid=userid)
+
+    if token is not None and token[0].expires_at > datetime.date.today():
+        return token[0]
+
+    if token[0].expires_at > datetime.date.today():
+        db.session.delete(token)
+        db.session.commit()
+
+    return None
+
+
+def get_reset_token_by_token(token_name: str, delete_after=False) -> models.ResetTokens:
+    hashed_token = hashlib.sha512(token_name.encode('utf-8')).hexdigest()
+    token = models.ResetTokens.query.filter_by(token=hashed_token).first()
+
+    if token is not None and token.expires_at > datetime.datetime.now():
+        if delete_after:
+            db.session.delete(token)
+            db.session.commit()
+
+        return token
+
+    if token is not None and expires < datetime.datetime.now():
+        db.session.delete(token)
+        db.session.commit()
+
+    return None

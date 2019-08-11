@@ -13,12 +13,17 @@ db = SQLAlchemy(metadata=metadata)
 APIV = '/api/v1'
 
 excluded_routes = [
+    '/api/v1/protected/auth/user/resetpassword/email',
+    '/api/v1/protected/auth/user/resetpassword/token',
+    '/api/v1/protected/auth/user/resetpassword/link',
     '/api/v1/protected/auth/login?stayloggedin=1',
     '/api/v1/protected/auth/login'
 ]
 
-jwtMiddleware = middleware.JWtMiddleware(url_prefix='{}/protected'.format(APIV), 
-    excluded=excluded_routes)
+jwtMiddleware = middleware.JWtMiddleware(url_prefix='%s/protected' % APIV,
+                                         excluded=excluded_routes)
+
+
 def _add_middleware(app):
     middleware.Middleware(app)
     middleware.LoggerMiddleware(app).init_app(app)

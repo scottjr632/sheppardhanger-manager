@@ -120,7 +120,8 @@ class Lessee(db.Model):
     fname = db.Column(db.String)
     lname = db.Column(db.String)
     rank = db.Column(db.String, db.ForeignKey('ranktype.id'))
-    rankname = db.relationship('RankType', backref=db.backref('ranktype', lazy=True))
+    rankname = db.relationship('RankType', backref=db.backref('ranktype',
+                                                              lazy=True))
     email = db.Column(db.String, unique=True)
     phone = db.Column(db.String(length=16))
     address = db.Column(db.String)
@@ -130,9 +131,12 @@ class Lessee(db.Model):
     notes = db.Column(db.String)
     status = db.Column(Enum(StatusEnum, name='statusenum', create_type=False))
     reservationid = db.Column(db.Integer)
-    reservation = db.relationship('Reservation', backref=db.backref('reservations', lazy=True))
+    reservation = db.relationship('Reservation',
+                                  backref=db.backref('reservations',
+                                                     lazy=True))
     programid = db.Column(db.Integer, db.ForeignKey('tdytype.id'))
-    program = db.relationship('TDYType', primaryjoin="Lessee.programid == TDYType.id")
+    program = db.relationship('TDYType',
+                              primaryjoin="Lessee.programid == TDYType.id")
 
     def serialize(self):
         return {
@@ -155,7 +159,8 @@ class Lessee(db.Model):
 
     def update(self, **kwargs):
         for k, v in kwargs.items():
-            if hasattr(self, k): setattr(self, k, v)
+            if hasattr(self, k):
+                setattr(self, k, v)
 
 
 class Reservation(db.Model):
@@ -165,9 +170,11 @@ class Reservation(db.Model):
     lesseeid = db.Column(db.Integer, db.ForeignKey('lessee.id'))
     lessee = db.relationship('Lessee', backref=db.backref('lessee', lazy=True))
     purpose = db.Column(db.String, db.ForeignKey('tdytype.id'))
-    purposename = db.relationship('TDYType', backref=db.backref('tdytype', lazy=True))
+    purposename = db.relationship('TDYType', backref=db.backref('tdytype', 
+                                  lazy=True))
     numberofguests = db.Column(db.Integer, db.ForeignKey('guesttype.id'))
-    guesttype = db.relationship('GuestType', backref=db.backref('guesttype', lazy=True))
+    guesttype = db.relationship('GuestType', backref=db.backref('guesttype', 
+                                lazy=True))
     pet = db.Column(db.Boolean)
     checkindate = db.Column(db.Date)
     checkoutdate = db.Column(db.Date)
@@ -177,7 +184,8 @@ class Reservation(db.Model):
     status = db.Column(Enum(StatusEnum, name='statusenum', create_type=False))
     notes = db.Column(db.String)
     bookingtypeid = db.Column(db.Integer, db.ForeignKey('bookingtype.id'))
-    bookingtype = db.relationship('BookingType', backref=db.backref('bookingtype', lazy=True))
+    bookingtype = db.relationship('BookingType', 
+                                  backref=db.backref('bookingtype', lazy=True))
     doorcode = db.Column(db.String)
 
     def serialize(self):
@@ -206,13 +214,18 @@ class Reservation(db.Model):
 
     def update(self, **kwargs):
         for k, v in kwargs.items():
-            if k == 'bookingtype': continue
-            if k == 'room': continue
-            if k == 'bookingtype': continue
+            if k == 'bookingtype':
+                continue
+            if k == 'room':
+                continue
+            if k == 'bookingtype':
+                continue
             # if k == 'checkindate': continue
             # if k == 'checkoutdate': continue
-            if v == None or v == '': continue
-            if hasattr(self, k): setattr(self, k, v)
+            if v is None or v == '':
+                continue
+            if hasattr(self, k):
+                setattr(self, k, v)
 
 
 class ReferrerLog(db.Model):
@@ -222,7 +235,6 @@ class ReferrerLog(db.Model):
     userid = db.Column(db.Integer, db.ForeignKey('lessee.id'))
     # user = db.relationship('Lessee', backref=db.backref('lessee', lazy=True))
     referrerid = db.Column(db.Integer, db.ForeignKey('lessee.id'))
-    # referrer = db.relationship('Lessee', backref=db.backref('lessee', lazy=True))
     name = db.Column(db.String)
 
 
@@ -230,14 +242,16 @@ class User(db.Model):
     __tablename__ = 'users'
     __table_args__ = {'extend_existing': True}
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True, server_default=sa_text("uuid_generate_v4()"))
+    id = db.Column(UUID(as_uuid=True), primary_key=True, 
+                   server_default=sa_text("uuid_generate_v4()"))
     email = db.Column(db.String(254), unique=True, nullable=False)
     fname = db.Column(db.String)
     lname = db.Column(db.String)
     password = db.Column(db.String, nullable=False)
     salt = db.Column(db.String)
     hash_version = db.Column(db.Integer)
-    roleid = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False, default=2)
+    roleid = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False, 
+                       default=2)
     role = db.relationship('Roles', backref=db.backref('roles', lazy=True))
     preferences = db.Column(db.String)
 
@@ -255,11 +269,23 @@ class User(db.Model):
         }
 
 
+class ResetTokens(db.Model):
+    __tablename__ = 'resettokens'
+    __table_args__ = (
+        db.PrimaryKeyConstraint('uid'),
+    )
+
+    uid = db.Column(db.Integer, db.ForeignKey('users.id'))
+    token = db.Column(db.String)
+    expires_at = db.Column(db.Date)
+
+
 class UserPreferences(db.Model):
     __tablename__ = 'user_preferences'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), 
+                        nullable=False)
     preferences = db.Column(db.String)
 
 
@@ -326,4 +352,5 @@ class Documents(db.Model):
 
     def update(self, **kwargs):
         for k, v in kwargs.items():
-            if hasattr(self, k): setattr(self, k, v)
+            if hasattr(self, k):
+                setattr(self, k, v)

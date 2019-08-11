@@ -1,3 +1,4 @@
+import math
 import sys
 import decimal
 from functools import wraps
@@ -8,6 +9,10 @@ from flask import abort, request, Response, current_app, make_response
 
 from app import db
 from .auth import *
+
+
+def first_n_digits(num, n):
+    return num // 10 ** (int(math.log(num, 10)) - n + 1)
 
 
 def get_userid_from_ctx(c_request, name='user') -> int:

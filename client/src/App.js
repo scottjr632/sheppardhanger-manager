@@ -17,6 +17,10 @@ const Login = asyncComponent(() =>
   import('./pages/login.jsx').then(module => module.default)
 )
 
+const ResetPassword = asyncComponent(() => 
+  import('./pages/resetPassword').then(module => module.default)
+)
+
 const Dashboard = asyncComponent(() =>
   import('./pages/dashboard.jsx').then(module => module.default)
 )
@@ -40,10 +44,6 @@ const Documents = asyncComponent(() =>
 const Emails = asyncComponent(() =>
   import ('./pages/emails.jsx').then(module => module.default)
 )
-
-// const ReservationInfoPage = asyncComponent(() => {
-//   import('./pages/info.jsx').then(module => module.default)
-// })
 
 const NotFound = asyncComponent(() =>
   import('./pages/notFound.jsx').then(module => module.default)
@@ -70,6 +70,7 @@ class App extends Component {
                 <Route exact path='/login' component={ Login } />
                 <Route exact path='/' component={ Login } />
                 <Route path='/reservation' component={ ReservationInfo } />
+                <Route exact path='/resetpassword' component={ ResetPassword } />
                 <PrivateRoute path='/info' component={ Info } />
                 <PrivateRoute path='/dashboard' component={ Dashboard } />
                 <PrivateRoute path='/admin' component={ Admin } />
