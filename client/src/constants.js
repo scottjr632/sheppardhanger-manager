@@ -39,5 +39,6 @@ export const SCHEDULER_VIEWS = [
   {viewName: 'Week', viewType: ViewTypes.Week, showAgenda: true, isEventPerspective: false},
   {viewName: 'Month', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: false},
   {viewName: 'Quarter', viewType: ViewTypes.Quarter, showAgenda: false, isEventPerspective: false},
+  {viewName: 'Year', viewType: ViewTypes.Year, showAgenda: false, isEventPerspective: false},
   {viewName: 'Task View', viewType: ViewTypes.Month, showAgenda: false, isEventPerspective: true},
 ]

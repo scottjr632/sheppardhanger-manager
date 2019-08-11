@@ -89,6 +89,7 @@ class UserPreferences extends React.Component {
       selectedViews: this.state.selectedViews,
       views: this.state.views,
       monthCellWidth: `${this.state.cellWidth}%`,
+      quarterCellWidth: `${this.state.cellWidth}%`
     }
   }
 
