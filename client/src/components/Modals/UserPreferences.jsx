@@ -202,7 +202,7 @@ class UserPreferences extends React.Component {
                 <br/>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <h4>Update will require page refresh to take affect</h4>
+                <h4>Update will require page refresh to take effect</h4>
                 <button className="btn__new" onClick={this.updatePreferences}>
                   Update
                 </button>
